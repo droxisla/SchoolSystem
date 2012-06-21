@@ -5,16 +5,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import schoolsystem.model.ClassCard;
-import schoolsystem.model.Curriculum;
-import schoolsystem.model.EnrollmentForm;
-import schoolsystem.model.Schedule;
-import schoolsystem.model.Section;
-import schoolsystem.model.SectionFullException;
-import schoolsystem.model.Student;
 import schoolsystem.model.Student.Status;
-import schoolsystem.model.Subject;
-import schoolsystem.model.Teacher;
+import schoolsystem.model.*;
 
 public class SchoolSystemTests {
 	
