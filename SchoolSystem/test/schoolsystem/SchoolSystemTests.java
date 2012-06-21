@@ -1,6 +1,6 @@
 package schoolsystem;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,17 +33,11 @@ public class SchoolSystemTests {
 		enrollmentForm = new EnrollmentForm(student);
 		classCard = new ClassCard(enrollmentForm, section);
 	}
-	
-	@Test
-	public void testEnrollmentService() {
-		//EnrollmentService.initiateRegistration(student);
-		//assertEquals(1, student.getNumEnrollmentForms());
-	}
 
 	@Test
 	public void testTeacherSection() {
 		assertEquals(teacher, section.getTeacher());
-		assertEquals(true, teacher.hasSection(section));
+		assertTrue(teacher.hasSection(section));
 	}
 
 	@Test
@@ -67,7 +61,7 @@ public class SchoolSystemTests {
 	}
 
 	@Test(expected = SectionFullException.class)
-	public void testSectionClassCardMax() throws SectionFullException {
+	public void classCardsMustNotExceedForty() throws SectionFullException {
 		EnrollmentForm enrollmentForm = new EnrollmentForm(student);
 		for (int i = 0; i < 40; i++) {
 			new ClassCard(enrollmentForm, section);
