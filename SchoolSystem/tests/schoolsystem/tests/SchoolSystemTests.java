@@ -18,7 +18,7 @@ public class SchoolSystemTests {
 	private EnrollmentForm enrollmentForm;
 	
 	@Before
-	public void createFixture() {
+	public void createFixture() throws Exception{
 		schedule = new Schedule();
 		subject = new Subject();
 		teacher = new Teacher();
@@ -34,10 +34,10 @@ public class SchoolSystemTests {
 		student.addEnrollmentForm(enrollmentForm);
 	}
 	
-	@Test
-	public void testSectionClassCardMax() {
+	@Test(expected = SectionFullException.class)
+	public void testSectionClassCardMax() throws SectionFullException{
 		for(int i = 0; i < 41; i++) {
-			//TODO: section.addClassCard(new ClassCard())
+			section.addClassCard(new ClassCard(section));
 		}
 	}
 	
