@@ -21,6 +21,18 @@ public class Section {
 		enrolledStudents = 0;
 	}
 	
+	public Subject getSubject() {
+		return subject;
+	}
+	
+	public Teacher getTeacher() {
+		return teacher;
+	}
+	
+	public Schedule getSchedule() {
+		return schedule;
+	}
+	
 	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
 	}
