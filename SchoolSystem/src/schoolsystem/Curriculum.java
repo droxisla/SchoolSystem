@@ -3,9 +3,10 @@ package schoolsystem;
 import java.util.*;
 
 public class Curriculum {
-	private List<Subject> subjects = new ArrayList<Subject>();
+	private List<Subject> subjects;
 	
 	public void addSubject(Subject subject) {
+		subjects = new ArrayList<Subject>();
 		subjects.add(subject);
 	}
 }

@@ -36,6 +36,13 @@ public class SchoolSystemTests {
 	}
 	
 	@Test
+	public void testSectionClassCardMax() {
+		for(int i = 0; i < 41; i++) {
+			//section.addClassCard(new ClassCard())
+		}
+	}
+	
+	@Test
 	public void testStudentRegister() { 
 		
 		//TODO: student.enroll(section);

@@ -3,9 +3,10 @@ package schoolsystem;
 import java.util.*;
 public class EnrollmentForm {
 	private Student student;
-	private List<ClassCard> classCards = new ArrayList<ClassCard>();
+	private List<ClassCard> classCards;
 	
 	public EnrollmentForm(Student student) {
+		classCards = new ArrayList<ClassCard>();
 		this.student = student;
 	}
 	

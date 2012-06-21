@@ -6,9 +6,10 @@ public class Section {
 	private Subject subject;
 	private Teacher teacher;
 	private Schedule schedule;
-	private List<ClassCard> classCards = new ArrayList<ClassCard>();
+	private List<ClassCard> classCards;
 	
 	public Section(Subject subject, Schedule schedule) {
+		classCards = new ArrayList<ClassCard>();
 		this.subject = subject;
 		this.schedule = schedule;
 	}
