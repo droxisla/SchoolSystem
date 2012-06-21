@@ -1,4 +1,4 @@
-package tests;
+package schoolsystem.tests;
 
 import static org.junit.Assert.*;
 
@@ -22,8 +22,7 @@ public class SchoolSystemTests {
 		schedule = new Schedule();
 		subject = new Subject();
 		teacher = new Teacher();
-		section = new Section(subject, schedule);
-		section.setTeacher(teacher);
+		section = new Section(subject, schedule, teacher);
 		teacher.setSection(section);
 		classCard = new ClassCard(section);
 		section.addClassCard(classCard);
@@ -38,7 +37,7 @@ public class SchoolSystemTests {
 	@Test
 	public void testSectionClassCardMax() {
 		for(int i = 0; i < 41; i++) {
-			//section.addClassCard(new ClassCard())
+			//TODO: section.addClassCard(new ClassCard())
 		}
 	}
 	

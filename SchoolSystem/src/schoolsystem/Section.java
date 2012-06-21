@@ -8,10 +8,11 @@ public class Section {
 	private Schedule schedule;
 	private List<ClassCard> classCards;
 	
-	public Section(Subject subject, Schedule schedule) {
+	public Section(Subject subject, Schedule schedule, Teacher teacher) {
 		classCards = new ArrayList<ClassCard>();
 		this.subject = subject;
 		this.schedule = schedule;
+		this.teacher = teacher;
 	}
 	
 	public void setTeacher(Teacher teacher) {
