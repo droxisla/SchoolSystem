@@ -33,6 +33,12 @@ public class SchoolSystemTests {
 		enrollmentForm = new EnrollmentForm(student);
 		classCard = new ClassCard(enrollmentForm, section);
 	}
+	
+	@Test
+	public void testEnrollmentService() {
+		//EnrollmentService.initiateRegistration(student);
+		//assertEquals(1, student.getNumEnrollmentForms());
+	}
 
 	@Test
 	public void testTeacherSection() {
@@ -67,10 +73,4 @@ public class SchoolSystemTests {
 			new ClassCard(enrollmentForm, section);
 		}
 	}
-
-	@Test
-	public void testStudentRegister() {
-		// TODO: student.enroll(section);
-	}
-
 }

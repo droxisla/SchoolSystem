@@ -20,6 +20,10 @@ public class Student {
 		enrollmentForms.add(enrollmentForm);
 	}
 	
+	public int getNumEnrollmentForms() {
+		return enrollmentForms.size();
+	}
+	
 	public Status getStatus() {
 		return status;
 	}
