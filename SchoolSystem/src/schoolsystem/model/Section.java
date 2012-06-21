@@ -14,7 +14,11 @@ public class Section {
 	private final Schedule schedule;
 	private final List<ClassCard> classCards;
 	
-	public Section(String name, Subject subject, Schedule schedule, Teacher teacher) {
+	public static Section createSection(String name, Subject subject, Schedule schedule, Teacher teacher) {
+		return new Section(name, subject, schedule, teacher);
+	}
+	
+	private Section(String name, Subject subject, Schedule schedule, Teacher teacher) {
 		this.classCards = new ArrayList<ClassCard>();
 		this.name = name;
 		this.subject = subject;

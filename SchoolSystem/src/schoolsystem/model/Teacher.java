@@ -1,6 +1,9 @@
 package schoolsystem.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import schoolsystem.model.schedule.Schedule;
 
 public class Teacher {
 	
@@ -21,6 +24,10 @@ public class Teacher {
 	//TODO: Add getSection, make hasSection private
 	public boolean hasSection(Section section) {
 		return sections.contains(section);
+	}
+	
+	public boolean hasScheduledClass(Schedule schedule) {
+		return false; //TODO
 	}
 	
 	@Override
