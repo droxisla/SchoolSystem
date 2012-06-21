@@ -1,5 +1,6 @@
 package schoolsystem;
 
+@SuppressWarnings("serial")
 public class SectionFullException extends Exception {
 
 	public SectionFullException() {
