@@ -3,19 +3,19 @@ package schoolsystem.model;
 import java.util.*;
 
 public class Student {
-	
+
 	private final int studentNumber;
-	private final Status status;
+	private final StudentStatus status;
 	private final Curriculum curriculum;
 	private final List<EnrollmentForm> enrollmentForms;
-	
-	public Student(int studentNumber, Status status, Curriculum curriculum) {
+
+	public Student(int studentNumber, StudentStatus status, Curriculum curriculum) {
 		this.enrollmentForms = new ArrayList<EnrollmentForm>();
 		this.studentNumber = studentNumber;
 		this.status = status;
 		this.curriculum = curriculum;
 	}
-	
+
 	public void addEnrollmentForm(EnrollmentForm enrollmentForm) {
 		enrollmentForms.add(enrollmentForm);
 	}
@@ -23,8 +23,9 @@ public class Student {
 	public int getNumEnrollmentForms() {
 		return enrollmentForms.size();
 	}
-	
-	public Status getStatus() {
+
+	public StudentStatus getStatus() {
+
 		return status;
 	}
 
@@ -36,10 +37,5 @@ public class Student {
 	public String toString() {
 		return "" + studentNumber;
 	}
-	
-	public enum Status { //TODO so client will use Student.Status.New?, or should we place it separate java file?
-		NEW, CONTINUING, GRADUATING, GRADUATED, PROBATIONARY, INELIGIBLE;
-	}
 
-	
 }

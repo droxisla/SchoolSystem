@@ -5,8 +5,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import schoolsystem.model.Student.Status;
 import schoolsystem.model.*;
+
 
 public class SchoolSystemTests {
 	
@@ -25,7 +25,7 @@ public class SchoolSystemTests {
 		
 		schedule = new Schedule();
 		teacher = new Teacher(1, "John Doe");
-		student = new Student(1, Status.NEW, curriculum);
+		student = new Student(1, StudentStatus.NEW, curriculum);
 	
 		subject = new Subject("CS21", curriculum);
 		section = new Section("A", subject, schedule, teacher);
