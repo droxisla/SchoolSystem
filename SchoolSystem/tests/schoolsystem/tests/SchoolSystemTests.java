@@ -34,6 +34,11 @@ public class SchoolSystemTests {
 		student.addEnrollmentForm(enrollmentForm);
 	}
 	
+	@Test
+	public void testTeacherToString() {
+		assertEquals("John Doe", teacher.toString());
+	}
+	
 	@Test(expected = SectionFullException.class)
 	public void testSectionClassCardMax() throws SectionFullException{
 		for(int i = 0; i < 41; i++) {

@@ -14,4 +14,8 @@ public class Teacher {
 	public void addSection(Section section) {
 		sections.add(section);
 	}
+	
+	public String toString() {
+		return name;
+	}
 }
