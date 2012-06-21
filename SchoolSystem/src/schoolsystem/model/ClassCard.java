@@ -1,4 +1,4 @@
-package schoolsystem;
+package schoolsystem.model;
 
 public class ClassCard {
 	private Section section;

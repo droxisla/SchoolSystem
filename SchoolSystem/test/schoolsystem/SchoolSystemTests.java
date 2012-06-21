@@ -1,11 +1,11 @@
-package schoolsystem.tests;
+package schoolsystem;
 
 import static org.junit.Assert.*;
 
 import org.junit.*;
 
-import schoolsystem.*;
-import schoolsystem.Student.Status;
+import schoolsystem.model.*;
+import schoolsystem.model.Student.Status;
 
 public class SchoolSystemTests {
 	private Schedule schedule;

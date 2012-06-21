@@ -1,4 +1,4 @@
-package schoolsystem;
+package schoolsystem.model;
 
 import java.util.*;
 public class EnrollmentForm {
