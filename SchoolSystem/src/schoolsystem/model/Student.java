@@ -15,8 +15,12 @@ public class Student {
 		this.status = status;
 		this.curriculum = curriculum;
 	}
+	
+	public void beginEnrollment() {
+		addEnrollmentForm(new EnrollmentForm(this));
+	}
 
-	public void addEnrollmentForm(EnrollmentForm enrollmentForm) {
+	void addEnrollmentForm(EnrollmentForm enrollmentForm) {
 		enrollmentForms.add(enrollmentForm);
 	}
 	

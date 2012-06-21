@@ -6,9 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import schoolsystem.model.*;
-import schoolsystem.model.schedule.Schedule;
-import schoolsystem.model.schedule.ScheduleDays;
-import schoolsystem.model.schedule.ScheduleTimes;
+import schoolsystem.model.schedule.*;
 
 
 public class SchoolSystemTests {
@@ -24,13 +22,11 @@ public class SchoolSystemTests {
 
 	@Before
 	public void createFixture() throws Exception {
-		curriculum = new Curriculum();
-		
 		schedule = new Schedule(ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
 		teacher = new Teacher(1, "John Doe");
 		student = new Student(1, StudentStatus.NEW, curriculum);
 	
-		subject = new Subject("CS21", curriculum);
+		subject = new Subject("CS21");
 		section = Section.createSection("A", subject, schedule, teacher);
 		
 		enrollmentForm = new EnrollmentForm(student);
