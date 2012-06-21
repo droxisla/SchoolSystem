@@ -20,27 +20,32 @@ public class SchoolSystemTests {
 	@Before
 	public void createFixture() throws Exception{
 		schedule = new Schedule();
-		subject = new Subject("CS 21");
+		subject = new Subject("CS21");
 		teacher = new Teacher("John Doe");
 		section = new Section("A", subject, schedule, teacher);
 		classCard = new ClassCard(section);
 		curriculum = new Curriculum();
 		student = new Student(1, Status.NEW, curriculum);
 		enrollmentForm = student.addNewEnrollmentForm();
-		teacher.addSection(section);
 		section.addClassCard(classCard);
 		curriculum.addSubject(subject);
 		enrollmentForm.addClassCard(classCard);
 	}
 	
 	@Test
+	public void testTeacherSection() {
+		assertEquals(teacher, section.getTeacher());
+		assertEquals(section, teacher.hasSection(section));
+	}
+	
+	@Test
 	public void testSubjectToString() {
-		assertEquals("CS 21", subject.toString());
+		assertEquals("CS21", subject.toString());
 	}
 	
 	@Test
 	public void testSectionToString() {
-		assertEquals("A", section.toString());
+		assertEquals("CS21 A", section.toString());
 	}
 	
 	@Test

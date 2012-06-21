@@ -11,12 +11,17 @@ public class Teacher {
 		sections = new ArrayList<Section>();
 	}
 	
-	public void addSection(Section section) {
-		sections.add(section);
+	//TODO: Add getSection, make hasSection private
+	public boolean hasSection(Section section) {
+		return sections.contains(section);
 	}
 	
 	@Override
 	public String toString() {
 		return name;
+	}
+	
+	void addSection(Section section) {
+		sections.add(section);
 	}
 }

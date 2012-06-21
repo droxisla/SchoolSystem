@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Section {
 	public static final int MAX_STUDENTS = 40;
-
+	
 	private String name;
 	private Subject subject;
 	private Teacher teacher;
@@ -18,6 +18,7 @@ public class Section {
 		this.subject = subject;
 		this.schedule = schedule;
 		this.teacher = teacher;
+		teacher.addSection(this);
 		enrolledStudents = 0;
 	}
 	
@@ -48,7 +49,7 @@ public class Section {
 	
 	@Override
 	public String toString() {
-		return name;
+		return subject.toString() + name;
 	}
 		
 }
