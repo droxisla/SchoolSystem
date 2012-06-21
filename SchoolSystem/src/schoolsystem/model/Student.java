@@ -25,7 +25,6 @@ public class Student {
 	}
 
 	public StudentStatus getStatus() {
-
 		return status;
 	}
 

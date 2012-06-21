@@ -2,6 +2,8 @@ package schoolsystem.model;
 
 import java.util.*;
 
+import schoolsystem.model.schedule.Schedule;
+
 public class Section {
 	
 	public static final int MAX_STUDENTS = 40;
