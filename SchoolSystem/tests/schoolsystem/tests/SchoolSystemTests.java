@@ -55,7 +55,7 @@ public class SchoolSystemTests {
 	
 	@Test(expected = SectionFullException.class)
 	public void testSectionClassCardMax() throws SectionFullException{
-		for(int i = 0; i < 41; i++) {
+		for(int i = 0; i < 40; i++) {
 			section.addClassCard(new ClassCard(section));
 		}
 	}

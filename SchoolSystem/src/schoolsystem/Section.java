@@ -22,7 +22,7 @@ public class Section {
 	}
 	
 	public void addClassCard(ClassCard classCard) throws SectionFullException {
-		if(enrolledStudents <= MAX_STUDENTS) {
+		if(enrolledStudents < MAX_STUDENTS) {
 			classCards.add(classCard);
 			enrolledStudents++;
 		} else {
