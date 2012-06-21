@@ -6,10 +6,16 @@ public class Teacher {
 	
 	private final List<Section> sections;
 	private final String name;
+	private final int facultyNumber;
 	
-	public Teacher(String name) {
+	public Teacher(int facultyNumber, String name) {
+		this.facultyNumber = facultyNumber;
 		this.name = name;
 		this.sections = new ArrayList<Section>();
+	}
+	
+	public int getFacultyNumber() {
+		return facultyNumber;
 	}
 	
 	//TODO: Add getSection, make hasSection private

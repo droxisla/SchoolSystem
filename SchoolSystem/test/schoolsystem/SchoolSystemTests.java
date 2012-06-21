@@ -24,7 +24,7 @@ public class SchoolSystemTests {
 		curriculum = new Curriculum();
 		
 		schedule = new Schedule();
-		teacher = new Teacher("John Doe");
+		teacher = new Teacher(1, "John Doe");
 		student = new Student(1, Status.NEW, curriculum);
 	
 		subject = new Subject("CS21", curriculum);
