@@ -21,15 +21,15 @@ public class SchoolSystemTests {
 	public void createFixture() throws Exception{
 		schedule = new Schedule();
 		subject = new Subject();
-		teacher = new Teacher();
+		teacher = new Teacher("John Doe");
 		section = new Section(subject, schedule, teacher);
-		teacher.setSection(section);
 		classCard = new ClassCard(section);
-		section.addClassCard(classCard);
 		curriculum = new Curriculum();
-		curriculum.addSubject(subject);
 		student = new Student(1, Status.NEW, curriculum);
 		enrollmentForm = new EnrollmentForm(student);
+		teacher.addSection(section);
+		section.addClassCard(classCard);
+		curriculum.addSubject(subject);
 		enrollmentForm.addClassCard(classCard);
 		student.addEnrollmentForm(enrollmentForm);
 	}

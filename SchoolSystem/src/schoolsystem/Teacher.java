@@ -1,9 +1,17 @@
 package schoolsystem;
 
+import java.util.*;
+
 public class Teacher {
-	private Section section;
+	private List<Section> sections;
+	private String name;
 	
-	public void setSection(Section section) {
-		this.section = section;
+	public Teacher(String name) {
+		this.name = name;
+		sections = new ArrayList<Section>();
+	}
+	
+	public void addSection(Section section) {
+		sections.add(section);
 	}
 }
