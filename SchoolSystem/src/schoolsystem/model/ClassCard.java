@@ -1,11 +1,11 @@
 package schoolsystem.model;
 
 public class ClassCard {
+
 	private final Section section;
 	private final EnrollmentForm enrollmentForm;
 
-	public ClassCard(EnrollmentForm enrollmentForm, Section section)
-			throws SectionFullException {
+	public ClassCard(EnrollmentForm enrollmentForm, Section section) throws SectionFullException {
 		this.section = section;
 		this.enrollmentForm = enrollmentForm;
 

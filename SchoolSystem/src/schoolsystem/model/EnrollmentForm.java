@@ -22,7 +22,7 @@ public class EnrollmentForm {
 		return student;
 	}
 
-	public void addClassCard(ClassCard classCard) {
+	void addClassCard(ClassCard classCard) {
 		this.classCards.add(classCard);
 	}
 }

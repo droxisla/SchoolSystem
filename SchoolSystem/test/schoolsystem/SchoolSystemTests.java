@@ -17,6 +17,7 @@ import schoolsystem.model.Subject;
 import schoolsystem.model.Teacher;
 
 public class SchoolSystemTests {
+	
 	private Schedule schedule;
 	private Subject subject;
 	private Teacher teacher;
@@ -39,7 +40,6 @@ public class SchoolSystemTests {
 		
 		enrollmentForm = new EnrollmentForm(student);
 		classCard = new ClassCard(enrollmentForm, section);
-		enrollmentForm.addClassCard(classCard);
 	}
 
 	@Test

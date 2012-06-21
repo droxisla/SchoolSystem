@@ -3,6 +3,7 @@ package schoolsystem.model;
 import java.util.*;
 
 public class Curriculum {
+	
 	private final List<Subject> subjects;
 	
 	public Curriculum() {

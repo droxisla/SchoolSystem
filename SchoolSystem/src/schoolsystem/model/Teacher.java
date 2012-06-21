@@ -3,6 +3,7 @@ package schoolsystem.model;
 import java.util.*;
 
 public class Teacher {
+	
 	private final List<Section> sections;
 	private final String name;
 	
