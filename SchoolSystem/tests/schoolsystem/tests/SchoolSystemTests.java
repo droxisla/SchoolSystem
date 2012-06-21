@@ -26,12 +26,11 @@ public class SchoolSystemTests {
 		classCard = new ClassCard(section);
 		curriculum = new Curriculum();
 		student = new Student(1, Status.NEW, curriculum);
-		enrollmentForm = new EnrollmentForm(student);
+		enrollmentForm = student.addNewEnrollmentForm();
 		teacher.addSection(section);
 		section.addClassCard(classCard);
 		curriculum.addSubject(subject);
 		enrollmentForm.addClassCard(classCard);
-		student.addEnrollmentForm(enrollmentForm);
 	}
 	
 	@Test
@@ -63,7 +62,6 @@ public class SchoolSystemTests {
 	
 	@Test
 	public void testStudentRegister() { 
-		
 		//TODO: student.enroll(section);
 	}
 
