@@ -6,4 +6,8 @@ public class ClassCard {
 	public ClassCard(Section section) {
 		this.section = section;
 	}
+	
+	public Section getSection() {
+		return section;
+	}
 }

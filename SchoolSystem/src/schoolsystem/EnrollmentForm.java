@@ -13,4 +13,8 @@ public class EnrollmentForm {
 	public void addClassCard(ClassCard classCard) {
 		classCards.add(classCard);
 	}
+	
+	public Student getStudent() {
+		return student;
+	}
 }

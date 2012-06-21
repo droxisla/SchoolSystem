@@ -19,6 +19,14 @@ public class Student {
 		enrollmentForms.add(enrollmentForm);
 	}
 	
+	public Status getStatus() {
+		return status;
+	}
+
+	public Curriculum getCurriculum() {
+		return curriculum;
+	}
+
 	@Override
 	public String toString() {
 		return "" + studentNumber;
