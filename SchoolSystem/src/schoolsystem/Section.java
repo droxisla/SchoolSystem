@@ -21,8 +21,21 @@ public class Section {
 		enrolledStudents = 0;
 	}
 	
+	public void addClassCard(ClassCard classCard) throws SectionFullException {
+		if(enrolledStudents <= MAX_STUDENTS) {
+			classCards.add(classCard);
+			enrolledStudents++;
+		} else {
+			throw new SectionFullException();
+		}
+	}
+	
 	public Subject getSubject() {
 		return subject;
+	}
+	
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
 	}
 	
 	public Teacher getTeacher() {
@@ -33,23 +46,9 @@ public class Section {
 		return schedule;
 	}
 	
-	public void setTeacher(Teacher teacher) {
-		this.teacher = teacher;
-	}
-	
-	public void addClassCard(ClassCard classCard) throws SectionFullException {
-		if(enrolledStudents <= MAX_STUDENTS) {
-			classCards.add(classCard);
-			enrolledStudents++;
-		} else {
-			throw new SectionFullException();
-		}
-	}
-
 	@Override
 	public String toString() {
 		return name;
 	}
-	
-	
+		
 }
