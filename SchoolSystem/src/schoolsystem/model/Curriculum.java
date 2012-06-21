@@ -3,13 +3,13 @@ package schoolsystem.model;
 import java.util.*;
 
 public class Curriculum {
-	private List<Subject> subjects;
+	private final List<Subject> subjects;
 	
 	public Curriculum() {
 		subjects = new ArrayList<Subject>();
 	}
 	
-	public void addSubject(Subject subject) {
+	void addSubject(Subject subject) {
 		subjects.add(subject);
 	}
 }

@@ -1,20 +1,28 @@
 package schoolsystem.model;
 
 import java.util.*;
+
 public class EnrollmentForm {
-	private Student student;
-	private List<ClassCard> classCards;
+	
+	private final Student student;
+	private final List<ClassCard> classCards;
 	
 	public EnrollmentForm(Student student) {
-		classCards = new ArrayList<ClassCard>();
+		this.classCards = new ArrayList<ClassCard>();
 		this.student = student;
+		
+		addEnrollmentFormToStudent();
 	}
 	
-	public void addClassCard(ClassCard classCard) {
-		classCards.add(classCard);
+	private void addEnrollmentFormToStudent() {
+		this.student.addEnrollmentForm(this);
 	}
-	
+
 	public Student getStudent() {
 		return student;
+	}
+
+	public void addClassCard(ClassCard classCard) {
+		this.classCards.add(classCard);
 	}
 }

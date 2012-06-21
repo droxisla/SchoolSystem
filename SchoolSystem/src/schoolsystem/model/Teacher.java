@@ -3,12 +3,12 @@ package schoolsystem.model;
 import java.util.*;
 
 public class Teacher {
-	private List<Section> sections;
-	private String name;
+	private final List<Section> sections;
+	private final String name;
 	
 	public Teacher(String name) {
 		this.name = name;
-		sections = new ArrayList<Section>();
+		this.sections = new ArrayList<Section>();
 	}
 	
 	//TODO: Add getSection, make hasSection private

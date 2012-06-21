@@ -3,31 +3,34 @@ package schoolsystem.model;
 import java.util.*;
 
 public class Section {
+	
 	public static final int MAX_STUDENTS = 40;
 	
-	private String name;
-	private Subject subject;
-	private Teacher teacher;
-	private Schedule schedule;
-	private List<ClassCard> classCards;
-	private int enrolledStudents;
-	private StringBuilder sb;
+	private final String name;
+	private final Subject subject;
+	private final Teacher teacher;
+	private final Schedule schedule;
+	private final List<ClassCard> classCards;
 	
 	public Section(String name, Subject subject, Schedule schedule, Teacher teacher) {
-		classCards = new ArrayList<ClassCard>();
+		this.classCards = new ArrayList<ClassCard>();
 		this.name = name;
 		this.subject = subject;
 		this.schedule = schedule;
-		this.teacher = teacher;
-		teacher.addSection(this);
-		enrolledStudents = 0;
-		sb = new StringBuilder();
+		this.teacher = teacher;		
+				
+		addSectionToTeacher();
 	}
 	
-	public void addClassCard(ClassCard classCard) throws SectionFullException {
-		if(enrolledStudents < MAX_STUDENTS) {
+	private void addSectionToTeacher() {
+		this.teacher.addSection(this);
+	}
+
+	void addClassCard(ClassCard classCard) throws SectionFullException {
+		int numberOfEnrolledStudents = classCards.size();
+		
+		if(numberOfEnrolledStudents < MAX_STUDENTS) {
 			classCards.add(classCard);
-			enrolledStudents++;
 		} else {
 			throw new SectionFullException();
 		}
@@ -35,10 +38,6 @@ public class Section {
 	
 	public Subject getSubject() {
 		return subject;
-	}
-	
-	public void setTeacher(Teacher teacher) {
-		this.teacher = teacher;
 	}
 	
 	public Teacher getTeacher() {
@@ -51,6 +50,7 @@ public class Section {
 	
 	@Override
 	public String toString() {
+		StringBuilder sb = new StringBuilder(); //TODO i placed it here, though I think stringbuilder is not necessary, given the short string result
 		return sb.append(subject.toString()).append(" ").append(name).toString();
 	}
 		

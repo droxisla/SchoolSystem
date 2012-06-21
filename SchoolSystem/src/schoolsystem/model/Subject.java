@@ -1,10 +1,13 @@
 package schoolsystem.model;
 
 public class Subject {
-	private String name;
 	
-	public Subject(String name) {
+	private final String name;
+	private final Curriculum curriculum;
+	
+	public Subject(String name, Curriculum curriculum) {
 		this.name = name;
+		this.curriculum = curriculum;
 	}
 	
 	@Override

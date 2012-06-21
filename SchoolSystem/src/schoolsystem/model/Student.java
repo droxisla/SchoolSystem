@@ -3,22 +3,21 @@ package schoolsystem.model;
 import java.util.*;
 
 public class Student {
-	private int studentNumber;
-	private Status status;
-	private Curriculum curriculum;
-	private List<EnrollmentForm> enrollmentForms;
+	
+	private final int studentNumber;
+	private final Status status;
+	private final Curriculum curriculum;
+	private final List<EnrollmentForm> enrollmentForms;
 	
 	public Student(int studentNumber, Status status, Curriculum curriculum) {
-		enrollmentForms = new ArrayList<EnrollmentForm>();
+		this.enrollmentForms = new ArrayList<EnrollmentForm>();
 		this.studentNumber = studentNumber;
 		this.status = status;
 		this.curriculum = curriculum;
 	}
 	
-	public EnrollmentForm addNewEnrollmentForm() {
-		EnrollmentForm ef = new EnrollmentForm(this);
-		enrollmentForms.add(ef);
-		return ef;
+	public void addEnrollmentForm(EnrollmentForm enrollmentForm) {
+		enrollmentForms.add(enrollmentForm);
 	}
 	
 	public Status getStatus() {
@@ -34,7 +33,9 @@ public class Student {
 		return "" + studentNumber;
 	}
 	
-	public enum Status {
+	public enum Status { //TODO so client will use Student.Status.New?, or should we place it separate java file?
 		NEW, CONTINUING, GRADUATING, GRADUATED, PROBATIONARY, INELIGIBLE;
 	}
+
+	
 }
