@@ -15,6 +15,7 @@ public class Teacher {
 		sections.add(section);
 	}
 	
+	@Override
 	public String toString() {
 		return name;
 	}

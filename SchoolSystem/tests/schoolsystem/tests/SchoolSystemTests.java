@@ -35,6 +35,11 @@ public class SchoolSystemTests {
 	}
 	
 	@Test
+	public void testStudentToString() {
+		assertEquals("1", student.toString());
+	}
+	
+	@Test
 	public void testTeacherToString() {
 		assertEquals("John Doe", teacher.toString());
 	}

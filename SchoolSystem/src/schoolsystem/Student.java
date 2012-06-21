@@ -19,6 +19,11 @@ public class Student {
 		enrollmentForms.add(enrollmentForm);
 	}
 	
+	@Override
+	public String toString() {
+		return "" + studentNumber;
+	}
+	
 	public enum Status {
 		NEW, CONTINUING, GRADUATING, GRADUATED, PROBATIONARY, INELIGIBLE;
 	}
