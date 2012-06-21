@@ -35,7 +35,7 @@ public class SchoolSystemTests {
 	@Test
 	public void testTeacherSection() {
 		assertEquals(teacher, section.getTeacher());
-		assertEquals(section, teacher.hasSection(section));
+		assertEquals(true, teacher.hasSection(section));
 	}
 	
 	@Test

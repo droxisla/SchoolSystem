@@ -11,6 +11,7 @@ public class Section {
 	private Schedule schedule;
 	private List<ClassCard> classCards;
 	private int enrolledStudents;
+	private StringBuilder sb;
 	
 	public Section(String name, Subject subject, Schedule schedule, Teacher teacher) {
 		classCards = new ArrayList<ClassCard>();
@@ -20,6 +21,7 @@ public class Section {
 		this.teacher = teacher;
 		teacher.addSection(this);
 		enrolledStudents = 0;
+		sb = new StringBuilder();
 	}
 	
 	public void addClassCard(ClassCard classCard) throws SectionFullException {
@@ -49,7 +51,7 @@ public class Section {
 	
 	@Override
 	public String toString() {
-		return subject.toString() + name;
+		return sb.append(subject.toString()).append(" ").append(name).toString();
 	}
 		
 }
