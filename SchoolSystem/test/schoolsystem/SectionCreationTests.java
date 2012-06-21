@@ -39,8 +39,7 @@ public class SectionCreationTests {
 	}
 
 	private Subject createSubject() {
-		Curriculum curriculum = new Curriculum();
-		Subject subject = new Subject(createRandomStr("Subject"), curriculum);
+		Subject subject = new Subject(createRandomStr("Subject"));
 		return subject;
 	}
 
