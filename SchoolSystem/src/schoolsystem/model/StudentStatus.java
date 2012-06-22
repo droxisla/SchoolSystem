@@ -15,8 +15,8 @@ public enum StudentStatus {
 	private final boolean mustCheckPrerequisites;
 	private final boolean canTakePrerequisiteSubjects;
 
-	StudentStatus(boolean isEligibleToEnroll, boolean mustCheckPrerequisites, boolean canTakePrerequisiteSubjects) {
-		this(0, Integer.MAX_VALUE, isEligibleToEnroll, mustCheckPrerequisites, canTakePrerequisiteSubjects);
+	StudentStatus(boolean isEligibleToEnroll, boolean mustCheckPrerequisites, boolean canTakeSubjectsWithPrerequisites) {
+		this(0, Integer.MAX_VALUE, isEligibleToEnroll, mustCheckPrerequisites, canTakeSubjectsWithPrerequisites);
 	}
 
 	StudentStatus(int minUnits, int maxUnits, boolean isEligibleToEnroll, boolean mustCheckPrerequisites,
