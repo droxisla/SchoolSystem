@@ -10,12 +10,6 @@ public class EnrollmentForm {
 	public EnrollmentForm(Student student) {
 		this.classCards = new ArrayList<ClassCard>();
 		this.student = student;
-		
-		addEnrollmentFormToStudent();
-	}
-	
-	private void addEnrollmentFormToStudent() {
-		this.student.addEnrollmentForm(this);
 	}
 
 	public Student getStudent() {

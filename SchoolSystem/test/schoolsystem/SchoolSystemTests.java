@@ -32,6 +32,12 @@ public class SchoolSystemTests {
 		enrollmentForm = new EnrollmentForm(student);
 		classCard = new ClassCard(enrollmentForm, section);
 	}
+	
+	@Test
+	public void enrollNewStudentInSectionWithNoPrereq() {
+		student.beginEnrollment();
+		assertEquals(1, student.getNumEnrollmentForms());
+	}
 
 	@Test
 	public void testTeacherSection() {
