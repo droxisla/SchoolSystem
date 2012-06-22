@@ -17,26 +17,26 @@ public class SchoolSystemTests {
 	private Section section;
 	private ClassCard classCard;
 	private Curriculum curriculum;
-	private Student student;
+	private Student newStudent;
 	private EnrollmentForm enrollmentForm;
 
 	@Before
 	public void createFixture() throws Exception {
 		schedule = new Schedule(ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
 		teacher = new Teacher(1, "John Doe");
-		student = new Student(1, StudentStatus.NEW, curriculum);
+		newStudent = new Student(1, StudentStatus.NEW, curriculum);
 		
 		subject = new Subject("CS21");
 		section = Section.createSection("A", subject, schedule, teacher);
 		
-		enrollmentForm = new EnrollmentForm(student);
+		enrollmentForm = new EnrollmentForm(newStudent);
 		classCard = new ClassCard(enrollmentForm, section);
 	}
 	
 	@Test
 	public void enrollEligibleStudentInSectionWithNoPrereq() {
-		student.beginEnrollment();
-		assertEquals(1, student.getNumEnrollmentForms());
+		newStudent.beginEnrollment();
+		assertEquals(1, newStudent.getNumEnrollmentForms());
 	}
 	
 	@Test(expected = IneligibleStudentException.class)
@@ -70,7 +70,7 @@ public class SchoolSystemTests {
 
 	@Test
 	public void testStudentToString() {
-		assertEquals("1", student.toString());
+		assertEquals("1", newStudent.toString());
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class SchoolSystemTests {
 
 	@Test(expected = SectionFullException.class)
 	public void classCardsMustNotExceedForty() throws SectionFullException {
-		EnrollmentForm enrollmentForm = new EnrollmentForm(student);
+		EnrollmentForm enrollmentForm = new EnrollmentForm(newStudent);
 		for (int i = 0; i < 40; i++) {
 			new ClassCard(enrollmentForm, section);
 		}
