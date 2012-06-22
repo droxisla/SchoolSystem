@@ -22,6 +22,7 @@ public class SchoolSystemTests {
 
 	@Before
 	public void createFixture() throws Exception {
+		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
 		schedule = new Schedule(ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
 		teacher = new Teacher(1, "John Doe");
 		newStudent = new Student(1, StudentStatus.NEW, curriculum);
