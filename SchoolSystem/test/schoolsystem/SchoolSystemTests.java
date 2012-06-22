@@ -2,6 +2,10 @@ package schoolsystem;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,6 +36,16 @@ public class SchoolSystemTests {
 		
 		enrollmentForm = new EnrollmentForm(newStudent);
 		classCard = new ClassCard(enrollmentForm, section);
+	}
+	
+	@Test
+	public void subjectHasPrerequisites() {
+		Subject subjectWithNoPrerequisites = new Subject("FLC 1");
+		assertEquals(Collections.emptyList(), subjectWithNoPrerequisites.getPrerequisites());
+		List<Subject> prerequisites = new ArrayList<Subject>();
+		prerequisites.add(subjectWithNoPrerequisites);
+		Subject subjectWithPrerequisites = new Subject("FLC 2", prerequisites);
+		assertEquals(prerequisites, subjectWithPrerequisites.getPrerequisites());
 	}
 	
 	@Test
