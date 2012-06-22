@@ -3,7 +3,6 @@ package schoolsystem.model;
 import java.util.*;
 
 public enum Curriculum {
-	//TODO: Make into enum. No electives.
 	BS_COMPUTER_SCIENCE(Arrays.asList(new Subject("CS 21A"), new Subject("EN 11"), 
 			new Subject("LIT 13"), new Subject("FIL 11"), new Subject("MA 18A"), 
 			new Subject("MA 18B"), new Subject("PE 1"), new Subject("NSTP 1"), 
