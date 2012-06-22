@@ -25,7 +25,7 @@ public class SchoolSystemTests {
 		schedule = new Schedule(ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
 		teacher = new Teacher(1, "John Doe");
 		student = new Student(1, StudentStatus.NEW, curriculum);
-	
+		
 		subject = new Subject("CS21");
 		section = Section.createSection("A", subject, schedule, teacher);
 		
@@ -34,10 +34,23 @@ public class SchoolSystemTests {
 	}
 	
 	@Test
-	public void enrollNewStudentInSectionWithNoPrereq() {
+	public void enrollEligibleStudentInSectionWithNoPrereq() {
 		student.beginEnrollment();
 		assertEquals(1, student.getNumEnrollmentForms());
 	}
+	
+	@Test(expected = IneligibleStudentException.class)
+	public void enrollIneligibleStudent() {
+		Student ineligibleStudent = new Student(2, StudentStatus.INELIGIBLE, Curriculum.BS_COMPUTER_SCIENCE);
+		ineligibleStudent.beginEnrollment();
+	}
+	
+	@Test(expected = IneligibleStudentException.class)
+	public void enrollGraduatedStudent() {
+		Student graduatedStudent = new Student(2, StudentStatus.GRADUATE, Curriculum.BS_COMPUTER_SCIENCE);		
+		graduatedStudent.beginEnrollment();
+	}
+	
 
 	@Test
 	public void testTeacherSection() {

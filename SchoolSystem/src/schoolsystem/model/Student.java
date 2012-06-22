@@ -17,7 +17,10 @@ public class Student {
 	}
 	
 	public void beginEnrollment() {
-		addEnrollmentForm(new EnrollmentForm(this));
+		if(status.isEligibleToEnroll())
+			addEnrollmentForm(new EnrollmentForm(this));
+		else
+			throw new IneligibleStudentException();
 	}
 
 	void addEnrollmentForm(EnrollmentForm enrollmentForm) {
