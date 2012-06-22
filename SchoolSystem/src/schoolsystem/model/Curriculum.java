@@ -88,9 +88,10 @@ public enum Curriculum{
 		}
 	};
 	
-	Curriculum() { initializeSubjects(); }
+	Curriculum() { 
+		initializeSubjects(); 
+	}
 	
-	//private List<Subject> subjects;
 	abstract void initializeSubjects();
 	public abstract List<Subject> getSubjects();
 }
