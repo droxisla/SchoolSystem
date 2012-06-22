@@ -15,18 +15,19 @@ public class Student {
 		this.status = status;
 		this.curriculum = curriculum;
 	}
-	
+
 	public void beginEnrollment() {
-		if(status.isEligibleToEnroll())
+		if (status.isEligibleToEnroll()) {
 			addEnrollmentForm(new EnrollmentForm(this));
-		else
+		} else {
 			throw new IneligibleStudentException();
+		}
 	}
 
 	void addEnrollmentForm(EnrollmentForm enrollmentForm) {
 		enrollmentForms.add(enrollmentForm);
 	}
-	
+
 	public int getNumEnrollmentForms() {
 		return enrollmentForms.size();
 	}

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import schoolsystem.model.schedule.Schedule;
 import schoolsystem.model.schedule.ScheduleConflictException;
+import schoolsystem.model.section.SectionNameConflictException;
 
 public class Subject {
 	

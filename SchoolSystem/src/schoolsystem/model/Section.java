@@ -1,20 +1,19 @@
 package schoolsystem.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import schoolsystem.model.schedule.Schedule;
 import schoolsystem.model.schedule.ScheduleConflictException;
+import schoolsystem.model.section.SectionNameConflictException;
 
 public class Section {
-
-	public static final int MAX_STUDENTS = 40;
 
 	private final String name;
 	private final Subject subject;
 	private final Teacher teacher;
 	private final Schedule schedule;
-	private final List<ClassCard> classCards;
+	private final Map<AcademicTerm, EnrollmentSection> enrollmentHistory;
 
 	static Section createSection(String sectionName, Subject subject, Schedule schedule, Teacher teacher)
 			throws ScheduleConflictException, SectionNameConflictException {
@@ -30,11 +29,11 @@ public class Section {
 	}
 
 	private Section(String name, Subject subject, Schedule schedule, Teacher teacher) {
-		this.classCards = new ArrayList<ClassCard>();
 		this.name = name;
 		this.subject = subject;
 		this.schedule = schedule;
 		this.teacher = teacher;
+		this.enrollmentHistory = new HashMap<AcademicTerm, EnrollmentSection>();
 
 		addSectionToTeacher();
 		addSectionToSubject();
@@ -46,16 +45,6 @@ public class Section {
 
 	private void addSectionToTeacher() {
 		this.teacher.addSection(this);
-	}
-
-	void addClassCard(ClassCard classCard) throws SectionFullException {
-		int numberOfEnrolledStudents = classCards.size();
-
-		if (numberOfEnrolledStudents < MAX_STUDENTS) {
-			classCards.add(classCard);
-		} else {
-			throw new SectionFullException();
-		}
 	}
 
 	public Subject getSubject() {
@@ -78,6 +67,21 @@ public class Section {
 
 	public String getSectionName() {
 		return name;
+	}
+
+	public EnrollmentSection openEnrollmentForNextAcademicTerm() {
+		AcademicTerm nextAcademicTerm = AcademicTerm.academicTermAfterCurrent();
+		return EnrollmentSection.newInstance(this, nextAcademicTerm);
+	}
+
+	EnrollmentSection findEnrollmentSectionDuring(AcademicTerm academicTerm) {
+		return enrollmentHistory.get(academicTerm);
+		//TODO if none, then null ko na lang haha
+	}
+
+	void addEnrollmentHistory(AcademicTerm academicTerm, EnrollmentSection enrollmentSection) {
+		assert enrollmentHistory.containsKey(academicTerm):"Double enrollment section entries";
+		enrollmentHistory.put(academicTerm, enrollmentSection);
 	}
 
 }

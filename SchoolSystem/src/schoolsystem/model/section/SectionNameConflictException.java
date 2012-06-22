@@ -1,6 +1,8 @@
-package schoolsystem.model;
+package schoolsystem.model.section;
 
 public class SectionNameConflictException extends Exception {
+
+	private static final long serialVersionUID = 7585210003264404713L;
 
 	public SectionNameConflictException() {
 		super();

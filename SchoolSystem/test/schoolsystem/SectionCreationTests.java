@@ -5,13 +5,13 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import schoolsystem.model.Section;
-import schoolsystem.model.SectionNameConflictException;
 import schoolsystem.model.Subject;
 import schoolsystem.model.Teacher;
 import schoolsystem.model.schedule.Schedule;
 import schoolsystem.model.schedule.ScheduleConflictException;
 import schoolsystem.model.schedule.ScheduleDays;
 import schoolsystem.model.schedule.ScheduleTimes;
+import schoolsystem.model.section.SectionNameConflictException;
 
 public class SectionCreationTests {
 
@@ -23,22 +23,15 @@ public class SectionCreationTests {
 		Subject subject1 = createSubject();
 		String sectionName1 = "S19";
 		Section section1 = subject1.createSection(sectionName1, schedule1, teacher);
-		
+
 		checkSection(section1, teacher, schedule1, subject1, sectionName1);
-		
+
 		Schedule schedule2 = new Schedule(ScheduleDays.TUE_AND_FRI, ScheduleTimes.FROM_0830_TO_1000);
 		Subject subject2 = createSubject();
 		String sectionName2 = "S20";
 		Section section2 = subject2.createSection(sectionName2, schedule2, teacher);
-		
-		checkSection(section2, teacher, schedule2, subject2, sectionName2);
-	}
 
-	private void checkSection(Section section, Teacher teacher, Schedule schedule, Subject subject, String sectionName) {
-		assertEquals(section.getSchedule(), schedule);
-		assertEquals(section.getSectionName(), sectionName);
-		assertEquals(section.getTeacher(), teacher);
-		assertEquals(section.getSubject(), subject);
+		checkSection(section2, teacher, schedule2, subject2, sectionName2);
 	}
 
 	@Test(expected = ScheduleConflictException.class)
@@ -65,6 +58,13 @@ public class SectionCreationTests {
 		subject.createSection("S19", schedule2, teacher);
 	}
 
+	private void checkSection(Section section, Teacher teacher, Schedule schedule, Subject subject, String sectionName) {
+		assertEquals(section.getSchedule(), schedule);
+		assertEquals(section.getSectionName(), sectionName);
+		assertEquals(section.getTeacher(), teacher);
+		assertEquals(section.getSubject(), subject);
+	}
+
 	private Teacher createTeacher() {
 		Teacher teacher = new Teacher(1, createRandomStr("Teacher"));
 		return teacher;
@@ -78,4 +78,6 @@ public class SectionCreationTests {
 	private String createRandomStr(String prefix) {
 		return prefix + " " + Math.random();
 	}
+	
+	//TODO should i check if teacher handles a duplicate/same section?
 }

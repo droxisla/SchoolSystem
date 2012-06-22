@@ -1,16 +1,18 @@
 package schoolsystem.model;
 
+import schoolsystem.model.section.SectionFullException;
+
 
 public class ClassCard {
 
-	private final Section section;
+	private final EnrollmentSection enrolledSection;
 	private final EnrollmentForm enrollmentForm;
 
-	public ClassCard(EnrollmentForm enrollmentForm, Section section) throws SectionFullException {
-		this.section = section;
+	public ClassCard(EnrollmentForm enrollmentForm, EnrollmentSection enrolledSection) throws SectionFullException {
+		this.enrolledSection = enrolledSection;
 		this.enrollmentForm = enrollmentForm;
 
-		addClassCardToSection();
+		addClassCardToEnrolledSection();
 		addClassCardToEnrollmentForm();
 	}
 
@@ -18,11 +20,11 @@ public class ClassCard {
 		this.enrollmentForm.addClassCard(this);
 	}
 
-	public Section getSection() {
-		return section;
+	public EnrollmentSection getSection() {
+		return enrolledSection;
 	}
 
-	void addClassCardToSection() throws SectionFullException {
-		this.section.addClassCard(this);
+	void addClassCardToEnrolledSection() throws SectionFullException {
+		this.enrolledSection.addClassCard(this);
 	}
 }

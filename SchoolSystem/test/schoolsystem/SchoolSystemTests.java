@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import schoolsystem.model.*;
 import schoolsystem.model.schedule.*;
+import schoolsystem.model.section.SectionFullException;
 
 
 public class SchoolSystemTests {
@@ -15,6 +16,7 @@ public class SchoolSystemTests {
 	private Subject subject;
 	private Teacher teacher;
 	private Section section;
+	private EnrollmentSection enrolledSection;
 	private ClassCard classCard;
 	private Curriculum curriculum;
 	private Student newStudent;
@@ -30,7 +32,8 @@ public class SchoolSystemTests {
 		section = subject.createSection("A", schedule, teacher);
 		
 		enrollmentForm = new EnrollmentForm(newStudent);
-		classCard = new ClassCard(enrollmentForm, section);
+		enrolledSection = section.openEnrollmentForNextAcademicTerm();
+		classCard = new ClassCard(enrollmentForm, enrolledSection);
 	}
 	
 	@Test
@@ -82,7 +85,7 @@ public class SchoolSystemTests {
 	public void classCardsMustNotExceedForty() throws SectionFullException {
 		EnrollmentForm enrollmentForm = new EnrollmentForm(newStudent);
 		for (int i = 0; i < 40; i++) {
-			new ClassCard(enrollmentForm, section);
+			new ClassCard(enrollmentForm, enrolledSection);
 		}
 	}
 }
