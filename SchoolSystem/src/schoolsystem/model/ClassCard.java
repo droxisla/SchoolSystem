@@ -1,5 +1,6 @@
 package schoolsystem.model;
 
+
 public class ClassCard {
 
 	private final Section section;

@@ -27,7 +27,7 @@ public class SchoolSystemTests {
 		newStudent = new Student(1, StudentStatus.NEW, curriculum);
 		
 		subject = new Subject("CS21");
-		section = Section.createSection("A", subject, schedule, teacher);
+		section = subject.createSection("A", schedule, teacher);
 		
 		enrollmentForm = new EnrollmentForm(newStudent);
 		classCard = new ClassCard(enrollmentForm, section);

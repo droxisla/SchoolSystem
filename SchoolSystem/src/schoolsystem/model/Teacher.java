@@ -26,8 +26,15 @@ public class Teacher {
 		return sections.contains(section);
 	}
 	
-	public boolean hasScheduledClass(Schedule schedule) {
-		return false; //TODO
+	public boolean hasScheduledClassDuring(Schedule schedule) {
+		for(Section section:sections) { //TODO should we prefer hashset of schedule?
+			Schedule scheduleOfTeacher = section.getSchedule();
+			
+			if(scheduleOfTeacher.equals(schedule)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	@Override
