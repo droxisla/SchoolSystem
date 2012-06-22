@@ -2,6 +2,10 @@ package schoolsystem;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,6 +28,7 @@ public class SchoolSystemTests {
 
 	@Before
 	public void createFixture() throws Exception {
+		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
 		schedule = new Schedule(ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
 		teacher = new Teacher(1, "John Doe");
 		newStudent = new Student(1, StudentStatus.NEW, curriculum);
@@ -34,6 +39,21 @@ public class SchoolSystemTests {
 		enrollmentForm = new EnrollmentForm(newStudent);
 		enrolledSection = section.openEnrollmentForNextAcademicTerm();
 		classCard = new ClassCard(enrollmentForm, enrolledSection);
+	}
+	
+	@Test
+	public void createCurriculum() {
+		assertEquals(48, Curriculum.BS_COMPUTER_SCIENCE.getSubjects().size());
+	}
+	
+	@Test
+	public void subjectHasPrerequisites() {
+		Subject subjectWithNoPrerequisites = new Subject("FLC 1");
+		assertEquals(Collections.emptyList(), subjectWithNoPrerequisites.getPrerequisites());
+		List<Subject> prerequisites = new ArrayList<Subject>();
+		prerequisites.add(subjectWithNoPrerequisites);
+		Subject subjectWithPrerequisites = new Subject("FLC 2", prerequisites);
+		assertEquals(prerequisites, subjectWithPrerequisites.getPrerequisites());
 	}
 	
 	@Test

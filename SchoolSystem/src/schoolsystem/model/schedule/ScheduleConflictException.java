@@ -1,5 +1,6 @@
 package schoolsystem.model.schedule;
 
+@SuppressWarnings("serial")
 public class ScheduleConflictException extends Exception {
 
 	private static final long serialVersionUID = 7416769492383198079L;
