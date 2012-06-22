@@ -1,5 +1,6 @@
 package schoolsystem.model.schedule;
 
+@SuppressWarnings("serial")
 public class ScheduleConflictException extends Exception {
 
 	public ScheduleConflictException() {

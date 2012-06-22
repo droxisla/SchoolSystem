@@ -1,5 +1,6 @@
 package schoolsystem.model;
 
+@SuppressWarnings("serial")
 public class SectionNameConflictException extends Exception {
 
 	public SectionNameConflictException() {
