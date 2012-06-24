@@ -1,7 +1,6 @@
 package schoolsystem.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import schoolsystem.model.schedule.Schedule;
@@ -36,13 +35,23 @@ public class EnrollmentForm {
 				throw new SectionFullException();
 			}
 
+			checkScheduleConflict(section);
+			addUnits(section);
+			sections.add(section);
+
+			return this;
+		}
+
+		private void addUnits(Section section) throws SubjectUnitsRestrictionException {
 			Subject subject = section.getSubject();
 			totalUnits += subject.getNumberOfUnits();
 
 			if (totalUnits > studentStatus.getMaxUnits()) {
 				throw new SubjectUnitsRestrictionException();
 			}
+		}
 
+		private void checkScheduleConflict(Section section) throws ScheduleConflictException {
 			final Section sectionWithSameSchedule = getSectionWithSameSchedule(section.getSchedule());
 			if (sectionWithSameSchedule != null) {
 				if (sectionWithSameSchedule.equals(section)) {
@@ -50,9 +59,6 @@ public class EnrollmentForm {
 				}
 				throw new ScheduleConflictException("Section '" + section + "' conflicts with other section schedule.");
 			}
-
-			sections.add(section);
-			return this;
 		}
 
 		private Section getSectionWithSameSchedule(Schedule schedule) {
