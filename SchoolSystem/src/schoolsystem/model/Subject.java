@@ -1,16 +1,12 @@
 package schoolsystem.model;
 
-import java.util.*;
-
-import schoolsystem.model.schedule.Schedule;
-import schoolsystem.model.schedule.ScheduleConflictException;
-import schoolsystem.model.section.SectionNameConflictException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Subject {
 
-	private static final long NUM_UNITS = 3;
+	private static final int NUM_UNITS = 3;
 
-	private final List<Section> sections;
 	private final List<Subject> prerequisites;
 	private final String name;
 
@@ -19,18 +15,8 @@ public class Subject {
 	}
 
 	public Subject(String name, List<Subject> prerequisites) {
-		this.sections = new ArrayList<Section>();
 		this.name = name;
 		this.prerequisites = new ArrayList<Subject>(prerequisites);
-	}
-
-	public boolean hasSection(String sectionName) {
-		for (Section section : sections) {
-			if (section.getSectionName().equalsIgnoreCase(sectionName)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override
@@ -42,17 +28,33 @@ public class Subject {
 		return new ArrayList<Subject>(prerequisites);
 	}
 
-	public long getNumberOfUnits() {
+	public int getNumberOfUnits() {
 		return NUM_UNITS;
 	}
 
-	public Section createSection(String sectionName, Schedule schedule,
-			Teacher teacher) throws ScheduleConflictException,
-			SectionNameConflictException {
-		return Section.createSection(sectionName, this, schedule, teacher);
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
 	}
 
-	public void addSection(Section section) {
-		sections.add(section);
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Subject other = (Subject) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
 	}
+
 }

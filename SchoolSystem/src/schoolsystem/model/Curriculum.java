@@ -5,6 +5,7 @@ import java.util.*;
 public enum Curriculum{
 	BS_COMPUTER_SCIENCE() {
 		private List<Subject> subjects;
+		
 		void initializeSubjects() {
 			Subject ph101 = new Subject("PH 101");
 			Subject ph102 = new Subject("PH 102", Arrays.asList(ph101));
@@ -66,6 +67,7 @@ public enum Curriculum{
 			Subject cs124 = new Subject("CS 124", Arrays.asList(cs123));
 			Subject cs162a = new Subject("CS 162A", Arrays.asList(cs152a, cs152b));
 			Subject cs162b = new Subject("CS 162B", Arrays.asList(cs152a, cs152b));
+			
 			subjects = Arrays.asList(
 					psy101, flc1, sci10, sa21, ec102, pos100,
 					hi16, hi166,    

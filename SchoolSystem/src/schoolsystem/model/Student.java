@@ -1,6 +1,9 @@
 package schoolsystem.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import schoolsystem.model.EnrollmentForm.EnrollmentFormBuilder;
 
 public class Student {
 
@@ -16,15 +19,14 @@ public class Student {
 		this.curriculum = curriculum;
 	}
 
-	public void beginEnrollment() {
-		if (status.isEligibleToEnroll()) {
-			addEnrollmentForm(new EnrollmentForm(this));
-		} else {
-			throw new IneligibleStudentException();
-		}
+	public EnrollmentFormBuilder getEnrollmentFormBuilder() throws IneligibleStudentException {
+		return new EnrollmentForm.EnrollmentFormBuilder(this);
 	}
 
 	void addEnrollmentForm(EnrollmentForm enrollmentForm) {
+		if (!enrollmentForm.getStudent().equals(this)) {
+			throw new IllegalArgumentException("Enrollment form does not belong to student.");
+		}
 		enrollmentForms.add(enrollmentForm);
 	}
 
@@ -43,6 +45,32 @@ public class Student {
 	@Override
 	public String toString() {
 		return "" + studentNumber;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + studentNumber;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Student other = (Student) obj;
+		if (studentNumber != other.studentNumber)
+			return false;
+		return true;
+	}
+
+	public int getStudentNumber() {
+		return studentNumber;
 	}
 
 }

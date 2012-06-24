@@ -1,4 +1,4 @@
-package schoolsystem.model.section;
+package schoolsystem.model;
 
 @SuppressWarnings("serial")
 public class SectionFullException extends Exception {

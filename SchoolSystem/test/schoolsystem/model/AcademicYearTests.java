@@ -1,4 +1,4 @@
-package schoolsystem;
+package schoolsystem.model;
 
 import static org.junit.Assert.*;
 
@@ -6,7 +6,7 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import schoolsystem.model.AcademicTerm;
+import schoolsystem.model.schedule.AcademicTerm;
 import schoolsystem.model.schedule.ScheduleConflictException;
 
 public class AcademicYearTests {

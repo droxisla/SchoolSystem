@@ -1,30 +1,58 @@
 package schoolsystem.model;
 
-import schoolsystem.model.section.SectionFullException;
-
-
 public class ClassCard {
 
-	private final EnrollmentSection enrolledSection;
-	private final EnrollmentForm enrollmentForm;
+	private final Student student;
+	private int grade; // TODO make it as enum?
+	private final Section section;
 
-	public ClassCard(EnrollmentForm enrollmentForm, EnrollmentSection enrolledSection) throws SectionFullException {
-		this.enrolledSection = enrolledSection;
-		this.enrollmentForm = enrollmentForm;
+	ClassCard(EnrollmentForm enrollmentForm, Section section) {
+		if (!enrollmentForm.hasSection(section)) {
+			throw new IllegalArgumentException("Section '" + section + "' not present in enrollment form '" + enrollmentForm + "'.");
+		}
 
-		addClassCardToEnrolledSection();
-		addClassCardToEnrollmentForm();
+		this.section = section;
+		this.student = enrollmentForm.getStudent();
+		this.section.addClassCard(this);
 	}
 
-	private void addClassCardToEnrollmentForm() {
-		this.enrollmentForm.addClassCard(this);
+	public Section getSection() {
+		return section;
 	}
 
-	public EnrollmentSection getSection() {
-		return enrolledSection;
+	public Student getStudent() {
+		return student;
 	}
 
-	void addClassCardToEnrolledSection() throws SectionFullException {
-		this.enrolledSection.addClassCard(this);
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((section == null) ? 0 : section.hashCode());
+		result = prime * result + ((student == null) ? 0 : student.hashCode());
+		return result;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ClassCard other = (ClassCard) obj;
+		if (section == null) {
+			if (other.section != null)
+				return false;
+		} else if (!section.equals(other.section))
+			return false;
+		if (student == null) {
+			if (other.student != null)
+				return false;
+		} else if (!student.equals(other.student))
+			return false;
+		return true;
+	}
+
 }

@@ -1,11 +1,14 @@
 package schoolsystem.model.schedule;
 
+
 public class Schedule {
 
+	private final AcademicTerm academicTerm;
 	private final ScheduleDays days;
 	private final ScheduleTimes timeRange;
 
-	public Schedule(ScheduleDays days, ScheduleTimes timeRange) {
+	public Schedule(AcademicTerm academicTerm, ScheduleDays days, ScheduleTimes timeRange) {
+		this.academicTerm = academicTerm;
 		this.days = days;
 		this.timeRange = timeRange;
 	}
@@ -22,6 +25,7 @@ public class Schedule {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((academicTerm == null) ? 0 : academicTerm.hashCode());
 		result = prime * result + ((days == null) ? 0 : days.hashCode());
 		result = prime * result + ((timeRange == null) ? 0 : timeRange.hashCode());
 		return result;
@@ -36,6 +40,11 @@ public class Schedule {
 		if (getClass() != obj.getClass())
 			return false;
 		Schedule other = (Schedule) obj;
+		if (academicTerm == null) {
+			if (other.academicTerm != null)
+				return false;
+		} else if (!academicTerm.equals(other.academicTerm))
+			return false;
 		if (days != other.days)
 			return false;
 		if (timeRange != other.timeRange)
@@ -43,4 +52,10 @@ public class Schedule {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Schedule [academicTerm=" + academicTerm + ", days=" + days + ", timeRange=" + timeRange + "]";
+	}
+
+	
 }

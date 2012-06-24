@@ -1,50 +1,36 @@
 package schoolsystem.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import schoolsystem.model.schedule.Schedule;
 import schoolsystem.model.schedule.ScheduleConflictException;
-import schoolsystem.model.section.SectionNameConflictException;
 
 public class Section {
 
+	public static final int MAX_STUDENTS = 40;
+
 	private final String name;
 	private final Subject subject;
-	private final Teacher teacher;
 	private final Schedule schedule;
-	private final Map<AcademicTerm, EnrollmentSection> enrollmentHistory;
+	private final Teacher teacher;
+	private final Set<ClassCard> classCards;
 
-	static Section createSection(String sectionName, Subject subject, Schedule schedule, Teacher teacher)
-			throws ScheduleConflictException, SectionNameConflictException {
-		if (teacher.hasScheduledClassDuring(schedule)) {
-			throw new ScheduleConflictException();
-		}
+	public Section(String name, Subject subject, Schedule schedule, Teacher teacher) throws ScheduleConflictException {
+		SectionManager sectionManager = SectionManager.getInstance();
 
-		if (subject.hasSection(sectionName)) {
-			throw new SectionNameConflictException();
-		}
-
-		return new Section(sectionName, subject, schedule, teacher);
-	}
-
-	private Section(String name, Subject subject, Schedule schedule, Teacher teacher) {
 		this.name = name;
 		this.subject = subject;
 		this.schedule = schedule;
 		this.teacher = teacher;
-		this.enrollmentHistory = new HashMap<AcademicTerm, EnrollmentSection>();
 
-		addSectionToTeacher();
-		addSectionToSubject();
-	}
-
-	private void addSectionToSubject() {
-		this.subject.addSection(this);
-	}
-
-	private void addSectionToTeacher() {
-		this.teacher.addSection(this);
+		if(sectionManager.hasSection(this)) {
+			Section storedSection = sectionManager.getSection(this);
+			this.classCards = storedSection.classCards;
+		} else {
+			this.classCards = new HashSet<ClassCard>();
+			sectionManager.addSection(this);
+		}
 	}
 
 	public Subject getSubject() {
@@ -69,19 +55,56 @@ public class Section {
 		return name;
 	}
 
-	public EnrollmentSection openEnrollmentForNextAcademicTerm() {
-		AcademicTerm nextAcademicTerm = AcademicTerm.academicTermAfterCurrent();
-		return EnrollmentSection.newInstance(this, nextAcademicTerm);
+	void addClassCard(ClassCard classCard) {
+		if (!classCard.getSection().equals(this)) {
+			throw new IllegalArgumentException("Class card does not belong to this section");
+		}
+
+		assert classCards.size() <= MAX_STUDENTS : "Section capacity is full.";
+
+		classCards.add(classCard);
 	}
 
-	EnrollmentSection findEnrollmentSectionDuring(AcademicTerm academicTerm) {
-		return enrollmentHistory.get(academicTerm);
-		//TODO if none, then null ko na lang haha
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((schedule == null) ? 0 : schedule.hashCode());
+		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
+		return result;
 	}
 
-	void addEnrollmentHistory(AcademicTerm academicTerm, EnrollmentSection enrollmentSection) {
-		assert enrollmentHistory.containsKey(academicTerm):"Double enrollment section entries";
-		enrollmentHistory.put(academicTerm, enrollmentSection);
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Section other = (Section) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (schedule == null) {
+			if (other.schedule != null)
+				return false;
+		} else if (!schedule.equals(other.schedule))
+			return false;
+		if (subject == null) {
+			if (other.subject != null)
+				return false;
+		} else if (!subject.equals(other.subject))
+			return false;
+		return true;
+	}
+
+	public boolean isFull() {
+		int numberOfEnrolledStudents = classCards.size();
+		return numberOfEnrolledStudents == MAX_STUDENTS;
 	}
 
 }

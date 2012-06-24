@@ -1,4 +1,4 @@
-package schoolsystem.model;
+package schoolsystem.model.schedule;
 
 import java.util.Calendar;
 
@@ -103,6 +103,11 @@ public class AcademicTerm {
 		if (year != other.year)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "AcademicTerm [year=" + year + ", termNum=" + termNum + "]";
 	}
 
 }
