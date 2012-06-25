@@ -6,9 +6,9 @@ public enum StudentStatus {
 
 	NEW(15, 18, true, true, false) {
 		public StudentStatus update(int numEnrollmentForms, BigDecimal average) {
-			if(numEnrollmentForms > 0 && new BigDecimal("3.00").compareTo(average) >= 0) {
+			if(numEnrollmentForms > 0 && PASSING_GRADE.compareTo(average) >= 0) {
 				return CONTINUING;
-			} else if(new BigDecimal("3.00").compareTo(average) < 0) {
+			} else if(PASSING_GRADE.compareTo(average) < 0) {
 				return PROBATIONARY;
 			}
 			return this;
@@ -40,6 +40,7 @@ public enum StudentStatus {
 		}; 
 	};
 
+	public static final BigDecimal PASSING_GRADE = new BigDecimal("3.00");
 	private final int minUnits;
 	private final int maxUnits;
 	private final boolean isEligibleToEnroll;
