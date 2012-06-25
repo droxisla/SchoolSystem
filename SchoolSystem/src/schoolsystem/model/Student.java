@@ -68,7 +68,7 @@ public class Student {
 		return true;
 	}
 
-	public BigDecimal calculateAverage() {
+	public BigDecimal calculateAverage() {//TODO refactor as getLastTerm'sAverage
 		BigDecimal average = BigDecimal.ZERO;
 		
 		List<ClassCard> classCards = getCurrentEnrollmentForm().getClassCards();
@@ -138,6 +138,10 @@ public class Student {
 			}
 		}
 		return false;
+	}
+
+	public List<EnrollmentForm> getEnrollmentForms() {
+		return Collections.unmodifiableList(enrollmentForms);
 	}
 
 }

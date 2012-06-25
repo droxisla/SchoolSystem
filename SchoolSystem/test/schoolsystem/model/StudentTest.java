@@ -23,8 +23,7 @@ public class StudentTest {
 	}
 
 	@Test
-	public void hasPassedSubject() throws ScheduleConflictException, SectionFullException,
-			SubjectUnitsRestrictionException, UnsatisfiedPrerequisiteException, IneligibleStudentException {
+	public void hasPassedSubject() throws Exception {
 		Student student = new Student(1, StudentStatus.CONTINUING, curriculum);
 		EnrollmentForm enrollmentForm = buildEnrollmentFormThenGradeWith(student, Grade.G3_00);
 
@@ -36,8 +35,7 @@ public class StudentTest {
 	}
 	
 	@Test
-	public void hasFailedSubject() throws ScheduleConflictException, SectionFullException,
-			SubjectUnitsRestrictionException, UnsatisfiedPrerequisiteException, IneligibleStudentException {
+	public void hasFailedSubject() throws Exception {
 		Student student = new Student(1, StudentStatus.CONTINUING, curriculum);
 		EnrollmentForm enrollmentForm = buildEnrollmentFormThenGradeWith(student, Grade.G5_00);
 
@@ -48,9 +46,7 @@ public class StudentTest {
 		}
 	}
 
-	private EnrollmentForm buildEnrollmentFormThenGradeWith(Student student, Grade grade) throws IneligibleStudentException,
-			ScheduleConflictException, SectionFullException, SubjectUnitsRestrictionException,
-			UnsatisfiedPrerequisiteException {
+	private EnrollmentForm buildEnrollmentFormThenGradeWith(Student student, Grade grade) throws Exception {
 		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
 		EnrollmentTests.addUnitsToEnrollmentForm(curriculum, StudentStatus.CONTINUING.getMinUnits(),
 				enrollmentFormBuilder);
