@@ -8,7 +8,7 @@ import schoolsystem.model.EnrollmentForm.EnrollmentFormBuilder;
 public class Student {
 
 	private final int studentNumber;
-	private final StudentStatus status;
+	private StudentStatus status;
 	private final Curriculum curriculum;
 	private final List<EnrollmentForm> enrollmentForms;
 
@@ -28,6 +28,10 @@ public class Student {
 			throw new IllegalArgumentException("Enrollment form does not belong to student.");
 		}
 		enrollmentForms.add(enrollmentForm);
+	}
+	
+	public void updateStatus() {
+		this.status = status.update(enrollmentForms.size());
 	}
 
 	public int getNumEnrollmentForms() {

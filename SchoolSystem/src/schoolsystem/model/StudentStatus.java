@@ -2,12 +2,39 @@ package schoolsystem.model;
 
 public enum StudentStatus {
 
-	NEW(15, 18, true, true, false), 
-	CONTINUING(18, 24, true, true, true), 
-	GRADUATING(true, false, true), 
-	GRADUATE(false, true, false),
-	PROBATIONARY(true, true, true),
-	INELIGIBLE(false, true, false);
+	NEW(15, 18, true, true, false) {
+		public StudentStatus update(int numEnrollmentForms) {
+			if(numEnrollmentForms > 0) {
+				return CONTINUING;
+			}
+			return this;
+		}; 
+	},
+	CONTINUING(18, 24, true, true, true) {
+		public StudentStatus update(int numEnrollmentForms) {
+			return this;
+		}; 
+	}, 
+	GRADUATING(true, false, true) {
+		public StudentStatus update(int numEnrollmentForms) {
+			return this;
+		}; 
+	},
+	GRADUATE(false, true, false) {
+		public StudentStatus update(int numEnrollmentForms) {
+			return this;
+		}; 
+	},
+	PROBATIONARY(true, true, true) {
+		public StudentStatus update(int numEnrollmentForms) {
+			return this;
+		}; 
+	},
+	INELIGIBLE(false, true, false) {
+		public StudentStatus update(int numEnrollmentForms) {
+			return this;
+		}; 
+	};
 
 	private final int minUnits;
 	private final int maxUnits;
@@ -47,5 +74,7 @@ public enum StudentStatus {
 	public boolean cankePrerequisiteSubjects() {
 		return canTakePrerequisiteSubjects;
 	}
+	
+	public abstract StudentStatus update(int numEnrollmentForms);
 
 }
