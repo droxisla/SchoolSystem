@@ -1,6 +1,5 @@
 package schoolsystem.model.schedule;
 
-
 public class Schedule {
 
 	private final AcademicTerm academicTerm;
@@ -8,6 +7,16 @@ public class Schedule {
 	private final ScheduleTimes timeRange;
 
 	public Schedule(AcademicTerm academicTerm, ScheduleDays days, ScheduleTimes timeRange) {
+		if (academicTerm == null) {
+			throw new IllegalArgumentException("Academic term must not be null.");
+		}
+		if (days == null) {
+			throw new IllegalArgumentException("Scheduled days must not be null.");
+		}
+		if (timeRange == null) {
+			throw new IllegalArgumentException("Scheduled time range must not be null.");
+		}
+
 		this.academicTerm = academicTerm;
 		this.days = days;
 		this.timeRange = timeRange;
@@ -57,5 +66,4 @@ public class Schedule {
 		return "Schedule [academicTerm=" + academicTerm + ", days=" + days + ", timeRange=" + timeRange + "]";
 	}
 
-	
 }

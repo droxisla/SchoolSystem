@@ -1,10 +1,11 @@
 package schoolsystem.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Iterator;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import schoolsystem.model.EnrollmentForm.EnrollmentFormBuilder;
 import schoolsystem.model.schedule.AcademicTerm;
@@ -26,23 +27,64 @@ public class EnrollmentTests {
 		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
 	}
 
-	private Section getFirstSubjectSection() throws ScheduleConflictException {
-		Subject subject = curriculum.getSubjects().get(0);
-		return createSection("A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
-	}
-
-	private Section createSection(String sectionName, Subject subject, ScheduleDays scheduleDays, ScheduleTimes scheduleTimes) throws ScheduleConflictException {
-		Schedule schedule = new Schedule(academicTerm, scheduleDays, scheduleTimes);
-		Teacher teacher = new Teacher(1, "John Doe");
-		return new Section(sectionName, subject, schedule, teacher);
-	}
-
 	@Test
-	public void enrollEligibleStudentInSectionWithNoPrereq() throws SectionFullException, IneligibleStudentException, SubjectUnitsRestrictionException, ScheduleConflictException {
+	public void enrollEligibleStudentInSectionWithNoPrereq() throws SectionFullException, IneligibleStudentException,
+			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
 		Student student = new Student(1, StudentStatus.GRADUATING, curriculum);
 		Section section = getFirstSubjectSection();
 		student.getEnrollmentFormBuilder().addSection(section).enroll();
 		assertEquals(1, student.getNumEnrollmentForms());
+	}
+
+	@Test(expected = UnsatisfiedPrerequisiteException.class)
+	public void enrollNewStudentsWithUnsatisfiedPrereq() throws SectionFullException, IneligibleStudentException,
+			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
+		Student student = new Student(1, StudentStatus.NEW, curriculum);
+		enrollStudentWithPrereq(student);
+	}
+
+//	@Test(expected = UnsatisfiedPrerequisiteException.class)
+//	public void enrollContinuingStudentsWithUnsatisfiedPrereq() throws SectionFullException,
+//			IneligibleStudentException, SubjectUnitsRestrictionException, ScheduleConflictException,
+//			UnsatisfiedPrerequisiteException {
+//		Student student = new Student(1, StudentStatus.CONTINUING, curriculum);
+//		enrollStudentWithPrereq(student);
+//	}
+//
+//	@Test(expected = UnsatisfiedPrerequisiteException.class)
+//	public void enrollProbationaryStudentsWithUnsatisfiedPrereq() throws SectionFullException,
+//			IneligibleStudentException, SubjectUnitsRestrictionException, ScheduleConflictException,
+//			UnsatisfiedPrerequisiteException {
+//		Student student = new Student(1, StudentStatus.PROBATIONARY, curriculum);
+//		enrollStudentWithPrereq(student);
+//	}
+
+	private void enrollStudentWithPrereq(Student student) throws ScheduleConflictException, SectionFullException,
+			IneligibleStudentException, SubjectUnitsRestrictionException, UnsatisfiedPrerequisiteException {
+		Subject subjectWithPrereq = getSubjectWithPrereq();
+
+		Section sectionWithPrereq = createSection("C", subjectWithPrereq, ScheduleDays.WED_AND_SAT,
+				ScheduleTimes.FROM_1600_TO_1730);
+
+		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
+
+		StudentStatus studentStatus = student.getStatus();
+		addUnitsToEnrollmentForm(studentStatus.getMinUnits(), enrollmentFormBuilder);
+
+		enrollmentFormBuilder.addSection(sectionWithPrereq).enroll();
+	}
+
+	private Subject getSubjectWithPrereq() {
+		Subject subjectWithPrereq = null;
+		for (Subject subj : curriculum.getSubjects()) {
+			if (subj.hasPrerequisites()) {
+				subjectWithPrereq = subj;
+				break;
+			}
+		}
+
+		assertNotNull(subjectWithPrereq);
+		return subjectWithPrereq;
 	}
 
 	@Test(expected = IneligibleStudentException.class)
@@ -58,56 +100,65 @@ public class EnrollmentTests {
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
-	public void newStudentBelowMinimumUnits() throws IneligibleStudentException, ScheduleConflictException, SectionFullException, SubjectUnitsRestrictionException {
+	public void newStudentBelowMinimumUnits() throws IneligibleStudentException, ScheduleConflictException,
+			SectionFullException, SubjectUnitsRestrictionException, UnsatisfiedPrerequisiteException {
 		StudentStatus studentStatus = StudentStatus.NEW;
 		Student student = new Student(2, studentStatus, curriculum);
 		enrollUnits(student, studentStatus.getMinUnits() - MAX_UNITS);
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
-	public void newStudentExceededMaximumUnits() throws IneligibleStudentException, ScheduleConflictException, SectionFullException, SubjectUnitsRestrictionException {
+	public void newStudentExceededMaximumUnits() throws IneligibleStudentException, ScheduleConflictException,
+			SectionFullException, SubjectUnitsRestrictionException, UnsatisfiedPrerequisiteException {
 		StudentStatus studentStatus = StudentStatus.NEW;
 		Student student = new Student(2, studentStatus, curriculum);
 		enrollUnits(student, studentStatus.getMaxUnits() + 1);
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
-	public void continuingStudentExceededMaximumUnits() throws IneligibleStudentException, ScheduleConflictException, SectionFullException, SubjectUnitsRestrictionException {
+	public void continuingStudentExceededMaximumUnits() throws IneligibleStudentException, ScheduleConflictException,
+			SectionFullException, SubjectUnitsRestrictionException, UnsatisfiedPrerequisiteException {
 		StudentStatus studentStatus = StudentStatus.CONTINUING;
 		Student student = new Student(2, studentStatus, curriculum);
 		enrollUnits(student, studentStatus.getMaxUnits() + 1);
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
-	public void continuingStudentBelowMinimumUnits() throws IneligibleStudentException, ScheduleConflictException, SectionFullException, SubjectUnitsRestrictionException {
+	public void continuingStudentBelowMinimumUnits() throws IneligibleStudentException, ScheduleConflictException,
+			SectionFullException, SubjectUnitsRestrictionException, UnsatisfiedPrerequisiteException {
 		StudentStatus studentStatus = StudentStatus.CONTINUING;
 		Student student = new Student(2, studentStatus, curriculum);
 		enrollUnits(student, studentStatus.getMinUnits() - MAX_UNITS);
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
-	public void probationaryStudentExceededMaximumUnits() throws IneligibleStudentException, ScheduleConflictException, SectionFullException, SubjectUnitsRestrictionException {
+	public void probationaryStudentExceededMaximumUnits() throws IneligibleStudentException, ScheduleConflictException,
+			SectionFullException, SubjectUnitsRestrictionException, UnsatisfiedPrerequisiteException {
 		StudentStatus studentStatus = StudentStatus.CONTINUING;
 		Student student = new Student(2, studentStatus, curriculum);
 		enrollUnits(student, studentStatus.getMaxUnits() + 1);
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
-	public void probationaryStudentBelowMinimumUnits() throws IneligibleStudentException, ScheduleConflictException, SectionFullException, SubjectUnitsRestrictionException {
+	public void probationaryStudentBelowMinimumUnits() throws IneligibleStudentException, ScheduleConflictException,
+			SectionFullException, SubjectUnitsRestrictionException, UnsatisfiedPrerequisiteException {
 		StudentStatus studentStatus = StudentStatus.PROBATIONARY;
 		Student student = new Student(2, studentStatus, curriculum);
 		enrollUnits(student, studentStatus.getMinUnits() - MAX_UNITS);
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
-	public void graduatingStudentEnrollmentFormWithNoUnits() throws IneligibleStudentException, ScheduleConflictException, SectionFullException, SubjectUnitsRestrictionException {
+	public void graduatingStudentEnrollmentFormWithNoUnits() throws IneligibleStudentException,
+			ScheduleConflictException, SectionFullException, SubjectUnitsRestrictionException,
+			UnsatisfiedPrerequisiteException {
 		StudentStatus studentStatus = StudentStatus.GRADUATING;
 		Student student = new Student(2, studentStatus, curriculum);
 		enrollUnits(student, 0);
 	}
 
 	@Test(expected = SectionFullException.class)
-	public void classCardsMustNotExceedMaxCapacity() throws SectionFullException, IneligibleStudentException, SubjectUnitsRestrictionException, ScheduleConflictException {
+	public void classCardsMustNotExceedMaxCapacity() throws SectionFullException, IneligibleStudentException,
+			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
 		Section section = getFirstSubjectSection();
 		for (int i = 1; i <= Section.MAX_STUDENTS + 1; i++) {
 			Student student = new Student(i, StudentStatus.GRADUATING, curriculum);
@@ -116,7 +167,8 @@ public class EnrollmentTests {
 	}
 
 	@Test(expected = ScheduleConflictException.class)
-	public void studentWithScheduleConflict() throws SectionFullException, IneligibleStudentException, SubjectUnitsRestrictionException, ScheduleConflictException {
+	public void studentWithScheduleConflict() throws SectionFullException, IneligibleStudentException,
+			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
 		Student student = new Student(1, StudentStatus.GRADUATING, curriculum);
 
 		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
@@ -132,12 +184,13 @@ public class EnrollmentTests {
 		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
 		enrollmentFormBuilder.addSection(section1);
 		enrollmentFormBuilder.addSection(section2);
-		
+
 		enrollmentFormBuilder.enroll();
 	}
-	
+
 	@Test(expected = ScheduleConflictException.class)
-	public void studentEnrollingSameSection() throws SectionFullException, IneligibleStudentException, SubjectUnitsRestrictionException, ScheduleConflictException {
+	public void studentEnrollingSameSection() throws SectionFullException, IneligibleStudentException,
+			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
 		Student student = new Student(1, StudentStatus.GRADUATING, curriculum);
 
 		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
@@ -148,13 +201,21 @@ public class EnrollmentTests {
 		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
 		enrollmentFormBuilder.addSection(section1);
 		enrollmentFormBuilder.addSection(section1);
-		
+
 		enrollmentFormBuilder.enroll();
 	}
-	
-	private void enrollUnits(Student student, int unitsToTake) throws IneligibleStudentException, ScheduleConflictException, SectionFullException, SubjectUnitsRestrictionException {
-		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
 
+	private void enrollUnits(Student student, int unitsToTake) throws IneligibleStudentException,
+			ScheduleConflictException, SectionFullException, SubjectUnitsRestrictionException,
+			UnsatisfiedPrerequisiteException {
+		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
+		addUnitsToEnrollmentForm(unitsToTake, enrollmentFormBuilder);
+		enrollmentFormBuilder.enroll();
+	}
+
+	private void addUnitsToEnrollmentForm(int unitsToTake, EnrollmentFormBuilder enrollmentFormBuilder)
+			throws ScheduleConflictException, SectionFullException, SubjectUnitsRestrictionException,
+			UnsatisfiedPrerequisiteException {
 		Iterator<Subject> subjectsIterator = curriculum.getSubjects().iterator();
 		ScheduleDays[] scheduleDaysList = ScheduleDays.values();
 		ScheduleTimes[] scheduleTimesList = ScheduleTimes.values();
@@ -166,7 +227,7 @@ public class EnrollmentTests {
 		while (totalUnits < unitsToTake) {
 			Subject subject = subjectsIterator.next();
 
-			if (!subject.getPrerequisites().isEmpty()) {
+			if (subject.hasPrerequisites()) {
 				continue;
 			}
 
@@ -186,7 +247,17 @@ public class EnrollmentTests {
 				scheduleDaysIndex++;
 			}
 		}
+	}
 
-		enrollmentFormBuilder.enroll();
+	private Section getFirstSubjectSection() throws ScheduleConflictException {
+		Subject subject = curriculum.getSubjects().get(0);
+		return createSection("A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
+	}
+
+	private Section createSection(String sectionName, Subject subject, ScheduleDays scheduleDays,
+			ScheduleTimes scheduleTimes) throws ScheduleConflictException {
+		Schedule schedule = new Schedule(academicTerm, scheduleDays, scheduleTimes);
+		Teacher teacher = new Teacher(1, "John Doe");
+		return new Section(sectionName, subject, schedule, teacher);
 	}
 }

@@ -20,7 +20,7 @@ public class EnrollmentForm {
 
 		EnrollmentFormBuilder(Student student) throws IneligibleStudentException {
 			assert student != null;
-			
+
 			this.student = student;
 			this.totalUnits = 0;
 			this.studentStatus = student.getStatus();
@@ -32,21 +32,35 @@ public class EnrollmentForm {
 			this.sections = new ArrayList<Section>();
 		}
 
-		public EnrollmentFormBuilder addSection(Section section) throws SectionFullException, SubjectUnitsRestrictionException, ScheduleConflictException {
-			if(section==null) {
+		public EnrollmentFormBuilder addSection(Section section) throws SectionFullException,
+				SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
+			if (section == null) {
 				throw new IllegalArgumentException("Section cannot be null.");
 			}
-			
+
 			if (section.isFull()) {
 				throw new SectionFullException();
 			}
 
 			checkScheduleConflict(section);
+			checkRequiredPrerequisites(section.getSubject());
 			addUnits(section);
-			
+
 			sections.add(section);
 
 			return this;
+		}
+
+		private void checkRequiredPrerequisites(Subject subject) throws UnsatisfiedPrerequisiteException {
+			if (subject.hasPrerequisites()) {
+				if (!studentStatus.canTakePrerequisiteSubjects()) {
+					throw new UnsatisfiedPrerequisiteException("Student cannot take subjects with prerequisite.");
+				}
+				
+//				if(studentStatus.mustCheckPrerequisites()) {
+//					student.hasTaken();
+//				}
+			}
 		}
 
 		private void addUnits(Section section) throws SubjectUnitsRestrictionException {
@@ -77,7 +91,8 @@ public class EnrollmentForm {
 			return null; // TODO is it ok?
 		}
 
-		public EnrollmentForm enroll() throws SectionFullException, IneligibleStudentException, SubjectUnitsRestrictionException {
+		public EnrollmentForm enroll() throws SectionFullException, IneligibleStudentException,
+				SubjectUnitsRestrictionException {
 			if (totalUnits < studentStatus.getMinUnits()) {
 				throw new SubjectUnitsRestrictionException();
 			}
@@ -88,8 +103,8 @@ public class EnrollmentForm {
 
 	private EnrollmentForm(Student student, List<Section> sections) {
 		assert student != null;
-		assert sections!=null && !sections.isEmpty();
-		
+		assert sections != null && !sections.isEmpty();
+
 		this.sections = sections;
 		this.student = student;
 		this.classCards = new ArrayList<ClassCard>();
@@ -108,4 +123,36 @@ public class EnrollmentForm {
 	public boolean hasSection(Section section) {
 		return sections.contains(section);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((sections == null) ? 0 : sections.hashCode());
+		result = prime * result + ((student == null) ? 0 : student.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EnrollmentForm other = (EnrollmentForm) obj;
+		if (sections == null) {
+			if (other.sections != null)
+				return false;
+		} else if (!sections.equals(other.sections))
+			return false;
+		if (student == null) {
+			if (other.student != null)
+				return false;
+		} else if (!student.equals(other.student))
+			return false;
+		return true;
+	}
+
 }

@@ -1,12 +1,16 @@
 package schoolsystem.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public enum Curriculum {
 	BS_COMPUTER_SCIENCE() {
-		private List<Subject> subjects;
 
-		void initializeSubjects() {
+		List<Subject> initializeSubjects() {
 			Subject ph101 = new Subject("PH 101");
 			Subject ph102 = new Subject("PH 102", Arrays.asList(ph101));
 			Subject ph103 = new Subject("PH 103", Arrays.asList(ph102));
@@ -68,22 +72,49 @@ public enum Curriculum {
 			Subject cs162a = new Subject("CS 162A", Arrays.asList(cs152a, cs152b));
 			Subject cs162b = new Subject("CS 162B", Arrays.asList(cs152a, cs152b));
 
-			subjects = Collections.unmodifiableList(Arrays.asList(psy101, flc1, sci10, sa21, ec102, pos100, hi16, hi166,
-					en11, en12, lit13, lit14, nstp1, nstp2, ma18a, ma18b, amc124, amc125, pe1, pe2, pe3, pe4, fil11,
-					fil12, fil14, th121, th131, th141, th151, ph101, ph102, ph103, ph104, cs21a, cs21b, cs123, cs124,
-					cs152a, cs152b, cs162a, cs162b, cs110, cs122, cs165, cs119p1, cs154, cs130, cs112));
-		}
+			List<Subject> subjects = Collections.unmodifiableList(Arrays.asList(psy101, flc1, sci10, sa21, ec102,
+					pos100, hi16, hi166, en11, en12, lit13, lit14, nstp1, nstp2, ma18a, ma18b, amc124, amc125, pe1,
+					pe2, pe3, pe4, fil11, fil12, fil14, th121, th131, th141, th151, ph101, ph102, ph103, ph104, cs21a,
+					cs21b, cs123, cs124, cs152a, cs152b, cs162a, cs162b, cs110, cs122, cs165, cs119p1, cs154, cs130,
+					cs112));
 
-		public List<Subject> getSubjects() {
 			return subjects;
 		}
+
 	};
 
+	private List<Subject> subjects;
+	private Map<String, Subject> subjectMapByName;
+
 	Curriculum() {
-		initializeSubjects();
+		subjects = initializeSubjects();
+		subjectMapByName = new HashMap<String, Subject>();
+
+		for (Subject subject : subjects) {
+			String subjectName = subject.getName().toLowerCase();
+
+			if (subjectMapByName.containsKey(subjectName)) {
+				throw new AssertionError("Duplicate subject in the same curriculum: " + subject);
+			}
+
+			subjectMapByName.put(subjectName, subject);
+		}
 	}
 
-	abstract void initializeSubjects();
+	abstract List<Subject> initializeSubjects();
 
-	public abstract List<Subject> getSubjects();
+	public List<Subject> getSubjects() {
+		return subjects;
+	}
+
+	public List<Subject> findSubject(String subjectName) {
+		List<Subject> subjectList = new ArrayList<Subject>();
+
+		Subject subject = subjectMapByName.get(subjectName.toLowerCase());
+		if (subject != null) {
+			subjectList.add(subject);
+		}
+
+		return subjectList;
+	}
 }

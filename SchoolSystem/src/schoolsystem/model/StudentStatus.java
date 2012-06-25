@@ -75,7 +75,7 @@ public enum StudentStatus {
 		return mustCheckPrerequisites;
 	}
 
-	public boolean cankePrerequisiteSubjects() {
+	public boolean canTakePrerequisiteSubjects() {
 		return canTakePrerequisiteSubjects;
 	}
 	

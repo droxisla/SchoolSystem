@@ -11,11 +11,11 @@ public class Subject {
 	private final List<Subject> prerequisites;
 	private final String name;
 
-	public Subject(String name) {
+	Subject(String name) {
 		this(name, new ArrayList<Subject>());
 	}
 
-	public Subject(String name, List<Subject> prerequisites) {
+	Subject(String name, List<Subject> prerequisites) {
 		if (name == null) {
 			throw new IllegalArgumentException("Subject name must not be null.");
 		}
@@ -63,6 +63,14 @@ public class Subject {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	public boolean hasPrerequisites() {
+		return !getPrerequisites().isEmpty();
+	}
+
+	public String getName() {
+		return name;
 	}
 
 }

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import schoolsystem.model.EnrollmentForm.EnrollmentFormBuilder;
 import schoolsystem.model.schedule.AcademicTerm;
 import schoolsystem.model.schedule.Schedule;
 import schoolsystem.model.schedule.ScheduleConflictException;
@@ -58,7 +59,7 @@ public class SectionTest {
 
 	@Test(expected = SectionFullException.class)
 	public void classCardsNotLost() throws SectionFullException, IneligibleStudentException,
-			SubjectUnitsRestrictionException, ScheduleConflictException {
+			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
 		Teacher teacher = createTeacher();
 		Subject subject = createSubject();
 		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
@@ -74,7 +75,7 @@ public class SectionTest {
 
 	@Test
 	public void sectionFull() throws SectionFullException, IneligibleStudentException,
-			SubjectUnitsRestrictionException, ScheduleConflictException {
+			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
 		Teacher teacher = createTeacher();
 		Subject subject = createSubject();
 		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
@@ -82,8 +83,10 @@ public class SectionTest {
 
 		for (int i = 1; i <= Section.MAX_STUDENTS; i++) {
 			Student student = new Student(i, StudentStatus.GRADUATING, curriculum);
-			student.getEnrollmentFormBuilder().addSection(section).enroll();
+			EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder().addSection(section);
 
+			enrollmentFormBuilder.enroll();
+			
 			if (i == Section.MAX_STUDENTS) {
 				assertTrue(section.isFull());
 			} else {

@@ -28,13 +28,14 @@ public class AcademicTerm {
 	}
 
 	public static AcademicTerm newInstance(int academicYear, int termNum) {
-		if (termNum > MAX_TERM_NUM || termNum < 1) {
-			throw new IllegalArgumentException("Term number value range must be from 1 to " + MAX_TERM_NUM);
-		}
 		return new AcademicTerm(academicYear, termNum);
 	}
 
 	private AcademicTerm(int academicYear, int termNumber) {
+		if (termNumber > MAX_TERM_NUM || termNumber < 1) {
+			throw new IllegalArgumentException("Term number value range must be from 1 to " + MAX_TERM_NUM);
+		}
+		
 		this.year = academicYear;
 		this.termNum = termNumber;
 	}
