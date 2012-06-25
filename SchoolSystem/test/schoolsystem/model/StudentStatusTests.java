@@ -38,14 +38,8 @@ public class StudentStatusTests {
 	public void fromNewToContinuing() throws Exception {
 		EnrollmentForm ef = enrollStudentInEighteenUnits(newStudent);
 		assertEquals(1, newStudent.getNumEnrollmentForms());
-		List<ClassCard> classCards = ef.getClassCards();
-		classCards.get(0).setGrade(new BigDecimal("1.00"));
-		classCards.get(1).setGrade(new BigDecimal("1.00"));
-		classCards.get(2).setGrade(new BigDecimal("3.00"));
-		classCards.get(3).setGrade(new BigDecimal("3.00"));
-		classCards.get(4).setGrade(new BigDecimal("5.00"));
-		classCards.get(5).setGrade(new BigDecimal("5.00"));
 		
+		setGradesToPassing(ef.getClassCards());
 		newStudent.updateStatus();
 		assertEquals(StudentStatus.CONTINUING, newStudent.getStatus());
 	}
@@ -55,14 +49,7 @@ public class StudentStatusTests {
 		EnrollmentForm ef = enrollStudentInEighteenUnits(newStudent);
 		assertEquals(1, newStudent.getNumEnrollmentForms());
 		
-		List<ClassCard> classCards = ef.getClassCards();
-		classCards.get(0).setGrade(new BigDecimal("5.00"));
-		classCards.get(1).setGrade(new BigDecimal("1.00"));
-		classCards.get(2).setGrade(new BigDecimal("3.00"));
-		classCards.get(3).setGrade(new BigDecimal("3.00"));
-		classCards.get(4).setGrade(new BigDecimal("5.00"));
-		classCards.get(5).setGrade(new BigDecimal("5.00"));
-		
+		setGradesToFailing(ef.getClassCards());
 		newStudent.updateStatus();
 		assertEquals(StudentStatus.PROBATIONARY, newStudent.getStatus());
 	}
@@ -72,14 +59,7 @@ public class StudentStatusTests {
 		EnrollmentForm ef = enrollStudentInEighteenUnits(continuingStudent);
 		assertEquals(1, continuingStudent.getNumEnrollmentForms());
 		
-		List<ClassCard> classCards = ef.getClassCards();
-		classCards.get(0).setGrade(new BigDecimal("5.00"));
-		classCards.get(1).setGrade(new BigDecimal("1.00"));
-		classCards.get(2).setGrade(new BigDecimal("3.00"));
-		classCards.get(3).setGrade(new BigDecimal("3.00"));
-		classCards.get(4).setGrade(new BigDecimal("5.00"));
-		classCards.get(5).setGrade(new BigDecimal("5.00"));
-		
+		setGradesToFailing(ef.getClassCards());
 		continuingStudent.updateStatus();
 		assertEquals(StudentStatus.PROBATIONARY, continuingStudent.getStatus());
 	}
@@ -89,16 +69,27 @@ public class StudentStatusTests {
 		EnrollmentForm ef = enrollStudentInEighteenUnits(probationaryStudent);
 		assertEquals(1, probationaryStudent.getNumEnrollmentForms());
 		
-		List<ClassCard> classCards = ef.getClassCards();
+		setGradesToPassing(ef.getClassCards());
+		probationaryStudent.updateStatus();
+		assertEquals(StudentStatus.CONTINUING, probationaryStudent.getStatus());
+	}
+	
+	private void setGradesToPassing(List<ClassCard> classCards) {
 		classCards.get(0).setGrade(new BigDecimal("1.00"));
 		classCards.get(1).setGrade(new BigDecimal("1.00"));
 		classCards.get(2).setGrade(new BigDecimal("3.00"));
 		classCards.get(3).setGrade(new BigDecimal("3.00"));
 		classCards.get(4).setGrade(new BigDecimal("5.00"));
 		classCards.get(5).setGrade(new BigDecimal("5.00"));
-		
-		probationaryStudent.updateStatus();
-		assertEquals(StudentStatus.CONTINUING, probationaryStudent.getStatus());
+	}
+	
+	private void setGradesToFailing(List<ClassCard> classCards) {
+		classCards.get(0).setGrade(new BigDecimal("5.00"));
+		classCards.get(1).setGrade(new BigDecimal("1.00"));
+		classCards.get(2).setGrade(new BigDecimal("3.00"));
+		classCards.get(3).setGrade(new BigDecimal("3.00"));
+		classCards.get(4).setGrade(new BigDecimal("5.00"));
+		classCards.get(5).setGrade(new BigDecimal("5.00"));
 	}
 	
 	private EnrollmentForm enrollStudentInEighteenUnits(Student student) throws Exception {
