@@ -119,6 +119,10 @@ public class EnrollmentForm {
 	public Student getStudent() {
 		return student;
 	}
+	
+	public List<ClassCard> getClassCards() {
+		return classCards;
+	}
 
 	public boolean hasSection(Section section) {
 		return sections.contains(section);

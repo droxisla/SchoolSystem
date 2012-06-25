@@ -1,9 +1,11 @@
 package schoolsystem.model;
 
+import java.math.BigDecimal;
+
 public class ClassCard {
 
 	private final Student student;
-	private int grade; // TODO make it as enum?
+	private BigDecimal grade;
 	private final Section section;
 
 	ClassCard(EnrollmentForm enrollmentForm, Section section) {
@@ -19,8 +21,12 @@ public class ClassCard {
 		this.section.addClassCard(this);
 	}
 	
-	public int getGrade() {
+	public BigDecimal getGrade() {
 		return grade;
+	}
+	
+	public void setGrade(BigDecimal grade) {
+		this.grade = grade;
 	}
 
 	public Section getSection() {
