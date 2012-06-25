@@ -74,6 +74,16 @@ public class StudentStatusTests {
 		assertEquals(StudentStatus.CONTINUING, probationaryStudent.getStatus());
 	}
 	
+	@Test
+	public void fromProbationaryToIneligible() throws Exception {
+		EnrollmentForm ef = enrollStudentInEighteenUnits(probationaryStudent);
+		assertEquals(1, probationaryStudent.getNumEnrollmentForms());
+		
+		setGradesToFailing(ef.getClassCards());
+		probationaryStudent.updateStatus();
+		assertEquals(StudentStatus.INELIGIBLE, probationaryStudent.getStatus());
+	}
+	
 	private void setGradesToPassing(List<ClassCard> classCards) {
 		classCards.get(0).setGrade(new BigDecimal("1.00"));
 		classCards.get(1).setGrade(new BigDecimal("1.00"));

@@ -35,6 +35,8 @@ public enum StudentStatus {
 		public StudentStatus update(int numEnrollmentForms, BigDecimal average) {
 			if(PASSING_GRADE.compareTo(average) >= 0)
 				return CONTINUING;
+			else if(PASSING_GRADE.compareTo(average) < 0)
+				return INELIGIBLE;
 			return this;
 		}; 
 	},
