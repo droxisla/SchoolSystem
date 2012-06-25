@@ -39,7 +39,7 @@ public class StudentStatusTests {
 		List<Section> sectionList = new ArrayList<Section>();
 		List<Subject> subjectList = curriculum.getSubjects();
 		sectionList.add(createSection("A", subjectList.get(0), ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000));
-		sectionList.add(createSection("A", subjectList.get(1), ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_10000_TO_1130));
+		sectionList.add(createSection("A", subjectList.get(1), ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1000_TO_1130));
 		sectionList.add(createSection("A", subjectList.get(2), ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1130_TO_1300));
 		sectionList.add(createSection("A", subjectList.get(3), ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1300_TO_1430));
 		sectionList.add(createSection("A", subjectList.get(4), ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1430_TO_1600));
