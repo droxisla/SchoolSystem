@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import schoolsystem.model.schedule.*;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 public class StudentStatusTests {
