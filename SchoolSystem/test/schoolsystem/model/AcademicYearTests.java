@@ -6,8 +6,7 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import schoolsystem.model.schedule.AcademicTerm;
-import schoolsystem.model.schedule.ScheduleConflictException;
+import schoolsystem.model.schedule.*;
 
 public class AcademicYearTests {
 

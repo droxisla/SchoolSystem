@@ -15,6 +15,10 @@ public class ClassCard {
 		this.student = enrollmentForm.getStudent();
 		this.section.addClassCard(this);
 	}
+	
+	public int getGrade() {
+		return grade;
+	}
 
 	public Section getSection() {
 		return section;

@@ -4,10 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Iterator;
 
-import junit.framework.TestCase;
-
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import schoolsystem.model.EnrollmentForm.EnrollmentFormBuilder;
 import schoolsystem.model.schedule.AcademicTerm;

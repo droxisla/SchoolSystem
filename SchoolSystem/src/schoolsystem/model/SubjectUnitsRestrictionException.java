@@ -2,6 +2,8 @@ package schoolsystem.model;
 
 public class SubjectUnitsRestrictionException extends Exception {
 
+	private static final long serialVersionUID = 4550979104277771556L;
+
 	public SubjectUnitsRestrictionException() {
 		super();
 	}

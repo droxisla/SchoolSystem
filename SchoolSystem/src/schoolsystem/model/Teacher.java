@@ -1,10 +1,5 @@
 package schoolsystem.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import schoolsystem.model.schedule.Schedule;
-
 public class Teacher {
 
 	private final String name;

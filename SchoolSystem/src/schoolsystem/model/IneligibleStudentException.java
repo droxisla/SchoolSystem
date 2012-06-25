@@ -1,6 +1,5 @@
 package schoolsystem.model;
 
-@SuppressWarnings("serial")
 public class IneligibleStudentException extends Exception {
 
 	private static final long serialVersionUID = 917801818657237814L;
