@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import schoolsystem.model.schedule.*;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 public class StudentStatusTests {
@@ -52,6 +51,29 @@ public class StudentStatusTests {
 		setGradesToFailing(ef.getClassCards());
 		newStudent.updateStatus();
 		assertEquals(StudentStatus.PROBATIONARY, newStudent.getStatus());
+	}
+	
+	@Test
+	//TODO: Incomplete
+	public void fromContinuingToGraduating() throws Exception {
+		EnrollmentForm ef = enrollStudentInEighteenUnits(continuingStudent);
+		assertEquals(1, continuingStudent.getNumEnrollmentForms());
+		
+		setGradesToPassing(ef.getClassCards());
+		continuingStudent.updateStatus();
+		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
+		
+		/*List<String> sectionNames = new ArrayList<String>(Arrays.asList("PH 101", "TH 121", "FIL 11", "PE 1", "MA 18A", "MA 18B"));
+		
+		List<Section> sectionList = createManySections(sectionNames);
+		
+		ef = enrollStudentInEighteenUnits(continuingStudent, sectionList);
+		assertEquals(2, continuingStudent.getNumEnrollmentForms());
+		
+		setGradesToPassing(ef.getClassCards());
+		continuingStudent.updateStatus();
+		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());*/
+		//if remainingUnits <= 18 and all prereqs taken.
 	}
 	
 	@Test
@@ -113,6 +135,16 @@ public class StudentStatusTests {
 												  .enroll();
 	}
 	
+	private EnrollmentForm enrollStudentInEighteenUnits(Student student, List<Section> sections) throws Exception {
+		return student.getEnrollmentFormBuilder().addSection(sections.get(0))
+												  .addSection(sections.get(1))
+												  .addSection(sections.get(2))
+												  .addSection(sections.get(3))
+												  .addSection(sections.get(4))
+												  .addSection(sections.get(5))
+												  .enroll();
+	}
+	
 	private List<Section> getSixSubjectsNoPrerequisites() throws Exception{
 		List<Section> sectionList = new ArrayList<Section>();
 		List<Subject> subjectList = curriculum.getSubjects();
@@ -122,6 +154,17 @@ public class StudentStatusTests {
 		sectionList.add(createSection("A", subjectList.get(3), ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1300_TO_1430));
 		sectionList.add(createSection("A", subjectList.get(4), ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1430_TO_1600));
 		sectionList.add(createSection("A", subjectList.get(5), ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1600_TO_1730));
+		return sectionList;
+	}
+	
+	private List<Section> createManySections(List<String> sectionNames) throws Exception{
+		List<Section> sectionList = new ArrayList<Section>();
+		sectionList.add(createSection("A", curriculum.findSubject(sectionNames.get(0)).get(0), ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000));
+		sectionList.add(createSection("A", curriculum.findSubject(sectionNames.get(1)).get(0), ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1000_TO_1130));
+		sectionList.add(createSection("A", curriculum.findSubject(sectionNames.get(2)).get(0), ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1130_TO_1300));
+		sectionList.add(createSection("A", curriculum.findSubject(sectionNames.get(3)).get(0), ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1300_TO_1430));
+		sectionList.add(createSection("A", curriculum.findSubject(sectionNames.get(4)).get(0), ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1430_TO_1600));
+		sectionList.add(createSection("A", curriculum.findSubject(sectionNames.get(5)).get(0), ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1600_TO_1730));
 		return sectionList;
 	}
 
