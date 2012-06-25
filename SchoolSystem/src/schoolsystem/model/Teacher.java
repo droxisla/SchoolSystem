@@ -1,7 +1,5 @@
 package schoolsystem.model;
 
-import java.math.BigDecimal;
-
 public class Teacher {
 
 	private final String name;
