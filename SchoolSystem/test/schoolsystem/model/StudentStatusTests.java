@@ -85,21 +85,21 @@ public class StudentStatusTests {
 	}
 	
 	private void setGradesToPassing(List<ClassCard> classCards) {
-		classCards.get(0).setGrade(new BigDecimal("1.00"));
-		classCards.get(1).setGrade(new BigDecimal("1.00"));
-		classCards.get(2).setGrade(new BigDecimal("3.00"));
-		classCards.get(3).setGrade(new BigDecimal("3.00"));
-		classCards.get(4).setGrade(new BigDecimal("5.00"));
-		classCards.get(5).setGrade(new BigDecimal("5.00"));
+		classCards.get(0).setGrade(Grade.G1_00);
+		classCards.get(1).setGrade(Grade.G1_00);
+		classCards.get(2).setGrade(Grade.G3_00);
+		classCards.get(3).setGrade(Grade.G3_00);
+		classCards.get(4).setGrade(Grade.G5_00);
+		classCards.get(5).setGrade(Grade.G5_00);
 	}
 	
 	private void setGradesToFailing(List<ClassCard> classCards) {
-		classCards.get(0).setGrade(new BigDecimal("5.00"));
-		classCards.get(1).setGrade(new BigDecimal("1.00"));
-		classCards.get(2).setGrade(new BigDecimal("3.00"));
-		classCards.get(3).setGrade(new BigDecimal("3.00"));
-		classCards.get(4).setGrade(new BigDecimal("5.00"));
-		classCards.get(5).setGrade(new BigDecimal("5.00"));
+		classCards.get(0).setGrade(Grade.G5_00);
+		classCards.get(1).setGrade(Grade.G1_00);
+		classCards.get(2).setGrade(Grade.G3_00);
+		classCards.get(3).setGrade(Grade.G3_00);
+		classCards.get(4).setGrade(Grade.G5_00);
+		classCards.get(5).setGrade(Grade.G5_00);
 	}
 	
 	private EnrollmentForm enrollStudentInEighteenUnits(Student student) throws Exception {
