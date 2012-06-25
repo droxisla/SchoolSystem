@@ -1,5 +1,6 @@
 package schoolsystem.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ public class Student {
 	private StudentStatus status;
 	private final Curriculum curriculum;
 	private final List<EnrollmentForm> enrollmentForms;
+	private EnrollmentForm currentEnrollmentForm;
 
 	public Student(int studentNumber, StudentStatus status, Curriculum curriculum) {
 		if (studentNumber < 0) {
@@ -41,10 +43,21 @@ public class Student {
 		}
 		
 		enrollmentForms.add(enrollmentForm);
+		currentEnrollmentForm = enrollmentForm;
 	}
 	
 	public void updateStatus() {
 		this.status = status.update(enrollmentForms.size());
+	}
+	
+	public BigDecimal calculateAverage() {
+		BigDecimal average = BigDecimal.ZERO;
+		List<ClassCard> classCards = currentEnrollmentForm.getClassCards();
+		for(ClassCard c: classCards) {
+			average = average.add(c.getGrade());
+		}
+		average = average.divide(new BigDecimal("" + classCards.size()));
+		return average;
 	}
 
 	public int getNumEnrollmentForms() {
