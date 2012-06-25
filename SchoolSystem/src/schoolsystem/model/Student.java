@@ -39,42 +39,50 @@ public class Student {
 		if (!enrollmentForm.getStudent().equals(this)) {
 			throw new IllegalArgumentException("Enrollment form does not belong to student.");
 		}
-		
+
 		enrollmentForms.add(enrollmentForm);
 	}
-	
+
 	private EnrollmentForm getCurrentEnrollmentForm() {
-		if(enrollmentForms.isEmpty()) {
+		if (enrollmentForms.isEmpty()) {
 			return EnrollmentForm.BLANK_ENROLLMENT_FORM;
 		}
 		return enrollmentForms.get(enrollmentForms.size() - 1);
 	}
-	
+
 	public void updateStatus() {
-		if(classCardsHaveGrades()) {
-			this.status = status.update(enrollmentForms.size(), calculateAverage());
+		if (classCardsHaveGrades()) {
+			this.status = status.update(calculateAverage());
 		}
 	}
-	
+
 	private Boolean classCardsHaveGrades() {
 		List<ClassCard> classCards = getCurrentEnrollmentForm().getClassCards();
-		if(0 == classCards.size()) {
+		if (0 == classCards.size()) {
 			return false;
 		}
-		for(ClassCard c: classCards) {
-			if(null == c)
+		for (ClassCard c : classCards) {
+			if (null == c)
 				return false;
 		}
 		return true;
 	}
-	
+
 	public BigDecimal calculateAverage() {
 		BigDecimal average = BigDecimal.ZERO;
+		
 		List<ClassCard> classCards = getCurrentEnrollmentForm().getClassCards();
-		for(ClassCard c: classCards) {
-			average = average.add(c.getGrade());
+		for (ClassCard c : classCards) {
+			Grade grade = c.getGrade();
+
+			if (grade == Grade.NO_GRADE) {
+				return BigDecimal.ZERO;
+			}
+
+			average = average.add(grade.value());
 		}
-		average = average.divide(new BigDecimal("" + classCards.size()), 2, BigDecimal.ROUND_CEILING);
+		
+		average = average.divide(new BigDecimal(classCards.size()), 2, BigDecimal.ROUND_CEILING);
 		return average;
 	}
 
@@ -119,6 +127,17 @@ public class Student {
 
 	public int getStudentNumber() {
 		return studentNumber;
+	}
+
+	public boolean hasPassedSubject(Subject subject) {
+		for (EnrollmentForm enrollmentForm : enrollmentForms) {
+			for (ClassCard classCard : enrollmentForm.getClassCards()) {
+				if (classCard.hasPassedSubject(subject)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }

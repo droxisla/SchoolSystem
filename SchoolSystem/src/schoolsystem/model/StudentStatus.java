@@ -5,48 +5,54 @@ import java.math.BigDecimal;
 public enum StudentStatus {
 
 	NEW(15, 18, true, true, false) {
-		public StudentStatus update(int numEnrollmentForms, BigDecimal average) {
-			if(numEnrollmentForms > 0 && PASSING_GRADE.compareTo(average) >= 0) {
+		public StudentStatus update(BigDecimal average) {
+			if (average.equals(BigDecimal.ZERO)) {
+				return this;
+			} else if (Grade.isPassing(average)) {
 				return CONTINUING;
-			} else if(PASSING_GRADE.compareTo(average) < 0) {
+			} else {
+				return PROBATIONARY;
+			}
+		};
+	},
+	CONTINUING(18, 24, true, true, true) {
+		public StudentStatus update(BigDecimal average) {
+			if (average.equals(BigDecimal.ZERO)) {
+				return this;
+			} else if (!Grade.isPassing(average)) {
 				return PROBATIONARY;
 			}
 			return this;
-		}; 
+		};
 	},
-	CONTINUING(18, 24, true, true, true) {
-		public StudentStatus update(int numEnrollmentForms, BigDecimal average) {
-			if(PASSING_GRADE.compareTo(average) < 0)
-				return PROBATIONARY;
-			return this;
-		}; 
-	}, 
 	GRADUATING(true, false, true) {
-		public StudentStatus update(int numEnrollmentForms, BigDecimal average) {
+		public StudentStatus update(BigDecimal average) {
 			return this;
-		}; 
+		};
 	},
 	GRADUATE(false, true, false) {
-		public StudentStatus update(int numEnrollmentForms, BigDecimal average) {
+		public StudentStatus update(BigDecimal average) {
 			return this;
-		}; 
+		};
 	},
 	PROBATIONARY(true, true, true) {
-		public StudentStatus update(int numEnrollmentForms, BigDecimal average) {
-			if(PASSING_GRADE.compareTo(average) >= 0)
+		public StudentStatus update(BigDecimal average) {
+			if (average.equals(BigDecimal.ZERO)) {
+				return this;
+			} else if (Grade.isPassing(average)) {
 				return CONTINUING;
-			else if(PASSING_GRADE.compareTo(average) < 0)
+				// TODO: to grad
+			} else {
 				return INELIGIBLE;
-			return this;
-		}; 
+			}
+		};
 	},
 	INELIGIBLE(false, true, false) {
-		public StudentStatus update(int numEnrollmentForms, BigDecimal average) {
+		public StudentStatus update(BigDecimal average) {
 			return this;
-		}; 
+		};
 	};
 
-	public static final BigDecimal PASSING_GRADE = new BigDecimal("3.00");
 	private final int minUnits;
 	private final int maxUnits;
 	private final boolean isEligibleToEnroll;
@@ -89,7 +95,7 @@ public enum StudentStatus {
 	public boolean canTakePrerequisiteSubjects() {
 		return canTakePrerequisiteSubjects;
 	}
-	
-	public abstract StudentStatus update(int numEnrollmentForms, BigDecimal average);
+
+	public abstract StudentStatus update(BigDecimal average);
 
 }

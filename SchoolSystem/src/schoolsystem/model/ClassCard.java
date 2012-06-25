@@ -1,11 +1,10 @@
 package schoolsystem.model;
 
-import java.math.BigDecimal;
 
 public class ClassCard {
 
 	private final Student student;
-	private BigDecimal grade;
+	private Grade grade;
 	private final Section section;
 
 	ClassCard(EnrollmentForm enrollmentForm, Section section) {
@@ -20,16 +19,14 @@ public class ClassCard {
 		this.section = section;
 		this.student = enrollmentForm.getStudent();
 		this.section.addClassCard(this);
+		this.grade = Grade.NO_GRADE;
 	}
 
-	public BigDecimal getGrade() {
+	public Grade getGrade() {
 		return grade;
 	}
 
-	public void setGrade(BigDecimal grade) {
-		if (grade.compareTo(BigDecimal.ZERO) < 0) {
-			throw new IllegalArgumentException("Grades cannot be negative.");
-		}
+	public void setGrade(Grade grade) {
 		this.grade = grade;
 	}
 
@@ -70,6 +67,15 @@ public class ClassCard {
 		} else if (!student.equals(other.student))
 			return false;
 		return true;
+	}
+
+	public boolean hasPassedSubject(Subject subject) {
+		if(section.getSubject().equals(subject)) {
+			if(grade.isPassing()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
