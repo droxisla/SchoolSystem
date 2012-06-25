@@ -62,8 +62,9 @@ public class StudentStatusTests {
 		setGradesToPassing(ef.getClassCards());
 		continuingStudent.updateStatus();
 		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
+		SectionManager.getInstance().reset();
 		
-		/*List<String> sectionNames = new ArrayList<String>(Arrays.asList("PH 101", "TH 121", "FIL 11", "PE 1", "MA 18A", "MA 18B"));
+		List<String> sectionNames = new ArrayList<String>(Arrays.asList("PH 101", "TH 121", "FIL 11", "PE 1", "MA 18A", "MA 18B"));
 		
 		List<Section> sectionList = createManySections(sectionNames);
 		
@@ -72,7 +73,7 @@ public class StudentStatusTests {
 		
 		setGradesToPassing(ef.getClassCards());
 		continuingStudent.updateStatus();
-		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());*/
+		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
 		//if remainingUnits <= 18 and all prereqs taken.
 	}
 	

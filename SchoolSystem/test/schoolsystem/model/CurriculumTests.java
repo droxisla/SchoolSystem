@@ -23,9 +23,6 @@ public class CurriculumTests {
 																  new Subject("CS 152B")));
 		
 		Set<Subject> csPrereqs = Curriculum.BS_COMPUTER_SCIENCE.getPrerequisites();
-		for(Subject s: csPrereqs) {
-			System.out.println(s);
-		}
 		assertTrue(prereqs.containsAll(csPrereqs));
 	}
 
