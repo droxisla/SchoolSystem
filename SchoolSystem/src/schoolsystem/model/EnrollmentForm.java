@@ -113,7 +113,7 @@ public class EnrollmentForm {
 		assert student != null;
 		assert sections != null && !sections.isEmpty();
 
-		this.sections = sections;
+		this.sections = Collections.unmodifiableList(sections);
 		this.student = student;
 		this.classCards = new ArrayList<ClassCard>();
 
@@ -130,6 +130,10 @@ public class EnrollmentForm {
 	
 	public List<ClassCard> getClassCards() {
 		return classCards;
+	}
+	
+	public List<Section> getSections(){
+		return sections;
 	}
 
 	public boolean hasSection(Section section) {

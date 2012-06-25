@@ -9,23 +9,27 @@ public class ClassCard {
 	private final Section section;
 
 	ClassCard(EnrollmentForm enrollmentForm, Section section) {
-		assert enrollmentForm!=null;
-		assert section!=null;
-		
+		assert enrollmentForm != null;
+		assert section != null;
+
 		if (!enrollmentForm.hasSection(section)) {
-			throw new IllegalArgumentException("Section '" + section + "' not present in enrollment form '" + enrollmentForm + "'.");
+			throw new IllegalArgumentException("Section '" + section + "' not present in enrollment form '"
+					+ enrollmentForm + "'.");
 		}
 
 		this.section = section;
 		this.student = enrollmentForm.getStudent();
 		this.section.addClassCard(this);
 	}
-	
+
 	public BigDecimal getGrade() {
 		return grade;
 	}
-	
+
 	public void setGrade(BigDecimal grade) {
+		if (grade.compareTo(BigDecimal.ZERO) < 0) {
+			throw new IllegalArgumentException("Grades cannot be negative.");
+		}
 		this.grade = grade;
 	}
 

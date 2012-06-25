@@ -32,8 +32,9 @@ public class EnrollmentTests {
 		return createSection("A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
 	}
 
-	private Section createSection(String sectionName, Subject subject, ScheduleDays scheduleDays,
+	private static Section createSection(String sectionName, Subject subject, ScheduleDays scheduleDays,
 			ScheduleTimes scheduleTimes) throws ScheduleConflictException {
+		AcademicTerm academicTerm = AcademicTerm.academicTermAfterCurrent();
 		Schedule schedule = new Schedule(academicTerm, scheduleDays, scheduleTimes);
 		Teacher teacher = new Teacher(1, "John Doe");
 		return new Section(sectionName, subject, schedule, teacher);
@@ -81,7 +82,7 @@ public class EnrollmentTests {
 		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
 
 		StudentStatus studentStatus = student.getStatus();
-		addUnitsToEnrollmentForm(studentStatus.getMinUnits(), enrollmentFormBuilder);
+		addUnitsToEnrollmentForm(curriculum, studentStatus.getMinUnits(), enrollmentFormBuilder);
 
 		enrollmentFormBuilder.addSection(sectionWithPrereq).enroll();
 	}
@@ -252,15 +253,15 @@ public class EnrollmentTests {
 		return sectionList;
 	}
 
-	private void enrollUnits(Student student, int unitsToTake) throws IneligibleStudentException,
+		private void enrollUnits(Student student, int unitsToTake) throws IneligibleStudentException,
 			ScheduleConflictException, SectionFullException, SubjectUnitsRestrictionException,
 			UnsatisfiedPrerequisiteException {
 		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
-		addUnitsToEnrollmentForm(unitsToTake, enrollmentFormBuilder);
+		addUnitsToEnrollmentForm(curriculum,unitsToTake, enrollmentFormBuilder);
 		enrollmentFormBuilder.enroll();
 	}
 
-	private void addUnitsToEnrollmentForm(int unitsToTake, EnrollmentFormBuilder enrollmentFormBuilder)
+	static void addUnitsToEnrollmentForm(Curriculum curriculum, int unitsToTake, EnrollmentFormBuilder enrollmentFormBuilder)
 			throws ScheduleConflictException, SectionFullException, SubjectUnitsRestrictionException,
 			UnsatisfiedPrerequisiteException {
 		Iterator<Subject> subjectsIterator = curriculum.getSubjects().iterator();
