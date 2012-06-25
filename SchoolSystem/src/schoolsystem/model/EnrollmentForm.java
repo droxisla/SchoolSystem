@@ -1,12 +1,14 @@
 package schoolsystem.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import schoolsystem.model.schedule.Schedule;
 import schoolsystem.model.schedule.ScheduleConflictException;
 
 public class EnrollmentForm {
+	public static final EnrollmentForm BLANK_ENROLLMENT_FORM = new EnrollmentForm();
 
 	private final Student student;
 	private final List<ClassCard> classCards;
@@ -99,6 +101,12 @@ public class EnrollmentForm {
 
 			return new EnrollmentForm(student, sections);
 		}
+	}
+	
+	private EnrollmentForm() {
+		sections = Collections.emptyList();
+		classCards = Collections.emptyList();
+		student = null;
 	}
 
 	private EnrollmentForm(Student student, List<Section> sections) {

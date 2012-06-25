@@ -11,6 +11,7 @@ import schoolsystem.model.schedule.ScheduleConflictException;
 import schoolsystem.model.schedule.ScheduleDays;
 import schoolsystem.model.schedule.ScheduleTimes;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class StudentStatusTests {
@@ -34,19 +35,53 @@ public class StudentStatusTests {
 	}
 
 	@Test
-	//TODO: Add test that makes sure that all current Subjects have grades before allowing updateStatus
 	public void fromNewToContinuing() throws Exception {
 		List <Section> sections = getSixSubjectsNoPrerequisites();
-		newStudent.getEnrollmentFormBuilder().addSection(sections.get(0))
-											 .addSection(sections.get(1))
-											 .addSection(sections.get(2))
-											 .addSection(sections.get(3))
-											 .addSection(sections.get(4))
-											 .addSection(sections.get(5))
-											 .enroll();
+		EnrollmentForm ef = newStudent.getEnrollmentFormBuilder().addSection(sections.get(0))
+																 .addSection(sections.get(1))
+																 .addSection(sections.get(2))
+																 .addSection(sections.get(3))
+																 .addSection(sections.get(4))
+																 .addSection(sections.get(5))
+																 .enroll();
 		assertEquals(1, newStudent.getNumEnrollmentForms());
+		
+		Teacher teacher = sections.get(0).getTeacher();
+		List<ClassCard> classCards = ef.getClassCards();
+		teacher.gradeClassCard(classCards.get(0), new BigDecimal("1.00"));
+		teacher.gradeClassCard(classCards.get(1), new BigDecimal("1.00"));
+		teacher.gradeClassCard(classCards.get(2), new BigDecimal("3.00"));
+		teacher.gradeClassCard(classCards.get(3), new BigDecimal("3.00"));
+		teacher.gradeClassCard(classCards.get(4), new BigDecimal("5.00"));
+		teacher.gradeClassCard(classCards.get(5), new BigDecimal("5.00"));
+		
 		newStudent.updateStatus();
 		assertEquals(StudentStatus.CONTINUING, newStudent.getStatus());
+	}
+	
+	@Test
+	public void fromNewToProbationary() throws Exception {
+		List <Section> sections = getSixSubjectsNoPrerequisites();
+		EnrollmentForm ef = newStudent.getEnrollmentFormBuilder().addSection(sections.get(0))
+																 .addSection(sections.get(1))
+																 .addSection(sections.get(2))
+																 .addSection(sections.get(3))
+																 .addSection(sections.get(4))
+																 .addSection(sections.get(5))
+																 .enroll();
+		assertEquals(1, newStudent.getNumEnrollmentForms());
+		
+		Teacher teacher = sections.get(0).getTeacher();
+		List<ClassCard> classCards = ef.getClassCards();
+		teacher.gradeClassCard(classCards.get(0), new BigDecimal("5.00"));
+		teacher.gradeClassCard(classCards.get(1), new BigDecimal("1.00"));
+		teacher.gradeClassCard(classCards.get(2), new BigDecimal("3.00"));
+		teacher.gradeClassCard(classCards.get(3), new BigDecimal("3.00"));
+		teacher.gradeClassCard(classCards.get(4), new BigDecimal("5.00"));
+		teacher.gradeClassCard(classCards.get(5), new BigDecimal("5.00"));
+		
+		newStudent.updateStatus();
+		assertEquals(StudentStatus.PROBATIONARY, newStudent.getStatus());
 	}
 	
 	private List<Section> getSixSubjectsNoPrerequisites() throws Exception{

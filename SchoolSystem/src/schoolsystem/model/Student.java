@@ -1,8 +1,7 @@
 package schoolsystem.model;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import schoolsystem.model.EnrollmentForm.EnrollmentFormBuilder;
 
@@ -12,7 +11,6 @@ public class Student {
 	private StudentStatus status;
 	private final Curriculum curriculum;
 	private final List<EnrollmentForm> enrollmentForms;
-	private EnrollmentForm currentEnrollmentForm;
 
 	public Student(int studentNumber, StudentStatus status, Curriculum curriculum) {
 		if (studentNumber < 0) {
@@ -43,20 +41,40 @@ public class Student {
 		}
 		
 		enrollmentForms.add(enrollmentForm);
-		currentEnrollmentForm = enrollmentForm;
+	}
+	
+	private EnrollmentForm getCurrentEnrollmentForm() {
+		if(enrollmentForms.isEmpty()) {
+			return EnrollmentForm.BLANK_ENROLLMENT_FORM;
+		}
+		return enrollmentForms.get(enrollmentForms.size() - 1);
 	}
 	
 	public void updateStatus() {
-		this.status = status.update(enrollmentForms.size());
+		if(classCardsHaveGrades()) {
+			this.status = status.update(enrollmentForms.size(), calculateAverage());
+		}
+	}
+	
+	private Boolean classCardsHaveGrades() {
+		List<ClassCard> classCards = getCurrentEnrollmentForm().getClassCards();
+		if(0 == classCards.size()) {
+			return false;
+		}
+		for(ClassCard c: classCards) {
+			if(null == c)
+				return false;
+		}
+		return true;
 	}
 	
 	public BigDecimal calculateAverage() {
 		BigDecimal average = BigDecimal.ZERO;
-		List<ClassCard> classCards = currentEnrollmentForm.getClassCards();
+		List<ClassCard> classCards = getCurrentEnrollmentForm().getClassCards();
 		for(ClassCard c: classCards) {
 			average = average.add(c.getGrade());
 		}
-		average = average.divide(new BigDecimal("" + classCards.size()));
+		average = average.divide(new BigDecimal("" + classCards.size()), 2, BigDecimal.ROUND_CEILING);
 		return average;
 	}
 

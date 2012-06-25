@@ -1,37 +1,41 @@
 package schoolsystem.model;
 
+import java.math.BigDecimal;
+
 public enum StudentStatus {
 
 	NEW(15, 18, true, true, false) {
-		public StudentStatus update(int numEnrollmentForms) {
-			if(numEnrollmentForms > 0) {
+		public StudentStatus update(int numEnrollmentForms, BigDecimal average) {
+			if(numEnrollmentForms > 0 && new BigDecimal("3.00").compareTo(average) >= 0) {
 				return CONTINUING;
+			} else if(new BigDecimal("3.00").compareTo(average) < 0) {
+				return PROBATIONARY;
 			}
 			return this;
 		}; 
 	},
 	CONTINUING(18, 24, true, true, true) {
-		public StudentStatus update(int numEnrollmentForms) {
+		public StudentStatus update(int numEnrollmentForms, BigDecimal average) {
 			return this;
 		}; 
 	}, 
 	GRADUATING(true, false, true) {
-		public StudentStatus update(int numEnrollmentForms) {
+		public StudentStatus update(int numEnrollmentForms, BigDecimal average) {
 			return this;
 		}; 
 	},
 	GRADUATE(false, true, false) {
-		public StudentStatus update(int numEnrollmentForms) {
+		public StudentStatus update(int numEnrollmentForms, BigDecimal average) {
 			return this;
 		}; 
 	},
 	PROBATIONARY(true, true, true) {
-		public StudentStatus update(int numEnrollmentForms) {
+		public StudentStatus update(int numEnrollmentForms, BigDecimal average) {
 			return this;
 		}; 
 	},
 	INELIGIBLE(false, true, false) {
-		public StudentStatus update(int numEnrollmentForms) {
+		public StudentStatus update(int numEnrollmentForms, BigDecimal average) {
 			return this;
 		}; 
 	};
@@ -79,6 +83,6 @@ public enum StudentStatus {
 		return canTakePrerequisiteSubjects;
 	}
 	
-	public abstract StudentStatus update(int numEnrollmentForms);
+	public abstract StudentStatus update(int numEnrollmentForms, BigDecimal average);
 
 }
