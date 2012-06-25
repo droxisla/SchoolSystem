@@ -54,6 +54,18 @@ public class StudentStatusTests {
 	}
 	
 	@Test
+	public void fromContinuingToGraduating() throws Exception {
+		EnrollmentForm ef = enrollStudentInEighteenUnits(continuingStudent);
+		assertEquals(1, continuingStudent.getNumEnrollmentForms());
+		
+		setGradesToPassing(ef.getClassCards());
+		continuingStudent.updateStatus();
+		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
+		
+		//if remainingUnits <= 18 and all prereqs taken.
+	}
+	
+	@Test
 	public void fromContinuingToProbationary() throws Exception {
 		EnrollmentForm ef = enrollStudentInEighteenUnits(continuingStudent);
 		assertEquals(1, continuingStudent.getNumEnrollmentForms());

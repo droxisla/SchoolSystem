@@ -1,11 +1,6 @@
 package schoolsystem.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public enum Curriculum {
 	BS_COMPUTER_SCIENCE() {
@@ -54,8 +49,8 @@ public enum Curriculum {
 			Subject hi16 = new Subject("HI 16");
 			Subject hi166 = new Subject("HI 166", Arrays.asList(hi16));
 
-			Subject cs21a = new Subject("CS21 A");
-			Subject cs21b = new Subject("CS21 B");
+			Subject cs21a = new Subject("CS 21A");
+			Subject cs21b = new Subject("CS 21B");
 
 			Subject cs110 = new Subject("CS 110", Arrays.asList(cs21a, cs21b));
 			Subject cs122 = new Subject("CS 122", Arrays.asList(cs21a, cs21b));
@@ -85,10 +80,12 @@ public enum Curriculum {
 
 	private List<Subject> subjects;
 	private Map<String, Subject> subjectMapByName;
+	private Set<Subject> prerequisites;
 
 	Curriculum() {
 		subjects = initializeSubjects();
 		subjectMapByName = new HashMap<String, Subject>();
+		prerequisites = new HashSet<Subject>();
 
 		for (Subject subject : subjects) {
 			String subjectName = subject.getName().toLowerCase();
@@ -99,12 +96,22 @@ public enum Curriculum {
 
 			subjectMapByName.put(subjectName, subject);
 		}
+		
+		for(Subject s: subjects) {
+			for(Subject p : s.getPrerequisites()) {
+				prerequisites.add(p);
+			}
+		}
 	}
 
 	abstract List<Subject> initializeSubjects();
 
 	public List<Subject> getSubjects() {
 		return subjects;
+	}
+	
+	public Set<Subject> getPrerequisites() {
+		return prerequisites;
 	}
 
 	public List<Subject> findSubject(String subjectName) {
