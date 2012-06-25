@@ -5,11 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import schoolsystem.model.schedule.AcademicTerm;
-import schoolsystem.model.schedule.Schedule;
-import schoolsystem.model.schedule.ScheduleConflictException;
-import schoolsystem.model.schedule.ScheduleDays;
-import schoolsystem.model.schedule.ScheduleTimes;
+import schoolsystem.model.schedule.*;
 
 import java.math.BigDecimal;
 import java.util.*;
