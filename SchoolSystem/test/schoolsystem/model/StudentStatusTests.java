@@ -16,20 +16,34 @@ import java.util.*;
 public class StudentStatusTests {
 	private Curriculum curriculum;
 	private AcademicTerm academicTerm;
+	private Student newStudent;
 
 	@Before
 	public void createFixture() throws Exception {
 		academicTerm = AcademicTerm.academicTermAfterCurrent();
 		SectionManager.getInstance().reset();
 		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
+		newStudent = new Student(1, StudentStatus.NEW, Curriculum.BS_COMPUTER_SCIENCE);
+	}
+	
+	@Test
+	public void fromNewToContinuingNoPreviousEnrollment() {
+		assertEquals(0, newStudent.getNumEnrollmentForms());
+		newStudent.updateStatus();
+		assertEquals(StudentStatus.NEW, newStudent.getStatus());
 	}
 
 	@Test
 	//TODO: Add test that makes sure that all current Subjects have grades before allowing updateStatus
-	public void fromNewToContinuing() throws Exception{
+	public void fromNewToContinuing() throws Exception {
 		List <Section> sections = getSixSubjectsNoPrerequisites();
-		Student newStudent = new Student(1, StudentStatus.NEW, Curriculum.BS_COMPUTER_SCIENCE);
-		newStudent.getEnrollmentFormBuilder().addSection(sections.get(0)).addSection(sections.get(1)).addSection(sections.get(2)).addSection(sections.get(3)).addSection(sections.get(4)).addSection(sections.get(5)).enroll();
+		newStudent.getEnrollmentFormBuilder().addSection(sections.get(0))
+											 .addSection(sections.get(1))
+											 .addSection(sections.get(2))
+											 .addSection(sections.get(3))
+											 .addSection(sections.get(4))
+											 .addSection(sections.get(5))
+											 .enroll();
 		assertEquals(1, newStudent.getNumEnrollmentForms());
 		newStudent.updateStatus();
 		assertEquals(StudentStatus.CONTINUING, newStudent.getStatus());
