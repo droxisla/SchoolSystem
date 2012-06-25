@@ -18,11 +18,6 @@ public class Teacher {
 		this.facultyNumber = facultyNumber;
 		this.name = name;
 	}
-	
-	//TODO: Call an Exception if Teacher attempts to grade a Section he doesn't teach
-	public void gradeClassCard(ClassCard classCard, BigDecimal grade) {
-		classCard.setGrade(grade);
-	}
 
 	public int getFacultyNumber() {
 		return facultyNumber;

@@ -232,14 +232,13 @@ public class EnrollmentTests {
 																 .addSection(sections.get(4))
 																 .addSection(sections.get(5))
 																 .enroll();
-		Teacher teacher = sections.get(0).getTeacher();
 		List<ClassCard> classCards = ef.getClassCards();
-		teacher.gradeClassCard(classCards.get(0), new BigDecimal("1.00"));
-		teacher.gradeClassCard(classCards.get(1), new BigDecimal("1.00"));
-		teacher.gradeClassCard(classCards.get(2), new BigDecimal("3.00"));
-		teacher.gradeClassCard(classCards.get(3), new BigDecimal("3.00"));
-		teacher.gradeClassCard(classCards.get(4), new BigDecimal("5.00"));
-		teacher.gradeClassCard(classCards.get(5), new BigDecimal("5.00"));
+		classCards.get(0).setGrade(new BigDecimal("1.00"));
+		classCards.get(1).setGrade(new BigDecimal("1.00"));
+		classCards.get(2).setGrade(new BigDecimal("3.00"));
+		classCards.get(3).setGrade(new BigDecimal("3.00"));
+		classCards.get(4).setGrade(new BigDecimal("5.00"));
+		classCards.get(5).setGrade(new BigDecimal("5.00"));
 		
 		assertEquals(0, new BigDecimal("3.00").compareTo(newStudent.calculateAverage()));
 	}
