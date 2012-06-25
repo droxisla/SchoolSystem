@@ -34,14 +34,7 @@ public class StudentStatusTests {
 
 	@Test
 	public void fromNewToContinuing() throws Exception {
-		List <Section> sections = getSixSubjectsNoPrerequisites();
-		EnrollmentForm ef = newStudent.getEnrollmentFormBuilder().addSection(sections.get(0))
-																 .addSection(sections.get(1))
-																 .addSection(sections.get(2))
-																 .addSection(sections.get(3))
-																 .addSection(sections.get(4))
-																 .addSection(sections.get(5))
-																 .enroll();
+		EnrollmentForm ef = enrollStudentInEighteenUnits(newStudent);
 		assertEquals(1, newStudent.getNumEnrollmentForms());
 		List<ClassCard> classCards = ef.getClassCards();
 		classCards.get(0).setGrade(new BigDecimal("1.00"));
@@ -57,14 +50,7 @@ public class StudentStatusTests {
 	
 	@Test
 	public void fromNewToProbationary() throws Exception {
-		List <Section> sections = getSixSubjectsNoPrerequisites();
-		EnrollmentForm ef = newStudent.getEnrollmentFormBuilder().addSection(sections.get(0))
-																 .addSection(sections.get(1))
-																 .addSection(sections.get(2))
-																 .addSection(sections.get(3))
-																 .addSection(sections.get(4))
-																 .addSection(sections.get(5))
-																 .enroll();
+		EnrollmentForm ef = enrollStudentInEighteenUnits(newStudent);
 		assertEquals(1, newStudent.getNumEnrollmentForms());
 		
 		List<ClassCard> classCards = ef.getClassCards();
@@ -81,14 +67,7 @@ public class StudentStatusTests {
 	
 	@Test
 	public void fromContinuingToProbationary() throws Exception {
-		List <Section> sections = getSixSubjectsNoPrerequisites();
-		EnrollmentForm ef = continuingStudent.getEnrollmentFormBuilder().addSection(sections.get(0))
-																 .addSection(sections.get(1))
-																 .addSection(sections.get(2))
-																 .addSection(sections.get(3))
-																 .addSection(sections.get(4))
-																 .addSection(sections.get(5))
-																 .enroll();
+		EnrollmentForm ef = enrollStudentInEighteenUnits(continuingStudent);
 		assertEquals(1, continuingStudent.getNumEnrollmentForms());
 		
 		List<ClassCard> classCards = ef.getClassCards();
@@ -101,6 +80,17 @@ public class StudentStatusTests {
 		
 		continuingStudent.updateStatus();
 		assertEquals(StudentStatus.PROBATIONARY, continuingStudent.getStatus());
+	}
+	
+	private EnrollmentForm enrollStudentInEighteenUnits(Student student) throws Exception {
+		List <Section> sections = getSixSubjectsNoPrerequisites();
+		return student.getEnrollmentFormBuilder().addSection(sections.get(0))
+												  .addSection(sections.get(1))
+												  .addSection(sections.get(2))
+												  .addSection(sections.get(3))
+												  .addSection(sections.get(4))
+												  .addSection(sections.get(5))
+												  .enroll();
 	}
 	
 	private List<Section> getSixSubjectsNoPrerequisites() throws Exception{
