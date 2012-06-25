@@ -30,7 +30,7 @@ public class SectionManager {
 		sectionsMap.clear();
 	}
 
-	boolean teacherHasScheduledClass(Teacher teacher, Schedule schedule) {
+	private boolean teacherHasScheduledClass(Teacher teacher, Schedule schedule) {
 		Map<Schedule, Section> teacherScheduledSections = teacherScheduledSectionMap.get(teacher);
 
 		if (teacherScheduledSections == null) {
@@ -44,7 +44,7 @@ public class SectionManager {
 		return false;
 	}
 
-	boolean teacherHasScheduledClassInSection(Teacher teacher, Schedule schedule, Section section) {
+	private boolean teacherHasScheduledClassInSection(Teacher teacher, Schedule schedule, Section section) {
 		Map<Schedule, Section> teacherScheduledSections = teacherScheduledSectionMap.get(teacher);
 
 		if (teacherScheduledSections == null) {
@@ -61,6 +61,8 @@ public class SectionManager {
 	}
 
 	void addSection(Section section) throws ScheduleConflictException {
+		assert section != null;
+
 		Teacher teacher = section.getTeacher();
 		Schedule schedule = section.getSchedule();
 
@@ -87,11 +89,15 @@ public class SectionManager {
 		teacherScheduledSection.put(schedule, section);
 	}
 
-	public boolean hasSection(Section section) {
+	boolean hasSection(Section section) {
+		assert section != null;
+
 		return sectionsMap.containsKey(section);
 	}
 
-	public Section getSection(Section section) {
+	Section getSection(Section section) {
+		assert section != null;
+
 		Section storedSection = sectionsMap.get(section);
 		if (storedSection == null) {
 			return section;

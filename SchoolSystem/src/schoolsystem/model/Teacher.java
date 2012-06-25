@@ -6,6 +6,13 @@ public class Teacher {
 	private final int facultyNumber;
 
 	public Teacher(int facultyNumber, String name) {
+		if(name==null) {
+			throw new IllegalArgumentException("Teacher's name must not be null.");
+		}
+		if(facultyNumber<0) {
+			throw new IllegalArgumentException("Faculty number must not be negative.");
+		}
+		
 		this.facultyNumber = facultyNumber;
 		this.name = name;
 	}

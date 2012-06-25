@@ -48,6 +48,10 @@ public enum StudentStatus {
 
 	StudentStatus(int minUnits, int maxUnits, boolean isEligibleToEnroll, boolean mustCheckPrerequisites,
 			boolean canTakePrerequisiteSubjects) {
+
+		assert minUnits >= 0;
+		assert maxUnits >= 0;
+
 		this.minUnits = minUnits;
 		this.maxUnits = maxUnits;
 		this.isEligibleToEnroll = isEligibleToEnroll;

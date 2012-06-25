@@ -19,6 +19,8 @@ public class EnrollmentForm {
 		private int totalUnits;
 
 		EnrollmentFormBuilder(Student student) throws IneligibleStudentException {
+			assert student != null;
+			
 			this.student = student;
 			this.totalUnits = 0;
 			this.studentStatus = student.getStatus();
@@ -31,12 +33,17 @@ public class EnrollmentForm {
 		}
 
 		public EnrollmentFormBuilder addSection(Section section) throws SectionFullException, SubjectUnitsRestrictionException, ScheduleConflictException {
+			if(section==null) {
+				throw new IllegalArgumentException("Section cannot be null.");
+			}
+			
 			if (section.isFull()) {
 				throw new SectionFullException();
 			}
 
 			checkScheduleConflict(section);
 			addUnits(section);
+			
 			sections.add(section);
 
 			return this;
@@ -80,6 +87,9 @@ public class EnrollmentForm {
 	}
 
 	private EnrollmentForm(Student student, List<Section> sections) {
+		assert student != null;
+		assert sections!=null && !sections.isEmpty();
+		
 		this.sections = sections;
 		this.student = student;
 		this.classCards = new ArrayList<ClassCard>();

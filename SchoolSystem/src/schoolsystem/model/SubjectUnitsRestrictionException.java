@@ -8,7 +8,8 @@ public class SubjectUnitsRestrictionException extends Exception {
 		super();
 	}
 
-	public SubjectUnitsRestrictionException(String paramString, Throwable paramThrowable, boolean paramBoolean1, boolean paramBoolean2) {
+	public SubjectUnitsRestrictionException(String paramString, Throwable paramThrowable, boolean paramBoolean1,
+			boolean paramBoolean2) {
 		super(paramString, paramThrowable, paramBoolean1, paramBoolean2);
 	}
 

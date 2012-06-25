@@ -1,20 +1,19 @@
 package schoolsystem.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import schoolsystem.model.Section;
-import schoolsystem.model.Subject;
-import schoolsystem.model.Teacher;
 import schoolsystem.model.schedule.AcademicTerm;
 import schoolsystem.model.schedule.Schedule;
 import schoolsystem.model.schedule.ScheduleConflictException;
 import schoolsystem.model.schedule.ScheduleDays;
 import schoolsystem.model.schedule.ScheduleTimes;
 
-public class SectionTests {
+public class SectionTest {
 
 	private AcademicTerm academicTerm;
 	private Curriculum curriculum;
@@ -58,16 +57,38 @@ public class SectionTests {
 	}
 
 	@Test(expected = SectionFullException.class)
-	public void classCardsNotLost() throws SectionFullException, IneligibleStudentException, SubjectUnitsRestrictionException, ScheduleConflictException {
+	public void classCardsNotLost() throws SectionFullException, IneligibleStudentException,
+			SubjectUnitsRestrictionException, ScheduleConflictException {
 		Teacher teacher = createTeacher();
 		Subject subject = createSubject();
 		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
 
 		for (int i = 1; i <= Section.MAX_STUDENTS + 1; i++) {
+			// Creating the same section still uses the same list of class cards
 			Section section = new Section("A", subject, schedule, teacher);
 
 			Student student = new Student(i, StudentStatus.GRADUATING, curriculum);
 			student.getEnrollmentFormBuilder().addSection(section).enroll();
+		}
+	}
+
+	@Test
+	public void sectionFull() throws SectionFullException, IneligibleStudentException,
+			SubjectUnitsRestrictionException, ScheduleConflictException {
+		Teacher teacher = createTeacher();
+		Subject subject = createSubject();
+		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
+		Section section = new Section("A", subject, schedule, teacher);
+
+		for (int i = 1; i <= Section.MAX_STUDENTS; i++) {
+			Student student = new Student(i, StudentStatus.GRADUATING, curriculum);
+			student.getEnrollmentFormBuilder().addSection(section).enroll();
+
+			if (i == Section.MAX_STUDENTS) {
+				assertTrue(section.isFull());
+			} else {
+				assertFalse(section.isFull());
+			}
 		}
 	}
 

@@ -13,6 +13,16 @@ public class Student {
 	private final List<EnrollmentForm> enrollmentForms;
 
 	public Student(int studentNumber, StudentStatus status, Curriculum curriculum) {
+		if (studentNumber < 0) {
+			throw new IllegalArgumentException("Student number must not be negative.");
+		}
+		if (status == null) {
+			throw new IllegalArgumentException("Student status must not be null.");
+		}
+		if (curriculum == null) {
+			throw new IllegalArgumentException("Curriculum must not be null.");
+		}
+
 		this.enrollmentForms = new ArrayList<EnrollmentForm>();
 		this.studentNumber = studentNumber;
 		this.status = status;
@@ -24,9 +34,12 @@ public class Student {
 	}
 
 	void addEnrollmentForm(EnrollmentForm enrollmentForm) {
+		assert enrollmentForm != null;
+
 		if (!enrollmentForm.getStudent().equals(this)) {
 			throw new IllegalArgumentException("Enrollment form does not belong to student.");
 		}
+		
 		enrollmentForms.add(enrollmentForm);
 	}
 	

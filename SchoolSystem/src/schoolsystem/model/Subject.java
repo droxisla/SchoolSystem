@@ -1,6 +1,7 @@
 package schoolsystem.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Subject {
@@ -15,8 +16,15 @@ public class Subject {
 	}
 
 	public Subject(String name, List<Subject> prerequisites) {
+		if (name == null) {
+			throw new IllegalArgumentException("Subject name must not be null.");
+		}
+		if (prerequisites == null) {
+			throw new IllegalArgumentException("List of prerequisites must not be null");
+		}
+
 		this.name = name;
-		this.prerequisites = new ArrayList<Subject>(prerequisites);
+		this.prerequisites = Collections.unmodifiableList(prerequisites);
 	}
 
 	@Override
@@ -25,7 +33,7 @@ public class Subject {
 	}
 
 	public List<Subject> getPrerequisites() {
-		return new ArrayList<Subject>(prerequisites);
+		return prerequisites;
 	}
 
 	public int getNumberOfUnits() {

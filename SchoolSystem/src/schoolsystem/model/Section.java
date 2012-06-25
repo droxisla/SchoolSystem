@@ -19,12 +19,25 @@ public class Section {
 	public Section(String name, Subject subject, Schedule schedule, Teacher teacher) throws ScheduleConflictException {
 		SectionManager sectionManager = SectionManager.getInstance();
 
+		if (name == null) {
+			throw new IllegalArgumentException("Section name must not be null.");
+		}
+		if (subject == null) {
+			throw new IllegalArgumentException("Subject must not be null.");
+		}
+		if (schedule == null) {
+			throw new IllegalArgumentException("Schedule must not be null.");
+		}
+		if (teacher == null) {
+			throw new IllegalArgumentException("Teacher must not be null.");
+		}
+
 		this.name = name;
 		this.subject = subject;
 		this.schedule = schedule;
 		this.teacher = teacher;
 
-		if(sectionManager.hasSection(this)) {
+		if (sectionManager.hasSection(this)) {
 			Section storedSection = sectionManager.getSection(this);
 			this.classCards = storedSection.classCards;
 		} else {
@@ -47,8 +60,7 @@ public class Section {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		return sb.append(subject.toString()).append(" ").append(name).toString();
+		return subject + " " + name;
 	}
 
 	public String getSectionName() {
@@ -56,11 +68,12 @@ public class Section {
 	}
 
 	void addClassCard(ClassCard classCard) {
+		assert classCard != null;
+		assert classCards.size() <= MAX_STUDENTS : "Section capacity is full.";
+
 		if (!classCard.getSection().equals(this)) {
 			throw new IllegalArgumentException("Class card does not belong to this section");
 		}
-
-		assert classCards.size() <= MAX_STUDENTS : "Section capacity is full.";
 
 		classCards.add(classCard);
 	}

@@ -7,6 +7,9 @@ public class ClassCard {
 	private final Section section;
 
 	ClassCard(EnrollmentForm enrollmentForm, Section section) {
+		assert enrollmentForm!=null;
+		assert section!=null;
+		
 		if (!enrollmentForm.hasSection(section)) {
 			throw new IllegalArgumentException("Section '" + section + "' not present in enrollment form '" + enrollmentForm + "'.");
 		}
