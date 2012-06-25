@@ -33,6 +33,8 @@ public enum StudentStatus {
 	},
 	PROBATIONARY(true, true, true) {
 		public StudentStatus update(int numEnrollmentForms, BigDecimal average) {
+			if(PASSING_GRADE.compareTo(average) >= 0)
+				return CONTINUING;
 			return this;
 		}; 
 	},

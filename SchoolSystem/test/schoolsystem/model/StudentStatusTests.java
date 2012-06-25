@@ -15,6 +15,7 @@ public class StudentStatusTests {
 	private AcademicTerm academicTerm;
 	private Student newStudent;
 	private Student continuingStudent;
+	private Student probationaryStudent;
 
 	@Before
 	public void createFixture() throws Exception {
@@ -23,6 +24,7 @@ public class StudentStatusTests {
 		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
 		newStudent = new Student(1, StudentStatus.NEW, Curriculum.BS_COMPUTER_SCIENCE);
 		continuingStudent = new Student(2, StudentStatus.CONTINUING, Curriculum.BS_COMPUTER_SCIENCE);
+		probationaryStudent = new Student(3, StudentStatus.PROBATIONARY, Curriculum.BS_COMPUTER_SCIENCE);
 	}
 	
 	@Test
@@ -80,6 +82,23 @@ public class StudentStatusTests {
 		
 		continuingStudent.updateStatus();
 		assertEquals(StudentStatus.PROBATIONARY, continuingStudent.getStatus());
+	}
+	
+	@Test
+	public void fromProbationaryToContinuing() throws Exception {
+		EnrollmentForm ef = enrollStudentInEighteenUnits(probationaryStudent);
+		assertEquals(1, probationaryStudent.getNumEnrollmentForms());
+		
+		List<ClassCard> classCards = ef.getClassCards();
+		classCards.get(0).setGrade(new BigDecimal("1.00"));
+		classCards.get(1).setGrade(new BigDecimal("1.00"));
+		classCards.get(2).setGrade(new BigDecimal("3.00"));
+		classCards.get(3).setGrade(new BigDecimal("3.00"));
+		classCards.get(4).setGrade(new BigDecimal("5.00"));
+		classCards.get(5).setGrade(new BigDecimal("5.00"));
+		
+		probationaryStudent.updateStatus();
+		assertEquals(StudentStatus.CONTINUING, probationaryStudent.getStatus());
 	}
 	
 	private EnrollmentForm enrollStudentInEighteenUnits(Student student) throws Exception {
