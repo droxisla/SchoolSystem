@@ -18,6 +18,7 @@ public class StudentStatusTests {
 	private Curriculum curriculum;
 	private AcademicTerm academicTerm;
 	private Student newStudent;
+	private Student continuingStudent;
 
 	@Before
 	public void createFixture() throws Exception {
@@ -25,6 +26,7 @@ public class StudentStatusTests {
 		SectionManager.getInstance().reset();
 		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
 		newStudent = new Student(1, StudentStatus.NEW, Curriculum.BS_COMPUTER_SCIENCE);
+		continuingStudent = new Student(2, StudentStatus.CONTINUING, Curriculum.BS_COMPUTER_SCIENCE);
 	}
 	
 	@Test
@@ -79,6 +81,30 @@ public class StudentStatusTests {
 		
 		newStudent.updateStatus();
 		assertEquals(StudentStatus.PROBATIONARY, newStudent.getStatus());
+	}
+	
+	@Test
+	public void fromContinuingToProbationary() throws Exception {
+		List <Section> sections = getSixSubjectsNoPrerequisites();
+		EnrollmentForm ef = continuingStudent.getEnrollmentFormBuilder().addSection(sections.get(0))
+																 .addSection(sections.get(1))
+																 .addSection(sections.get(2))
+																 .addSection(sections.get(3))
+																 .addSection(sections.get(4))
+																 .addSection(sections.get(5))
+																 .enroll();
+		assertEquals(1, continuingStudent.getNumEnrollmentForms());
+		
+		List<ClassCard> classCards = ef.getClassCards();
+		classCards.get(0).setGrade(new BigDecimal("5.00"));
+		classCards.get(1).setGrade(new BigDecimal("1.00"));
+		classCards.get(2).setGrade(new BigDecimal("3.00"));
+		classCards.get(3).setGrade(new BigDecimal("3.00"));
+		classCards.get(4).setGrade(new BigDecimal("5.00"));
+		classCards.get(5).setGrade(new BigDecimal("5.00"));
+		
+		continuingStudent.updateStatus();
+		assertEquals(StudentStatus.PROBATIONARY, continuingStudent.getStatus());
 	}
 	
 	private List<Section> getSixSubjectsNoPrerequisites() throws Exception{
