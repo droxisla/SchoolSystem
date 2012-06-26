@@ -15,12 +15,6 @@ public class EnrollmentForm {
 	private final List<Section> sections;
 	private int totalUnits;
 
-	public EnrollmentForm() { // TODO
-		sections = Collections.emptyList();
-		classCards = Collections.emptyList();
-		student = null;
-	}
-
 	public EnrollmentForm(Student student) throws IneligibleStudentException {
 		if (student == null) {
 			throw new IllegalArgumentException("Student must not be null.");
