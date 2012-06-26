@@ -16,6 +16,7 @@ import schoolsystem.model.schedule.ScheduleDays;
 import schoolsystem.model.schedule.ScheduleTimes;
 
 public class StudentStatusUpdateTest {
+	
 	private Curriculum curriculum;
 	private AcademicTerm academicTerm;
 	private Student newStudent;

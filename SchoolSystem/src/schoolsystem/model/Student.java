@@ -44,34 +44,27 @@ public class Student {
 		enrollmentForms.add(enrollmentForm);
 	}
 
-	private EnrollmentForm getCurrentEnrollmentForm() {
-		if (enrollmentForms.isEmpty()) {
-			return EnrollmentForm.BLANK_ENROLLMENT_FORM;
-		}
-		return enrollmentForms.get(enrollmentForms.size() - 1);
-	}
-
 	public void updateStatus() {
 		if (classCardsHaveGrades()) {
-			this.status = status.update(new TermStatus(calculateAverage(), remainingUnits(), prerequisitesDone()));
+			this.status = status.update(new TermStatus(calculateLastTermAverage(), remainingUnits(), prerequisitesDone()));
 		}
 	}
-	
+
 	private int remainingUnits() {
 		int units = curriculum.getTotalUnits();
 		List<Subject> subjects = curriculum.getSubjects();
-		for(Subject s: subjects) {
-			if(hasPassedSubject(s)) {
+		for (Subject s : subjects) {
+			if (hasPassedSubject(s)) {
 				units -= 3;
 			}
 		}
 		return units;
 	}
-	
+
 	private boolean prerequisitesDone() {
 		Set<Subject> prereqs = curriculum.getPrerequisites();
-		for(Subject p: prereqs) {
-			if(!hasPassedSubject(p)) {
+		for (Subject p : prereqs) {
+			if (!hasPassedSubject(p)) {
 				return false;
 			}
 		}
@@ -79,7 +72,12 @@ public class Student {
 	}
 
 	private Boolean classCardsHaveGrades() {
-		List<ClassCard> classCards = getCurrentEnrollmentForm().getClassCards();
+		if (enrollmentForms.isEmpty()) {
+			return false;
+		}
+
+		EnrollmentForm lastTermEnrollmentForm = enrollmentForms.get(enrollmentForms.size() - 1);
+		List<ClassCard> classCards = lastTermEnrollmentForm.getClassCards();
 		if (0 == classCards.size()) {
 			return false;
 		}
@@ -90,10 +88,16 @@ public class Student {
 		return true;
 	}
 
-	public BigDecimal calculateAverage() {//TODO refactor as getLastTerm'sAverage
+	public BigDecimal calculateLastTermAverage() {
 		BigDecimal average = BigDecimal.ZERO;
+
+		if (enrollmentForms.isEmpty()) {
+			return average;
+		}
 		
-		List<ClassCard> classCards = getCurrentEnrollmentForm().getClassCards();
+		EnrollmentForm lastTermEnrollmentForm = enrollmentForms.get(enrollmentForms.size() - 1);
+
+		List<ClassCard> classCards = lastTermEnrollmentForm.getClassCards();
 		for (ClassCard c : classCards) {
 			Grade grade = c.getGrade();
 
@@ -103,7 +107,7 @@ public class Student {
 
 			average = average.add(grade.value());
 		}
-		
+
 		average = average.divide(new BigDecimal(classCards.size()), 2, BigDecimal.ROUND_CEILING);
 		return average;
 	}

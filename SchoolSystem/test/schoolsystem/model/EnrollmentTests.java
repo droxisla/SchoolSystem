@@ -55,6 +55,8 @@ public class EnrollmentTests {
 		
 		assertEquals(1, student.getNumEnrollmentForms());
 	}
+	 
+	
 
 	@Test(expected = UnsatisfiedPrerequisiteException.class)
 	public void enrollNewStudentsWithUnsatisfiedPrereq() throws Exception {
@@ -323,7 +325,7 @@ public class EnrollmentTests {
 		classCards.get(4).setGrade(Grade.G5_00);
 		classCards.get(5).setGrade(Grade.G5_00);
 
-		assertEquals(0, new BigDecimal("3.00").compareTo(newStudent.calculateAverage()));
+		assertEquals(0, new BigDecimal("3.00").compareTo(newStudent.calculateLastTermAverage()));
 	}
 
 	private List<Section> getSixSectionsNoPrerequisites() throws Exception {

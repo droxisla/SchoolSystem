@@ -155,7 +155,6 @@ public enum StudentStatus {
 				return GRADUATING;
 			} else if (Grade.isPassing(ts.getAverage())) {
 				return CONTINUING;
-				// TODO: to grad
 			} else {
 				return INELIGIBLE;
 			}

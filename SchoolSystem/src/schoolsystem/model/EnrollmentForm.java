@@ -9,8 +9,6 @@ import schoolsystem.model.schedule.Schedule;
 import schoolsystem.model.schedule.ScheduleConflictException;
 
 public class EnrollmentForm {
-	// TODO may be dangerous?
-	public static final EnrollmentForm BLANK_ENROLLMENT_FORM = new EnrollmentForm();
 
 	private final Student student;
 	private final List<ClassCard> classCards;
@@ -43,7 +41,7 @@ public class EnrollmentForm {
 	private void checkIfPreviousTermHasAverage() {
 		boolean enrolledLastTerm = student.getNumEnrollmentForms() > 0;
 		if (enrolledLastTerm) {
-			boolean previousTermSubjectsHaveGrade = student.calculateAverage().equals(BigDecimal.ZERO);
+			boolean previousTermSubjectsHaveGrade = student.calculateLastTermAverage().equals(BigDecimal.ZERO);
 
 			if (previousTermSubjectsHaveGrade) {
 				throw new IllegalStateException(
