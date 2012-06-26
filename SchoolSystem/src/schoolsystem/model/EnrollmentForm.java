@@ -80,8 +80,8 @@ public class EnrollmentForm {
 	}
 
 	private void checkDuplicateSubject(Subject subject) throws SubjectUnitsRestrictionException {
-		for(Section section:sections) {
-			if(section.getSubject().equals(subject)) {
+		for (Section section : sections) {
+			if (section.getSubject().equals(subject)) {
 				throw new SubjectUnitsRestrictionException("Student is enrolling the same subject twice.");
 			}
 		}
@@ -134,9 +134,10 @@ public class EnrollmentForm {
 	public void submitForEnrollment() throws SubjectUnitsRestrictionException {
 		StudentStatus studentStatus = student.getStatus();
 		int minUnits = studentStatus.getMinUnits();
-		
+
 		if (totalUnits < minUnits) {
-			throw new SubjectUnitsRestrictionException("Student must take at least "+studentStatus.getMinUnits()+" number of units.");
+			throw new SubjectUnitsRestrictionException("Student must take at least " + studentStatus.getMinUnits()
+					+ " number of units.");
 		}
 
 		if (!hasBeenSubmittedForEnrollment()) {
@@ -199,4 +200,9 @@ public class EnrollmentForm {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "EnrollmentForm [classCards=" + classCards + "]";
+	}
+	
 }

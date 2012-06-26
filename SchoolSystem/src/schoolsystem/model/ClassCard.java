@@ -80,4 +80,9 @@ public class ClassCard {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "ClassCard [student=" + student + ", section=" + section + ", grade=" + grade + "]";
+	}
 }

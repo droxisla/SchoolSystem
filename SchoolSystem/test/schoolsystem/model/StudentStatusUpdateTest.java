@@ -16,7 +16,7 @@ import schoolsystem.model.schedule.ScheduleDays;
 import schoolsystem.model.schedule.ScheduleTimes;
 
 public class StudentStatusUpdateTest {
-	
+
 	private Curriculum curriculum;
 	private AcademicTerm academicTerm;
 	private Student newStudent;
@@ -27,9 +27,9 @@ public class StudentStatusUpdateTest {
 	public void createFixture() throws Exception {
 		academicTerm = AcademicTerm.academicTermAfterCurrent();
 		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
-		newStudent = new Student(1, StudentStatus.NEW, Curriculum.BS_COMPUTER_SCIENCE);
-		continuingStudent = new Student(2, StudentStatus.CONTINUING, Curriculum.BS_COMPUTER_SCIENCE);
-		probationaryStudent = new Student(3, StudentStatus.PROBATIONARY, Curriculum.BS_COMPUTER_SCIENCE);
+		newStudent = new Student(1, "Juan dela Cruz", StudentStatus.NEW, Curriculum.BS_COMPUTER_SCIENCE);
+		continuingStudent = new Student(2, "Juan Cruz", StudentStatus.CONTINUING, Curriculum.BS_COMPUTER_SCIENCE);
+		probationaryStudent = new Student(3, "Juan Ruz", StudentStatus.PROBATIONARY, Curriculum.BS_COMPUTER_SCIENCE);
 	}
 
 	@Test
@@ -152,7 +152,7 @@ public class StudentStatusUpdateTest {
 	@Test
 	public void fromProbationaryToGraduate() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
-		probationaryStudent = new Student(4, StudentStatus.PROBATIONARY, curriculum);
+		probationaryStudent = new Student(4, "Juan dela Pena", StudentStatus.PROBATIONARY, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(probationaryStudent);
 		setGradesToPassing(ef.getClassCards());
 		probationaryStudent.updateStatus();
@@ -162,7 +162,7 @@ public class StudentStatusUpdateTest {
 	@Test
 	public void fromProbationaryToGraduating() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
-		probationaryStudent = new Student(4, StudentStatus.PROBATIONARY, curriculum);
+		probationaryStudent = new Student(4, "Juan dela Pena", StudentStatus.PROBATIONARY, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(probationaryStudent);
 		List<ClassCard> classCards = ef.getClassCards();
 		for (int i = 0; i < classCards.size(); i++) {
@@ -179,7 +179,7 @@ public class StudentStatusUpdateTest {
 	@Test
 	public void fromGraduatingToGraduating() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
-		Student graduatingStudent = new Student(4, StudentStatus.GRADUATING, curriculum);
+		Student graduatingStudent = new Student(4, "Juan dela Pena", StudentStatus.GRADUATING, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(graduatingStudent);
 		List<ClassCard> classCards = ef.getClassCards();
 		for (int i = 0; i < classCards.size(); i++) {
@@ -196,7 +196,7 @@ public class StudentStatusUpdateTest {
 	@Test
 	public void fromGraduatingToGraduate() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
-		Student graduatingStudent = new Student(4, StudentStatus.GRADUATING, curriculum);
+		Student graduatingStudent = new Student(4, "Juan dela Pena", StudentStatus.GRADUATING, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(graduatingStudent);
 		setGradesToPassing(ef.getClassCards());
 		graduatingStudent.updateStatus();
@@ -206,7 +206,7 @@ public class StudentStatusUpdateTest {
 	@Test
 	public void fromGraduatingtoProbationary() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
-		Student graduatingStudent = new Student(4, StudentStatus.GRADUATING, curriculum);
+		Student graduatingStudent = new Student(4, "Juan dela Pena", StudentStatus.GRADUATING, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(graduatingStudent);
 		setGradesToFailing(ef.getClassCards());
 		graduatingStudent.updateStatus();

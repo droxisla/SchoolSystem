@@ -37,7 +37,7 @@ public class EnrollmentFormTest {
 	@Test
 	public void hasSection() throws SectionFullException, SubjectUnitsRestrictionException, ScheduleConflictException,
 			IneligibleStudentException, UnsatisfiedPrerequisiteException {
-		Student student = new Student(1, StudentStatus.GRADUATING, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatus.GRADUATING, curriculum);
 		Section section = getFirstSubjectSection();
 		
 		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();

@@ -13,12 +13,10 @@ public class Teacher {
 
 	public Teacher(int facultyNumber, String name) {
 		if (name == null) {
-			throw new IllegalArgumentException(
-					"Teacher's name must not be null.");
+			throw new IllegalArgumentException("Teacher's name must not be null.");
 		}
 		if (facultyNumber < 0) {
-			throw new IllegalArgumentException(
-					"Faculty number must not be negative.");
+			throw new IllegalArgumentException("Faculty number must not be negative.");
 		}
 
 		this.scheduledSections = new HashMap<Schedule, Section>();
@@ -42,8 +40,7 @@ public class Teacher {
 		assert section != null;
 
 		if (!section.getTeacher().equals(this)) {
-			throw new IllegalArgumentException(
-					"Section being added does not belong to the teacher");
+			throw new IllegalArgumentException("Section being added does not belong to the teacher");
 		}
 
 		scheduledSections.put(section.getSchedule(), section);
@@ -55,7 +52,7 @@ public class Teacher {
 
 	@Override
 	public String toString() {
-		return name;
+		return name + " (" + facultyNumber + ")";
 	}
 
 	@Override

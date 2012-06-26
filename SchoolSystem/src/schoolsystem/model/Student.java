@@ -12,8 +12,9 @@ public class Student {
 	private StudentStatus status;
 	private final Curriculum curriculum;
 	private final List<EnrollmentForm> enrollmentForms;
+	private final String studentName;
 
-	public Student(int studentNumber, StudentStatus status, Curriculum curriculum) {
+	public Student(int studentNumber, String studentName, StudentStatus status, Curriculum curriculum) {
 		if (studentNumber < 0) {
 			throw new IllegalArgumentException("Student number must not be negative.");
 		}
@@ -23,7 +24,11 @@ public class Student {
 		if (curriculum == null) {
 			throw new IllegalArgumentException("Curriculum must not be null.");
 		}
+		if (studentName == null) {
+			throw new IllegalArgumentException("Student name must not be null.");
+		}
 
+		this.studentName = studentName;
 		this.enrollmentForms = new ArrayList<EnrollmentForm>();
 		this.studentNumber = studentNumber;
 		this.status = status;
@@ -46,7 +51,8 @@ public class Student {
 
 	public void updateStatus() {
 		if (classCardsHaveGrades()) {
-			this.status = status.update(new TermStatus(calculateLastTermAverage(), getRemainingUnits(), prerequisitesDone()));
+			this.status = status.update(new TermStatus(calculateLastTermAverage(), getRemainingUnits(),
+					prerequisitesDone()));
 		}
 	}
 
@@ -94,7 +100,7 @@ public class Student {
 		if (enrollmentForms.isEmpty()) {
 			return average;
 		}
-		
+
 		EnrollmentForm lastTermEnrollmentForm = enrollmentForms.get(enrollmentForms.size() - 1);
 
 		List<ClassCard> classCards = lastTermEnrollmentForm.getClassCards();
@@ -126,7 +132,7 @@ public class Student {
 
 	@Override
 	public String toString() {
-		return "" + studentNumber;
+		return studentName + " (" + studentNumber + ")";
 	}
 
 	@Override
@@ -156,10 +162,10 @@ public class Student {
 	}
 
 	public boolean hasPassedSubject(Subject subject) {
-		if(subject==null) {
+		if (subject == null) {
 			return false;
 		}
-		
+
 		for (EnrollmentForm enrollmentForm : enrollmentForms) {
 			for (ClassCard classCard : enrollmentForm.getClassCards()) {
 				if (classCard.hasPassedSubject(subject)) {
@@ -169,7 +175,7 @@ public class Student {
 		}
 		return false;
 	}
- 
+
 	public List<EnrollmentForm> getSubmittedEnrollmentForms() {
 		return Collections.unmodifiableList(enrollmentForms);
 	}

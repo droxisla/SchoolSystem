@@ -105,7 +105,7 @@ public enum Curriculum {
 		initializeSubjectMapByName();
 		createPrerequisiteSet();
 	}
-
+	
 	private void createPrerequisiteSet() {
 		prerequisites = new HashSet<Subject>();
 		for(Subject s: subjects) {
