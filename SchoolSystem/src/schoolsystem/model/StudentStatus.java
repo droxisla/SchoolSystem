@@ -151,7 +151,7 @@ public enum StudentStatus {
 				return this;
 			} else if (ts.getUnitsLeft() == 0) {
 				return GRADUATE;
-			} else if (ts.getUnitsLeft() <= 18 && Grade.isPassing(ts.getAverage())) {
+			} else if (ts.getUnitsLeft() <= UNITS_FOR_GRADUATING && Grade.isPassing(ts.getAverage())) {
 				return GRADUATING;
 			} else if (Grade.isPassing(ts.getAverage())) {
 				return CONTINUING;
@@ -216,6 +216,8 @@ public enum StudentStatus {
 			return false;
 		};
 	};
+
+	private static final int UNITS_FOR_GRADUATING = 18;
 
 	StudentStatus() {
 
