@@ -101,10 +101,22 @@ public enum Curriculum {
 	private static int DEFAULT_SUBJECT_UNITS = 3;
 
 	Curriculum() {
-		subjects = initializeSubjects();
-		subjectMapByName = new HashMap<String, Subject>();
-		prerequisites = new HashSet<Subject>();
+		subjects = initializeSubjects();	
+		initializeSubjectMapByName();
+		createPrerequisiteSet();
+	}
 
+	private void createPrerequisiteSet() {
+		prerequisites = new HashSet<Subject>();
+		for(Subject s: subjects) {
+			for(Subject p : s.getPrerequisites()) {
+				prerequisites.add(p);
+			}
+		}
+	}
+
+	private void initializeSubjectMapByName() throws AssertionError {
+		subjectMapByName = new HashMap<String, Subject>();
 		for (Subject subject : subjects) {
 			String subjectName = subject.getName().toLowerCase();
 
@@ -113,12 +125,6 @@ public enum Curriculum {
 			}
 
 			subjectMapByName.put(subjectName, subject);
-		}
-		
-		for(Subject s: subjects) {
-			for(Subject p : s.getPrerequisites()) {
-				prerequisites.add(p);
-			}
 		}
 	}
 
