@@ -149,6 +149,10 @@ public enum StudentStatus {
 		public StudentStatus update(TermStatus ts) {
 			if (ts.getAverage().equals(BigDecimal.ZERO)) {
 				return this;
+			} else if (ts.getUnitsLeft() == 0) {
+				return GRADUATE;
+			} else if (ts.getUnitsLeft() <= 18 && Grade.isPassing(ts.getAverage())) {
+				return GRADUATING;
 			} else if (Grade.isPassing(ts.getAverage())) {
 				return CONTINUING;
 				// TODO: to grad

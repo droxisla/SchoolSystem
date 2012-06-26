@@ -141,6 +141,33 @@ public class StudentStatusUpdateTest {
 	}
 	
 	@Test
+	public void fromProbationaryToGraduate() throws Exception {
+		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
+		probationaryStudent = new Student(4, StudentStatus.PROBATIONARY, curriculum);		
+		EnrollmentForm ef = enrollStudentInEighteenUnits(probationaryStudent);
+		setGradesToPassing(ef.getClassCards());
+		probationaryStudent.updateStatus();
+		assertEquals(StudentStatus.GRADUATE, probationaryStudent.getStatus());
+	}
+	
+	@Test
+	public void fromProbationaryToGraduating() throws Exception {
+		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
+		probationaryStudent = new Student(4, StudentStatus.PROBATIONARY, curriculum);		
+		EnrollmentForm ef = enrollStudentInEighteenUnits(probationaryStudent);
+		List<ClassCard> classCards = ef.getClassCards();
+		for(int i = 0; i < classCards.size(); i++) {
+			if(i == 0) {
+				classCards.get(i).setGrade(Grade.G5_00);
+			} else {
+				classCards.get(i).setGrade(Grade.G1_00);
+			}
+		}
+		probationaryStudent.updateStatus();
+		assertEquals(StudentStatus.GRADUATING, probationaryStudent.getStatus());
+	}
+	
+	@Test
 	public void fromGraduatingToGraduating() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
 		Student graduatingStudent = new Student(4, StudentStatus.GRADUATING, curriculum);		
