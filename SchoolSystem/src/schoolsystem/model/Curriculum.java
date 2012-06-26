@@ -105,6 +105,10 @@ public enum Curriculum {
 	}
 
 	abstract List<Subject> initializeSubjects();
+	
+	public int getTotalUnits() {
+		return subjects.size() * 3;
+	}
 
 	public List<Subject> getSubjects() {
 		return subjects;

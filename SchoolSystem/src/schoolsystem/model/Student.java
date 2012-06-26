@@ -52,8 +52,29 @@ public class Student {
 
 	public void updateStatus() {
 		if (classCardsHaveGrades()) {
-			this.status = status.update(calculateAverage());
+			this.status = status.update(calculateAverage(), remainingUnits(), prerequisitesDone());
 		}
+	}
+	
+	private int remainingUnits() {
+		int units = curriculum.getTotalUnits();
+		List<Subject> subjects = curriculum.getSubjects();
+		for(Subject s: subjects) {
+			if(hasPassedSubject(s)) {
+				units -= 3;
+			}
+		}
+		return units;
+	}
+	
+	private boolean prerequisitesDone() {
+		Set<Subject> prereqs = curriculum.getPrerequisites();
+		for(Subject p: prereqs) {
+			if(!hasPassedSubject(p)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private Boolean classCardsHaveGrades() {
