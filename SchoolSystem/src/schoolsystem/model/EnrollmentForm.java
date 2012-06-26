@@ -30,14 +30,14 @@ public class EnrollmentForm {
 		}
 
 		checkIfPreviousTermHasAverage();
-		
+
 		student.updateStatus();
 	}
 
 	private void checkIfPreviousTermHasAverage() {
 		boolean enrolledLastTerm = student.getNumEnrollmentForms() > 0;
 		if (enrolledLastTerm) {
-			boolean previousTermSubjectsHaveGrade = student.calculateLastTermAverage().equals(BigDecimal.ZERO);
+			boolean previousTermSubjectsHaveGrade = student.calculateCurrentTermAverage().equals(BigDecimal.ZERO);
 
 			if (previousTermSubjectsHaveGrade) {
 				throw new IllegalStateException(
@@ -46,9 +46,23 @@ public class EnrollmentForm {
 		}
 	}
 
+	boolean allClassCardsHaveGrades() {
+		if (classCards.isEmpty()) {
+			return false;
+		}
+		
+		for (ClassCard c : classCards) {
+			if (c.getGrade() == Grade.NO_GRADE) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public void addSection(Section section) throws SectionFullException, SubjectUnitsRestrictionException,
 			ScheduleConflictException, UnsatisfiedPrerequisiteException {
-		
+
 		if (hasBeenSubmittedForEnrollment()) {
 			throw new IllegalStateException("Enrollment form has been submitted already.");
 		}
@@ -71,7 +85,7 @@ public class EnrollmentForm {
 		checkDuplicateSubject(subject);
 		checkScheduleConflict(section);
 		checkRequiredPrerequisites(subject);
-		
+
 		updateTotalUnits(section);
 		sections.add(section);
 	}
@@ -201,5 +215,5 @@ public class EnrollmentForm {
 	public String toString() {
 		return "EnrollmentForm [classCards=" + classCards + "]";
 	}
-	
+
 }

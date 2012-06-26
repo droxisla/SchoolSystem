@@ -57,7 +57,7 @@ public class StudentStatusUpdateTest {
 		newStudent.updateStatus();
 		assertEquals(StudentStatus.PROBATIONARY, newStudent.getStatus());
 	}
-	
+
 	@Test
 	public void fromContinuingToContinuingHasPrerequisitesRemaining() throws Exception {
 		curriculum = Curriculum.EIGHT_SUBJECTS_ONE_PREREQ_SEVENTH;
@@ -67,7 +67,7 @@ public class StudentStatusUpdateTest {
 		continuingStudent.updateStatus();
 		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
 	}
-	
+
 	@Test
 	public void fromContinuingToContinuingOverEighteenUnitsLeft() throws Exception {
 		curriculum = Curriculum.THIRTEEN_SUBJECTS_SIX_PREREQS;
@@ -77,7 +77,7 @@ public class StudentStatusUpdateTest {
 		continuingStudent.updateStatus();
 		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
 	}
-	
+
 	@Test
 	public void fromContinuingToGraduating() throws Exception {
 		curriculum = Curriculum.TWELVE_SUBJECTS_SIX_PREREQS;
