@@ -1,13 +1,10 @@
 package schoolsystem.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import schoolsystem.model.EnrollmentForm.EnrollmentFormBuilder;
 import schoolsystem.model.schedule.AcademicTerm;
 import schoolsystem.model.schedule.Schedule;
 import schoolsystem.model.schedule.ScheduleConflictException;
@@ -21,7 +18,6 @@ public class SectionTest {
 
 	@Before
 	public void createFixture() {
-		SectionManager.getInstance().reset();
 		academicTerm = AcademicTerm.academicTermAfterCurrent();
 		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
 	}
@@ -33,16 +29,23 @@ public class SectionTest {
 		Schedule schedule1 = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
 		Subject subject1 = createSubject();
 		String sectionName1 = "S19";
-		Section section1 = new Section(sectionName1, subject1, schedule1, teacher);
+		Section section1 = new Section(1, sectionName1, subject1, schedule1, teacher);
 
 		checkSection(section1, teacher, schedule1, subject1, sectionName1);
 
 		Schedule schedule2 = new Schedule(academicTerm, ScheduleDays.TUE_AND_FRI, ScheduleTimes.FROM_0830_TO_1000);
 		Subject subject2 = createSubject();
 		String sectionName2 = "S20";
-		Section section2 = new Section(sectionName2, subject2, schedule2, teacher);
+		Section section2 = new Section(2, sectionName2, subject2, schedule2, teacher);
 
 		checkSection(section2, teacher, schedule2, subject2, sectionName2);
+	}
+
+	private void checkSection(Section section, Teacher teacher, Schedule schedule, Subject subject, String sectionName) {
+		assertEquals(section.getSchedule(), schedule);
+		assertEquals(section.getSectionName(), sectionName);
+		assertEquals(section.getTeacher(), teacher);
+		assertEquals(section.getSubject(), subject);
 	}
 
 	@Test(expected = ScheduleConflictException.class)
@@ -51,55 +54,10 @@ public class SectionTest {
 		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
 
 		Subject subject1 = createSubject();
-		new Section("S19", subject1, schedule, teacher);
+		new Section(1, "S19", subject1, schedule, teacher);
 
 		Subject subject2 = createSubject();
-		new Section("S20", subject2, schedule, teacher);
-	}
-
-	@Test(expected = SectionFullException.class)
-	public void classCardsNotLost() throws SectionFullException, IneligibleStudentException,
-			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
-		Teacher teacher = createTeacher();
-		Subject subject = createSubject();
-		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
-
-		for (int i = 1; i <= Section.MAX_STUDENTS + 1; i++) {
-			// Creating the same section still uses the same list of class cards
-			Section section = new Section("A", subject, schedule, teacher);
-
-			Student student = new Student(i, StudentStatus.GRADUATING, curriculum);
-			student.getEnrollmentFormBuilder().addSection(section).enroll();
-		}
-	}
-
-	@Test
-	public void sectionFull() throws SectionFullException, IneligibleStudentException,
-			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
-		Teacher teacher = createTeacher();
-		Subject subject = createSubject();
-		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
-		Section section = new Section("A", subject, schedule, teacher);
-
-		for (int i = 1; i <= Section.MAX_STUDENTS; i++) {
-			Student student = new Student(i, StudentStatus.GRADUATING, curriculum);
-			EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder().addSection(section);
-
-			enrollmentFormBuilder.enroll();
-			
-			if (i == Section.MAX_STUDENTS) {
-				assertTrue(section.isFull());
-			} else {
-				assertFalse(section.isFull());
-			}
-		}
-	}
-
-	private void checkSection(Section section, Teacher teacher, Schedule schedule, Subject subject, String sectionName) {
-		assertEquals(section.getSchedule(), schedule);
-		assertEquals(section.getSectionName(), sectionName);
-		assertEquals(section.getTeacher(), teacher);
-		assertEquals(section.getSubject(), subject);
+		new Section(2, "S20", subject2, schedule, teacher);
 	}
 
 	private Teacher createTeacher() {

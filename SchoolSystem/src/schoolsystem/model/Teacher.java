@@ -1,9 +1,15 @@
 package schoolsystem.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import schoolsystem.model.schedule.Schedule;
+
 public class Teacher {
 
 	private final String name;
 	private final int facultyNumber;
+	private final Map<Schedule, Section> scheduledSections;
 
 	public Teacher(int facultyNumber, String name) {
 		if(name==null) {
@@ -13,8 +19,31 @@ public class Teacher {
 			throw new IllegalArgumentException("Faculty number must not be negative.");
 		}
 		
+		this.scheduledSections = new HashMap<Schedule,Section>();
 		this.facultyNumber = facultyNumber;
 		this.name = name;
+	}
+	
+	public boolean hasScheduledClass(Schedule schedule) {
+		return scheduledSections.containsKey(schedule);
+	}
+	
+	public boolean hasSection(Section section) {
+		Schedule schedule = section.getSchedule();
+		if(hasScheduledClass(schedule)) {
+			return scheduledSections.get(schedule).equals(section);
+		}
+		return false;
+	}
+	
+	void addSection(Section section) {
+		assert section!=null;
+		
+		if(!section.getTeacher().equals(this)) {
+			throw new IllegalArgumentException("Section being added does not belong to the teacher");
+		}
+		
+		scheduledSections.put(section.getSchedule(), section);
 	}
 
 	public int getFacultyNumber() {

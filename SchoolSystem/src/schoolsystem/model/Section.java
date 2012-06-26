@@ -15,10 +15,14 @@ public class Section {
 	private final Schedule schedule;
 	private final Teacher teacher;
 	private final Set<ClassCard> classCards;
+	private final int sectionId;
 
-	public Section(String name, Subject subject, Schedule schedule, Teacher teacher) throws ScheduleConflictException {
-		SectionManager sectionManager = SectionManager.getInstance();
+	public Section(int sectionId, String name, Subject subject, Schedule schedule, Teacher teacher)
+			throws ScheduleConflictException {
 
+		if (sectionId < 0) {
+			throw new IllegalArgumentException("Section id must not be negative.");
+		}
 		if (name == null) {
 			throw new IllegalArgumentException("Section name must not be null.");
 		}
@@ -32,18 +36,22 @@ public class Section {
 			throw new IllegalArgumentException("Teacher must not be null.");
 		}
 
+		this.teacher = teacher;
+		this.sectionId = sectionId;
 		this.name = name;
 		this.subject = subject;
 		this.schedule = schedule;
-		this.teacher = teacher;
+		this.classCards = new HashSet<ClassCard>(); //TODO classCards singleton
 
-		if (sectionManager.hasSection(this)) {
-			Section storedSection = sectionManager.getSection(this);
-			this.classCards = storedSection.classCards;
-		} else {
-			this.classCards = new HashSet<ClassCard>();
-			sectionManager.addSection(this);
+		if (teacher.hasScheduledClass(schedule)) {
+			boolean scheduledClassIsSameSection = teacher.hasSection(this);
+
+			if (!scheduledClassIsSameSection) {
+				throw new ScheduleConflictException("Schedule conflict for a teacher when adding the section.");
+			}
 		}
+		
+		teacher.addSection(this);
 	}
 
 	public Subject getSubject() {
@@ -82,9 +90,7 @@ public class Section {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((schedule == null) ? 0 : schedule.hashCode());
-		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
+		result = prime * result + sectionId;
 		return result;
 	}
 
@@ -94,23 +100,10 @@ public class Section {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Section))
 			return false;
 		Section other = (Section) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (schedule == null) {
-			if (other.schedule != null)
-				return false;
-		} else if (!schedule.equals(other.schedule))
-			return false;
-		if (subject == null) {
-			if (other.subject != null)
-				return false;
-		} else if (!subject.equals(other.subject))
+		if (sectionId != other.sectionId)
 			return false;
 		return true;
 	}
@@ -118,6 +111,10 @@ public class Section {
 	public boolean isFull() {
 		int numberOfEnrolledStudents = classCards.size();
 		return numberOfEnrolledStudents == MAX_STUDENTS;
+	}
+
+	public int getSectionId() {
+		return sectionId;
 	}
 
 }

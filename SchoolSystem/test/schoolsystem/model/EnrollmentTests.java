@@ -28,21 +28,20 @@ public class EnrollmentTests {
 	@Before
 	public void createFixture() throws Exception {
 		academicTerm = AcademicTerm.academicTermAfterCurrent();
-		SectionManager.getInstance().reset();
 		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
 	}
 
 	private Section getFirstSubjectSection() throws ScheduleConflictException {
 		Subject subject = curriculum.getSubjects().get(0);
-		return createSection("A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
+		return createSection(1, "A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
 	}
 
-	private static Section createSection(String sectionName, Subject subject, ScheduleDays scheduleDays,
+	private static Section createSection(int sectionId, String sectionName, Subject subject, ScheduleDays scheduleDays,
 			ScheduleTimes scheduleTimes) throws ScheduleConflictException {
 		AcademicTerm academicTerm = AcademicTerm.academicTermAfterCurrent();
 		Schedule schedule = new Schedule(academicTerm, scheduleDays, scheduleTimes);
 		Teacher teacher = new Teacher(1, "John Doe");
-		return new Section(sectionName, subject, schedule, teacher);
+		return new Section(sectionId, sectionName, subject, schedule, teacher);
 	}
 
 	@Test
@@ -90,12 +89,12 @@ public class EnrollmentTests {
 		}
 
 		Subject subject = getBSCSSubject("HI 16");
-		Section section = createSection("G", subject, ScheduleDays.WED_AND_SAT, ScheduleTimes.FROM_1130_TO_1300);
+		Section section = createSection(5, "G", subject, ScheduleDays.WED_AND_SAT, ScheduleTimes.FROM_1130_TO_1300);
 
 		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
 		enrollmentFormBuilder.addSection(section);
 	}
-	
+
 	@Test
 	public void addingPreviouslyFailedSubject() throws Exception {
 		Student student = new Student(1, StudentStatus.CONTINUING, curriculum);
@@ -106,7 +105,7 @@ public class EnrollmentTests {
 		}
 
 		Subject subject = getBSCSSubject("HI 16");
-		Section section = createSection("G", subject, ScheduleDays.WED_AND_SAT, ScheduleTimes.FROM_1130_TO_1300);
+		Section section = createSection(5, "G", subject, ScheduleDays.WED_AND_SAT, ScheduleTimes.FROM_1130_TO_1300);
 
 		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
 		enrollmentFormBuilder.addSection(section);
@@ -117,7 +116,7 @@ public class EnrollmentTests {
 		Student student = new Student(1, StudentStatus.PROBATIONARY, curriculum);
 
 		enrollTerm1WithNoPrereq(student);
-		
+
 		for (ClassCard term1ClassCard : student.getEnrollmentForms().get(0).getClassCards()) {
 			term1ClassCard.setGrade(Grade.G1_75);
 		}
@@ -133,7 +132,7 @@ public class EnrollmentTests {
 		addUnitsToEnrollmentForm(curriculum, 7, status.getMinUnits(), term2EnrollmentFormBuilder);
 
 		Subject subjectWithPrereq = getBSCSSubject("HI 166");
-		Section sectionWithPrereq = createSection("AV", subjectWithPrereq, ScheduleDays.WED_AND_SAT,
+		Section sectionWithPrereq = createSection(5, "AV", subjectWithPrereq, ScheduleDays.WED_AND_SAT,
 				ScheduleTimes.FROM_1600_TO_1730);
 		term2EnrollmentFormBuilder.addSection(sectionWithPrereq);
 
@@ -147,7 +146,7 @@ public class EnrollmentTests {
 		addUnitsToEnrollmentForm(curriculum, status.getMinUnits(), term1EnrollmentFormBuilder);
 
 		Subject prereqSubject = getBSCSSubject("HI 16");
-		Section prereqSection = createSection("AV", prereqSubject, ScheduleDays.WED_AND_SAT,
+		Section prereqSection = createSection(5, "AV", prereqSubject, ScheduleDays.WED_AND_SAT,
 				ScheduleTimes.FROM_1000_TO_1130);
 		term1EnrollmentFormBuilder.addSection(prereqSection);
 
@@ -163,7 +162,7 @@ public class EnrollmentTests {
 	private void enrollStudentWithPrereq(Student student) throws Exception {
 		Subject subjectWithPrereq = getSubjectWithPrereq();
 
-		Section sectionWithPrereq = createSection("C", subjectWithPrereq, ScheduleDays.WED_AND_SAT,
+		Section sectionWithPrereq = createSection(5, "C", subjectWithPrereq, ScheduleDays.WED_AND_SAT,
 				ScheduleTimes.FROM_1600_TO_1730);
 
 		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
@@ -266,11 +265,11 @@ public class EnrollmentTests {
 
 		Subject subject1 = curriculum.getSubjects().get(0);
 		Teacher teacher1 = new Teacher(1, "Juan Nakpil");
-		Section section1 = new Section("S19", subject1, schedule, teacher1);
+		Section section1 = new Section(1, "S19", subject1, schedule, teacher1);
 
 		Subject subject2 = curriculum.getSubjects().get(1);
 		Teacher teacher2 = new Teacher(1, "Carlos Garcia");
-		Section section2 = new Section("S20", subject2, schedule, teacher2);
+		Section section2 = new Section(2, "S20", subject2, schedule, teacher2);
 
 		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
 		enrollmentFormBuilder.addSection(section1);
@@ -286,7 +285,7 @@ public class EnrollmentTests {
 		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
 		Subject subject1 = curriculum.getSubjects().get(0);
 		Teacher teacher1 = new Teacher(1, "Juan Nakpil");
-		Section section1 = new Section("S19", subject1, schedule, teacher1);
+		Section section1 = new Section(1, "S19", subject1, schedule, teacher1);
 
 		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
 		enrollmentFormBuilder.addSection(section1);
@@ -319,27 +318,27 @@ public class EnrollmentTests {
 
 		Subject subject = subjectList.get(0);
 		assertTrue(!subject.hasPrerequisites());
-		sectionList.add(createSection("A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000));
+		sectionList.add(createSection(1, "A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000));
 
 		subject = subjectList.get(1);
 		assertTrue(!subject.hasPrerequisites());
-		sectionList.add(createSection("A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1000_TO_1130));
+		sectionList.add(createSection(2, "A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1000_TO_1130));
 
 		subject = subjectList.get(2);
 		assertTrue(!subject.hasPrerequisites());
-		sectionList.add(createSection("A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1130_TO_1300));
+		sectionList.add(createSection(3, "A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1130_TO_1300));
 
 		subject = subjectList.get(3);
 		assertTrue(!subject.hasPrerequisites());
-		sectionList.add(createSection("A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1300_TO_1430));
+		sectionList.add(createSection(4, "A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1300_TO_1430));
 
 		subject = subjectList.get(4);
 		assertTrue(!subject.hasPrerequisites());
-		sectionList.add(createSection("A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1430_TO_1600));
+		sectionList.add(createSection(5, "A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1430_TO_1600));
 
 		subject = subjectList.get(5);
 		assertTrue(!subject.hasPrerequisites());
-		sectionList.add(createSection("A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1600_TO_1730));
+		sectionList.add(createSection(6,"A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1600_TO_1730));
 
 		return sectionList;
 	}
@@ -397,7 +396,7 @@ public class EnrollmentTests {
 			totalUnits += subject.getNumberOfUnits();
 
 			String sectionName = "A_" + scheduleDaysIndex + "_" + scheduleTimesIndex;
-			Section section = createSection(sectionName, subject, scheduleDays, scheduleTimes);
+			Section section = createSection(subjectIndex + 200, sectionName, subject, scheduleDays, scheduleTimes);
 
 			enrollmentFormBuilder.addSection(section);
 		}

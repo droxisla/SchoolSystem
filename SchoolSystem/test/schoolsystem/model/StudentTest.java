@@ -17,7 +17,6 @@ public class StudentTest {
 
 	@Before
 	public void createFixture() throws Exception {
-		SectionManager.getInstance().reset();
 		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
 	}
 

@@ -19,20 +19,19 @@ public class EnrollmentFormTest {
 	@Before
 	public void createFixture() throws Exception {
 		academicTerm = AcademicTerm.academicTermAfterCurrent();
-		SectionManager.getInstance().reset();
 		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
 	}
 
 	private Section getFirstSubjectSection() throws ScheduleConflictException {
 		Subject subject = curriculum.getSubjects().get(0);
-		return createSection("A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
+		return createSection(1, "A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
 	}
 
-	private Section createSection(String sectionName, Subject subject, ScheduleDays scheduleDays,
+	private Section createSection(int sectionId, String sectionName, Subject subject, ScheduleDays scheduleDays,
 			ScheduleTimes scheduleTimes) throws ScheduleConflictException {
 		Schedule schedule = new Schedule(academicTerm, scheduleDays, scheduleTimes);
 		Teacher teacher = new Teacher(1, "John Doe");
-		return new Section(sectionName, subject, schedule, teacher);
+		return new Section(sectionId, sectionName, subject, schedule, teacher);
 	}
 
 	@Test
@@ -45,8 +44,8 @@ public class EnrollmentFormTest {
 		assertTrue(enrollmentForm.hasSection(section));
 
 		Subject subjectNotInEnrollmentForm = curriculum.getSubjects().get(1);
-		Section sectionNotInEnrollmentForm = createSection("B", subjectNotInEnrollmentForm, ScheduleDays.MON_AND_THU,
-				ScheduleTimes.FROM_1300_TO_1430);
+		Section sectionNotInEnrollmentForm = createSection(2, "B", subjectNotInEnrollmentForm,
+				ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1300_TO_1430);
 
 		assertFalse(enrollmentForm.hasSection(sectionNotInEnrollmentForm));
 	}
