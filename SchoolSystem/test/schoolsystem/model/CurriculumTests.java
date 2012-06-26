@@ -7,25 +7,36 @@ import java.util.*;
 import org.junit.Test;
 
 public class CurriculumTests {
-	
+
 	@Test
 	public void findAllPrerequisites() {
-		Set<Subject> prereqs = new HashSet<Subject>(Arrays.asList(new Subject("PH 101"), new Subject("PH 102"),
-																  new Subject("TH 121"), new Subject("TH 131"),
-																  new Subject("FIL 11"), new Subject("FIL 12"),
-																  new Subject("PE 1"), new Subject("PE 2"),
-																  new Subject("PE 3"), new Subject("MA 18A"),
-																  new Subject("MA 18B"), new Subject("AMC 124"),
-																  new Subject("NSTP 1"), new Subject("EN 11"),
-																  new Subject("LIT 13"), new Subject("HI 16"),
-																  new Subject("CS 21A"), new Subject("CS 21B"),
-																  new Subject("CS 123"), new Subject("CS 152A"),
-																  new Subject("CS 152B")));
+		Set<Subject> prereqs = new HashSet<Subject>();
+
+		prereqs.add(new Subject("PH 101"));
+		prereqs.add(new Subject("PH 102"));
+		prereqs.add(new Subject("TH 121"));
+		prereqs.add(new Subject("TH 131"));
+		prereqs.add(new Subject("FIL 11"));
+		prereqs.add(new Subject("FIL 12"));
+		prereqs.add(new Subject("PE 1"));
+		prereqs.add(new Subject("PE 2"));
+		prereqs.add(new Subject("PE 3"));
+		prereqs.add(new Subject("MA 18A"));
+		prereqs.add(new Subject("MA 18B"));
+		prereqs.add(new Subject("AMC 124"));
+		prereqs.add(new Subject("NSTP 1"));
+		prereqs.add(new Subject("EN 11"));
+		prereqs.add(new Subject("LIT 13"));
+		prereqs.add(new Subject("HI 16"));
+		prereqs.add(new Subject("CS 21A"));
+		prereqs.add(new Subject("CS 21B"));
+		prereqs.add(new Subject("CS 123"));
+		prereqs.add(new Subject("CS 152A"));
+		prereqs.add(new Subject("CS 152B"));
 		
 		Set<Subject> csPrereqs = Curriculum.BS_COMPUTER_SCIENCE.getPrerequisites();
 		assertTrue(prereqs.containsAll(csPrereqs));
 	}
-	
 
 	@Test
 	public void subjectHasPrerequisites() {

@@ -36,6 +36,8 @@ public class EnrollmentForm {
 		}
 
 		checkIfPreviousTermHasAverage();
+		
+		student.updateStatus();
 	}
 
 	private void checkIfPreviousTermHasAverage() {
@@ -52,6 +54,7 @@ public class EnrollmentForm {
 
 	public void addSection(Section section) throws SectionFullException, SubjectUnitsRestrictionException,
 			ScheduleConflictException, UnsatisfiedPrerequisiteException {
+		
 		if (hasBeenSubmittedForEnrollment()) {
 			throw new IllegalStateException("Enrollment form has been submitted already.");
 		}
@@ -74,8 +77,8 @@ public class EnrollmentForm {
 		checkDuplicateSubject(subject);
 		checkScheduleConflict(section);
 		checkRequiredPrerequisites(subject);
+		
 		updateTotalUnits(section);
-
 		sections.add(section);
 	}
 

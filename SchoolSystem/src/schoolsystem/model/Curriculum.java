@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public enum Curriculum {
+public enum Curriculum  {
 	EIGHT_SUBJECTS_ONE_PREREQ_SEVENTH() {
 		@Override
 		List<Subject> initializeSubjects() {
@@ -136,10 +136,11 @@ public enum Curriculum {
 	private List<Subject> subjects;
 	private Map<String, Subject> subjectMapByName;
 	private Set<Subject> prerequisites;
-	private static int DEFAULT_SUBJECT_UNITS = 3;
+	private final int totalUnits;
 
 	Curriculum() {
 		subjects = initializeSubjects();	
+		totalUnits = computeTotalUnits();
 		initializeSubjectMapByName();
 		createPrerequisiteSet();
 	}
@@ -151,6 +152,16 @@ public enum Curriculum {
 				prerequisites.add(p);
 			}
 		}
+	}
+
+	private int computeTotalUnits() {
+		int totalUnits = 0;
+
+		for (Subject subject : subjects) {
+			totalUnits += subject.getNumberOfUnits();
+		}
+
+		return totalUnits;
 	}
 
 	private void initializeSubjectMapByName() throws AssertionError {
@@ -169,7 +180,7 @@ public enum Curriculum {
 	abstract List<Subject> initializeSubjects();
 	
 	public int getTotalUnits() {
-		return subjects.size() * DEFAULT_SUBJECT_UNITS;
+		return totalUnits;
 	}
 
 	public List<Subject> getSubjects() {
