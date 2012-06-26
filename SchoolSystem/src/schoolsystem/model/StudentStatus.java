@@ -82,6 +82,8 @@ public enum StudentStatus {
 		public StudentStatus update(TermStatus ts) {
 			if(0 == ts.getUnitsLeft()) {
 				return GRADUATE;
+			} else if (!Grade.isPassing(ts.getAverage())) {
+				return PROBATIONARY;
 			}
 			return this;
 		}
