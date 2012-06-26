@@ -17,12 +17,12 @@ public class AcademicYearTest {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		assertEquals(year, academicTerm.getYear());
 	}
-	
+
 	@Test
 	public void createNextAcademicTerm() {
 		AcademicTerm currentAcademicTerm = AcademicTerm.currentAcademicTerm();
 		AcademicTerm nextAcademicTerm = AcademicTerm.academicTermAfterCurrent();
-		
+
 		assertEquals(currentAcademicTerm.getNextAcademicTerm(), nextAcademicTerm);
 	}
 
@@ -81,4 +81,17 @@ public class AcademicYearTest {
 		assertEquals(3, afterTerm2Sept.getTermNum());
 	}
 
+	@Test
+	public void academicTermComparison() {
+		AcademicTerm term3 = AcademicTerm.fromDate(2012, 1);
+		AcademicTerm term1 = AcademicTerm.fromDate(2012, 6);
+		AcademicTerm term2Dec = AcademicTerm.fromDate(2012, 12);
+		assertEquals(2, term2Dec.getTermNum());
+		AcademicTerm term2Sept = AcademicTerm.fromDate(2012, 9);
+		assertEquals(2, term2Sept.getTermNum());
+
+		assertTrue(term3.compareTo(term1) < 0);
+		assertTrue(term2Dec.compareTo(term1) > 0);
+		assertTrue(term2Dec.compareTo(term2Sept) == 0);
+	}
 }

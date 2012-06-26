@@ -25,7 +25,7 @@ public class EnrollmentFormTest {
 	@Test
 	public void hasSection() throws SectionFullException, SubjectUnitsRestrictionException, ScheduleConflictException,
 			IneligibleStudentException, UnsatisfiedPrerequisiteException {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatus.GRADUATING, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.GRADUATING, curriculum);
 		Section section = getFirstSubjectSection();
 
 		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
@@ -39,6 +39,23 @@ public class EnrollmentFormTest {
 				ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1300_TO_1430);
 
 		assertFalse(enrollmentForm.hasSection(sectionNotInEnrollmentForm));
+	}
+
+	@Test (expected = IllegalStateException.class)
+	public void enrollingWithUnupdatedStatus() throws Exception {
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.GRADUATING, curriculum);
+		Section section = getFirstSubjectSection();
+
+		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
+		enrollmentForm.addSection(section);
+		enrollmentForm.submitForEnrollment();
+
+		Subject subject = curriculum.getSubjects().get(1);
+		section = createSection(2, "B", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1300_TO_1430);
+
+		enrollmentForm = student.getNewEnrollmentForm();
+		enrollmentForm.addSection(section);
+		enrollmentForm.submitForEnrollment();
 	}
 
 	private Section getFirstSubjectSection() throws ScheduleConflictException {

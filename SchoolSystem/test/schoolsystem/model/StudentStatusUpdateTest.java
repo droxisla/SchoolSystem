@@ -26,36 +26,36 @@ public class StudentStatusUpdateTest {
 	public void createFixture() throws Exception {
 		academicTerm = AcademicTerm.academicTermAfterCurrent();
 		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
-		newStudent = new Student(1, "Juan dela Cruz", StudentStatus.NEW, Curriculum.BS_COMPUTER_SCIENCE);
-		continuingStudent = new Student(2, "Juan Cruz", StudentStatus.CONTINUING, Curriculum.BS_COMPUTER_SCIENCE);
-		probationaryStudent = new Student(3, "Juan Ruz", StudentStatus.PROBATIONARY, Curriculum.BS_COMPUTER_SCIENCE);
+		newStudent = new Student(1, "Juan dela Cruz", StudentStatusType.NEW, Curriculum.BS_COMPUTER_SCIENCE);
+		continuingStudent = new Student(2, "Juan Cruz", StudentStatusType.CONTINUING, Curriculum.BS_COMPUTER_SCIENCE);
+		probationaryStudent = new Student(3, "Juan Ruz", StudentStatusType.PROBATIONARY, Curriculum.BS_COMPUTER_SCIENCE);
 	}
-	
+
 	@Test
-	public void noGrades() throws Exception{
+	public void noGrades() throws Exception {
 		enrollStudentInEighteenUnits(newStudent);
-		newStudent.updateStatus();
-		assertEquals(StudentStatus.NEW, newStudent.getStatus());
-		
+		newStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.NEW, newStudent.getStatusType());
+
 		enrollStudentInEighteenUnits(continuingStudent);
-		continuingStudent.updateStatus();
-		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
-		
+		continuingStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.CONTINUING, continuingStudent.getStatusType());
+
 		enrollStudentInEighteenUnits(probationaryStudent);
-		probationaryStudent.updateStatus();
-		assertEquals(StudentStatus.PROBATIONARY, probationaryStudent.getStatus());
-		
-		Student graduatingStudent = new Student(4, "Juan Ruz", StudentStatus.GRADUATING, Curriculum.BS_COMPUTER_SCIENCE);
+		probationaryStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.PROBATIONARY, probationaryStudent.getStatusType());
+
+		Student graduatingStudent = new Student(4, "Juan Ruz", StudentStatusType.GRADUATING, Curriculum.BS_COMPUTER_SCIENCE);
 		enrollStudentInEighteenUnits(graduatingStudent);
-		graduatingStudent.updateStatus();
-		assertEquals(StudentStatus.GRADUATING, graduatingStudent.getStatus());
+		graduatingStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.GRADUATING, graduatingStudent.getStatusType());
 	}
 
 	@Test
 	public void fromNewToContinuingNoPreviousEnrollment() {
 		assertEquals(0, newStudent.getNumEnrollmentForms());
-		newStudent.updateStatus();
-		assertEquals(StudentStatus.NEW, newStudent.getStatus());
+		newStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.NEW, newStudent.getStatusType());
 	}
 
 	@Test
@@ -64,8 +64,8 @@ public class StudentStatusUpdateTest {
 		assertEquals(1, newStudent.getNumEnrollmentForms());
 
 		setGradesToPassing(ef.getClassCards());
-		newStudent.updateStatus();
-		assertEquals(StudentStatus.CONTINUING, newStudent.getStatus());
+		newStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.CONTINUING, newStudent.getStatusType());
 	}
 
 	@Test
@@ -74,38 +74,57 @@ public class StudentStatusUpdateTest {
 		assertEquals(1, newStudent.getNumEnrollmentForms());
 
 		setGradesToFailing(ef.getClassCards());
-		newStudent.updateStatus();
-		assertEquals(StudentStatus.PROBATIONARY, newStudent.getStatus());
+		newStudent.updateStatus(academicTerm);
+
+		assertEquals(StudentStatusType.PROBATIONARY, newStudent.getStatusType());
+	}
+
+	@Test
+	public void fromNewToProbationaryWithMultipleUpdateCalls() throws Exception {
+		EnrollmentForm ef = enrollStudentInEighteenUnits(newStudent);
+		assertEquals(1, newStudent.getNumEnrollmentForms());
+
+		setGradesToFailing(ef.getClassCards());
+		newStudent.updateStatus(academicTerm);
+
+		assertEquals(StudentStatusType.PROBATIONARY, newStudent.getStatusType());
+
+		// Multiple calls to updateStatus must not, change student from
+		// probationary to inelligible
+		newStudent.updateStatus(academicTerm);
+		newStudent.updateStatus(academicTerm);
+
+		assertEquals(StudentStatusType.PROBATIONARY, newStudent.getStatusType());
 	}
 
 	@Test
 	public void fromContinuingToContinuingHasPrerequisitesRemaining() throws Exception {
 		curriculum = Curriculum.EIGHT_SUBJECTS_ONE_PREREQ_SEVENTH;
-		continuingStudent = new Student(4, "Juan Cruz", StudentStatus.CONTINUING, curriculum);
+		continuingStudent = new Student(4, "Juan Cruz", StudentStatusType.CONTINUING, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(continuingStudent);
 		setGradesToPassing(ef.getClassCards());
-		continuingStudent.updateStatus();
-		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
+		continuingStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.CONTINUING, continuingStudent.getStatusType());
 	}
 
 	@Test
 	public void fromContinuingToContinuingOverEighteenUnitsLeft() throws Exception {
 		curriculum = Curriculum.THIRTEEN_SUBJECTS_SIX_PREREQS;
-		continuingStudent = new Student(4, "Juan Cruz", StudentStatus.CONTINUING, curriculum);
+		continuingStudent = new Student(4, "Juan Cruz", StudentStatusType.CONTINUING, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(continuingStudent);
 		setGradesToPassing(ef.getClassCards());
-		continuingStudent.updateStatus();
-		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
+		continuingStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.CONTINUING, continuingStudent.getStatusType());
 	}
 
 	@Test
 	public void fromContinuingToGraduating() throws Exception {
 		curriculum = Curriculum.TWELVE_SUBJECTS_SIX_PREREQS;
-		continuingStudent = new Student(4, "Juan Cruz", StudentStatus.CONTINUING, curriculum);
+		continuingStudent = new Student(4, "Juan Cruz", StudentStatusType.CONTINUING, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(continuingStudent);
 		setGradesToPassing(ef.getClassCards());
-		continuingStudent.updateStatus();
-		assertEquals(StudentStatus.GRADUATING, continuingStudent.getStatus());
+		continuingStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.GRADUATING, continuingStudent.getStatusType());
 	}
 
 	@Test
@@ -114,8 +133,8 @@ public class StudentStatusUpdateTest {
 		assertEquals(1, continuingStudent.getNumEnrollmentForms());
 
 		setGradesToFailing(ef.getClassCards());
-		continuingStudent.updateStatus();
-		assertEquals(StudentStatus.PROBATIONARY, continuingStudent.getStatus());
+		continuingStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.PROBATIONARY, continuingStudent.getStatusType());
 	}
 
 	@Test
@@ -124,8 +143,8 @@ public class StudentStatusUpdateTest {
 		assertEquals(1, probationaryStudent.getNumEnrollmentForms());
 
 		setGradesToPassing(ef.getClassCards());
-		probationaryStudent.updateStatus();
-		assertEquals(StudentStatus.CONTINUING, probationaryStudent.getStatus());
+		probationaryStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.CONTINUING, probationaryStudent.getStatusType());
 	}
 
 	@Test
@@ -134,24 +153,24 @@ public class StudentStatusUpdateTest {
 		assertEquals(1, probationaryStudent.getNumEnrollmentForms());
 
 		setGradesToFailing(ef.getClassCards());
-		probationaryStudent.updateStatus();
-		assertEquals(StudentStatus.INELIGIBLE, probationaryStudent.getStatus());
+		probationaryStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.INELIGIBLE, probationaryStudent.getStatusType());
 	}
 
 	@Test
 	public void fromProbationaryToGraduate() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
-		probationaryStudent = new Student(4, "Juan dela Pena", StudentStatus.PROBATIONARY, curriculum);
+		probationaryStudent = new Student(4, "Juan dela Pena", StudentStatusType.PROBATIONARY, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(probationaryStudent);
 		setGradesToPassing(ef.getClassCards());
-		probationaryStudent.updateStatus();
-		assertEquals(StudentStatus.GRADUATE, probationaryStudent.getStatus());
+		probationaryStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.GRADUATE, probationaryStudent.getStatusType());
 	}
 
 	@Test
 	public void fromProbationaryToGraduating() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
-		probationaryStudent = new Student(4, "Juan dela Pena", StudentStatus.PROBATIONARY, curriculum);
+		probationaryStudent = new Student(4, "Juan dela Pena", StudentStatusType.PROBATIONARY, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(probationaryStudent);
 		List<ClassCard> classCards = ef.getClassCards();
 		for (int i = 0; i < classCards.size(); i++) {
@@ -161,14 +180,14 @@ public class StudentStatusUpdateTest {
 				classCards.get(i).setGrade(Grade.G1_00);
 			}
 		}
-		probationaryStudent.updateStatus();
-		assertEquals(StudentStatus.GRADUATING, probationaryStudent.getStatus());
+		probationaryStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.GRADUATING, probationaryStudent.getStatusType());
 	}
 
 	@Test
 	public void fromGraduatingToGraduating() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
-		Student graduatingStudent = new Student(4, "Juan dela Pena", StudentStatus.GRADUATING, curriculum);
+		Student graduatingStudent = new Student(4, "Juan dela Pena", StudentStatusType.GRADUATING, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(graduatingStudent);
 		List<ClassCard> classCards = ef.getClassCards();
 		for (int i = 0; i < classCards.size(); i++) {
@@ -178,42 +197,42 @@ public class StudentStatusUpdateTest {
 				classCards.get(i).setGrade(Grade.G1_00);
 			}
 		}
-		graduatingStudent.updateStatus();
-		assertEquals(StudentStatus.GRADUATING, graduatingStudent.getStatus());
+		graduatingStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.GRADUATING, graduatingStudent.getStatusType());
 	}
 
 	@Test
 	public void fromGraduatingToGraduate() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
-		Student graduatingStudent = new Student(4, "Juan dela Pena", StudentStatus.GRADUATING, curriculum);
+		Student graduatingStudent = new Student(4, "Juan dela Pena", StudentStatusType.GRADUATING, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(graduatingStudent);
 		setGradesToPassing(ef.getClassCards());
-		graduatingStudent.updateStatus();
-		assertEquals(StudentStatus.GRADUATE, graduatingStudent.getStatus());
+		graduatingStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.GRADUATE, graduatingStudent.getStatusType());
 	}
 
 	@Test
 	public void fromGraduatingtoProbationary() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
-		Student graduatingStudent = new Student(4, "Juan dela Pena", StudentStatus.GRADUATING, curriculum);
+		Student graduatingStudent = new Student(4, "Juan dela Pena", StudentStatusType.GRADUATING, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(graduatingStudent);
 		setGradesToFailing(ef.getClassCards());
-		graduatingStudent.updateStatus();
-		assertEquals(StudentStatus.PROBATIONARY, graduatingStudent.getStatus());
+		graduatingStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.PROBATIONARY, graduatingStudent.getStatusType());
 	}
-	
+
 	@Test
 	public void fromGraduateToGraduate() throws Exception {
-		Student graduateStudent = new Student(4, "Juan dela Pena", StudentStatus.GRADUATE, curriculum);
-		graduateStudent.updateStatus();
-		assertEquals(StudentStatus.GRADUATE, graduateStudent.getStatus());
+		Student graduateStudent = new Student(4, "Juan dela Pena", StudentStatusType.GRADUATE, curriculum);
+		graduateStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.GRADUATE, graduateStudent.getStatusType());
 	}
-	
+
 	@Test
 	public void fromIneligibleToIneligible() throws Exception {
-		Student ineligibleStudent = new Student(4, "Juan dela Pena", StudentStatus.INELIGIBLE, curriculum);
-		ineligibleStudent.updateStatus();
-		assertEquals(StudentStatus.INELIGIBLE, ineligibleStudent.getStatus());
+		Student ineligibleStudent = new Student(4, "Juan dela Pena", StudentStatusType.INELIGIBLE, curriculum);
+		ineligibleStudent.updateStatus(academicTerm);
+		assertEquals(StudentStatusType.INELIGIBLE, ineligibleStudent.getStatusType());
 	}
 
 	private void setGradesToPassing(List<ClassCard> classCards) {

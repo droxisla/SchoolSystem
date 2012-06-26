@@ -46,7 +46,7 @@ public class EnrollmentTests {
 	@Test
 	public void enrollEligibleStudentInSectionWithNoPrereq() throws SectionFullException, IneligibleStudentException,
 			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatus.GRADUATING, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.GRADUATING, curriculum);
 		Section section = getFirstSubjectSection();
 
 		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
@@ -59,7 +59,7 @@ public class EnrollmentTests {
 	@Test(expected = IllegalStateException.class)
 	public void addingSectionToSubmittedForm() throws SectionFullException, IneligibleStudentException,
 			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatus.GRADUATING, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.GRADUATING, curriculum);
 		Section section = getFirstSubjectSection();
 
 		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
@@ -74,7 +74,7 @@ public class EnrollmentTests {
 	@Test(expected = SubjectUnitsRestrictionException.class)
 	public void enrollingSameSubject() throws SectionFullException, IneligibleStudentException,
 			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatus.GRADUATING, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.GRADUATING, curriculum);
 		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
 
 		Subject subject = getBSCSSubject("NSTP 2");
@@ -90,25 +90,25 @@ public class EnrollmentTests {
 
 	@Test(expected = UnsatisfiedPrerequisiteException.class)
 	public void enrollNewStudentsWithUnsatisfiedPrereq() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatus.NEW, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.NEW, curriculum);
 		enrollStudentWithPrereq(student);
 	}
 
 	@Test(expected = UnsatisfiedPrerequisiteException.class)
 	public void enrollContinuingStudentsWithUnsatisfiedPrereq() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatus.CONTINUING, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.CONTINUING, curriculum);
 		enrollStudentWithPrereq(student);
 	}
 
 	@Test(expected = UnsatisfiedPrerequisiteException.class)
 	public void enrollProbationaryStudentsWithUnsatisfiedPrereq() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatus.PROBATIONARY, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.PROBATIONARY, curriculum);
 		enrollStudentWithPrereq(student);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void enrollStudentWhenPreviousTermHasNoGrades() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatus.CONTINUING, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.CONTINUING, curriculum);
 
 		enrollTerm1WithNoPrereq(student);
 		enrollTerm2WithPrereq(student);
@@ -116,7 +116,7 @@ public class EnrollmentTests {
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
 	public void enrollingPassedSubjectsTwice() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatus.CONTINUING, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.CONTINUING, curriculum);
 
 		enrollTerm1WithNoPrereq(student);
 		for (ClassCard term1ClassCard : student.getSubmittedEnrollmentForms().get(0).getClassCards()) {
@@ -132,7 +132,7 @@ public class EnrollmentTests {
 
 	@Test
 	public void addingPreviouslyFailedSubject() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatus.CONTINUING, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.CONTINUING, curriculum);
 
 		enrollTerm1WithNoPrereq(student);
 		for (ClassCard term1ClassCard : student.getSubmittedEnrollmentForms().get(0).getClassCards()) {
@@ -148,7 +148,7 @@ public class EnrollmentTests {
 
 	@Test
 	public void enrollStudentWithPrereq() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatus.PROBATIONARY, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.PROBATIONARY, curriculum);
 
 		enrollTerm1WithNoPrereq(student);
 
@@ -162,7 +162,7 @@ public class EnrollmentTests {
 	}
 
 	private void enrollTerm2WithPrereq(Student student) throws Exception {
-		StudentStatus status = student.getStatus();
+		StudentStatusType status = student.getStatusType();
 		EnrollmentForm term2EnrollmentForm = student.getNewEnrollmentForm();
 		addUnitsToEnrollmentForm(curriculum, 7, status.getMinUnits(), term2EnrollmentForm);
 
@@ -175,7 +175,7 @@ public class EnrollmentTests {
 	}
 
 	private void enrollTerm1WithNoPrereq(Student student) throws Exception {
-		StudentStatus status = student.getStatus();
+		StudentStatusType status = student.getStatusType();
 
 		EnrollmentForm term1EnrollmentForm = student.getNewEnrollmentForm();
 		addUnitsToEnrollmentForm(curriculum, status.getMinUnits(), term1EnrollmentForm);
@@ -202,7 +202,7 @@ public class EnrollmentTests {
 
 		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
 
-		StudentStatus studentStatus = student.getStatus();
+		StudentStatusType studentStatus = student.getStatusType();
 		addUnitsToEnrollmentForm(curriculum, studentStatus.getMinUnits(), enrollmentForm);
 
 		enrollmentForm.addSection(sectionWithPrereq);
@@ -224,63 +224,63 @@ public class EnrollmentTests {
 
 	@Test(expected = IneligibleStudentException.class)
 	public void enrollIneligibleStudent() throws SectionFullException, IneligibleStudentException {
-		Student ineligibleStudent = new Student(2, "Juan Cruz", StudentStatus.INELIGIBLE,
+		Student ineligibleStudent = new Student(2, "Juan Cruz", StudentStatusType.INELIGIBLE,
 				Curriculum.BS_COMPUTER_SCIENCE);
 		ineligibleStudent.getNewEnrollmentForm();
 	}
 
 	@Test(expected = IneligibleStudentException.class)
 	public void enrollGraduatedStudent() throws SectionFullException, IneligibleStudentException {
-		Student graduatedStudent = new Student(2, "Juan de Cruz", StudentStatus.GRADUATE,
+		Student graduatedStudent = new Student(2, "Juan de Cruz", StudentStatusType.GRADUATE,
 				Curriculum.BS_COMPUTER_SCIENCE);
 		graduatedStudent.getNewEnrollmentForm();
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
 	public void newStudentBelowMinimumUnits() throws Exception {
-		StudentStatus studentStatus = StudentStatus.NEW;
+		StudentStatusType studentStatus = StudentStatusType.NEW;
 		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
 		enrollUnits(student, studentStatus.getMinUnits() - MAX_UNITS);
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
 	public void newStudentExceededMaximumUnits() throws Exception {
-		StudentStatus studentStatus = StudentStatus.NEW;
+		StudentStatusType studentStatus = StudentStatusType.NEW;
 		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
 		enrollUnits(student, studentStatus.getMaxUnits() + 1);
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
 	public void continuingStudentExceededMaximumUnits() throws Exception {
-		StudentStatus studentStatus = StudentStatus.CONTINUING;
+		StudentStatusType studentStatus = StudentStatusType.CONTINUING;
 		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
 		enrollUnits(student, studentStatus.getMaxUnits() + 1);
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
 	public void continuingStudentBelowMinimumUnits() throws Exception {
-		StudentStatus studentStatus = StudentStatus.CONTINUING;
+		StudentStatusType studentStatus = StudentStatusType.CONTINUING;
 		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
 		enrollUnits(student, studentStatus.getMinUnits() - MAX_UNITS);
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
 	public void probationaryStudentExceededMaximumUnits() throws Exception {
-		StudentStatus studentStatus = StudentStatus.CONTINUING;
+		StudentStatusType studentStatus = StudentStatusType.CONTINUING;
 		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
 		enrollUnits(student, studentStatus.getMaxUnits() + 1);
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
 	public void probationaryStudentBelowMinimumUnits() throws Exception {
-		StudentStatus studentStatus = StudentStatus.PROBATIONARY;
+		StudentStatusType studentStatus = StudentStatusType.PROBATIONARY;
 		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
 		enrollUnits(student, studentStatus.getMinUnits() - MAX_UNITS);
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
 	public void graduatingStudentEnrollmentFormWithNoUnits() throws Exception {
-		StudentStatus studentStatus = StudentStatus.GRADUATING;
+		StudentStatusType studentStatus = StudentStatusType.GRADUATING;
 		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
 		enrollUnits(student, 0);
 	}
@@ -291,7 +291,7 @@ public class EnrollmentTests {
 		Section section = getFirstSubjectSection();
 		for (int i = 1; i <= Section.MAX_STUDENTS + 1; i++) {
 
-			Student student = new Student(i, "Juan de Cruz", StudentStatus.GRADUATING, curriculum);
+			Student student = new Student(i, "Juan de Cruz", StudentStatusType.GRADUATING, curriculum);
 			EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
 			enrollmentForm.addSection(section);
 			enrollmentForm.submitForEnrollment();
@@ -300,7 +300,7 @@ public class EnrollmentTests {
 
 	@Test(expected = ScheduleConflictException.class)
 	public void studentWithScheduleConflict() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatus.GRADUATING, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.GRADUATING, curriculum);
 
 		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
 
@@ -321,7 +321,7 @@ public class EnrollmentTests {
 
 	@Test(expected = ScheduleConflictException.class)
 	public void studentEnrollingSameSection() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatus.GRADUATING, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.GRADUATING, curriculum);
 
 		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
 
@@ -342,7 +342,7 @@ public class EnrollmentTests {
 
 	@Test
 	public void passingAverage() throws Exception {
-		Student newStudent = new Student(1, "Juan dela Cruz", StudentStatus.NEW, curriculum);
+		Student newStudent = new Student(1, "Juan dela Cruz", StudentStatusType.NEW, curriculum);
 		List<Section> sections = getSixSectionsNoPrerequisites();
 
 		EnrollmentForm ef = newStudent.getNewEnrollmentForm();

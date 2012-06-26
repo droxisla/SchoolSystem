@@ -20,7 +20,7 @@ public class StudentTest {
 
 	@Test
 	public void hasPassedSubject() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatus.CONTINUING, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.CONTINUING, curriculum);
 		EnrollmentForm enrollmentForm = buildEnrollmentFormThenGradeWith(student, Grade.G3_00);
 
 		List<Subject> subjects = getSubjects(enrollmentForm);
@@ -32,7 +32,7 @@ public class StudentTest {
 
 	@Test
 	public void hasFailedSubject() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatus.CONTINUING, curriculum);
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.CONTINUING, curriculum);
 		EnrollmentForm enrollmentForm = buildEnrollmentFormThenGradeWith(student, Grade.G5_00);
 
 		List<Subject> subjects = getSubjects(enrollmentForm);
@@ -44,7 +44,7 @@ public class StudentTest {
 
 	private EnrollmentForm buildEnrollmentFormThenGradeWith(Student student, Grade grade) throws Exception {
 		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
-		EnrollmentTests.addUnitsToEnrollmentForm(curriculum, StudentStatus.CONTINUING.getMinUnits(), enrollmentForm);
+		EnrollmentTests.addUnitsToEnrollmentForm(curriculum, StudentStatusType.CONTINUING.getMinUnits(), enrollmentForm);
 
 		enrollmentForm.submitForEnrollment();
 

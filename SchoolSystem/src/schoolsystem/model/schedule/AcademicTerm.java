@@ -2,7 +2,7 @@ package schoolsystem.model.schedule;
 
 import java.util.Calendar;
 
-public class AcademicTerm {
+public class AcademicTerm implements Comparable<AcademicTerm> {
 
 	public final static int TERM_NUM_IN_DECEMBER = 2;
 	public final static int MAX_TERM_NUM = 3;
@@ -35,7 +35,7 @@ public class AcademicTerm {
 		if (termNumber > MAX_TERM_NUM || termNumber < 1) {
 			throw new IllegalArgumentException("Term number value range must be from 1 to " + MAX_TERM_NUM);
 		}
-		
+
 		this.year = academicYear;
 		this.termNum = termNumber;
 	}
@@ -57,7 +57,19 @@ public class AcademicTerm {
 			return 2;
 		}
 
-		throw new IllegalArgumentException("Month should be from 1 to 12");
+		throw new IllegalArgumentException("Month should be from 1 to 12.");
+	}
+
+	private static int getMonth(int termNum) {
+		switch (termNum) {
+		case 1:
+			return Calendar.JUNE;
+		case 2:
+			return Calendar.SEPTEMBER;
+		case 3:
+			return Calendar.JANUARY;
+		}
+		throw new IllegalArgumentException("Term number should be from 1 to 3.");
 	}
 
 	public AcademicTerm getNextAcademicTerm() {
@@ -109,6 +121,17 @@ public class AcademicTerm {
 	@Override
 	public String toString() {
 		return "AcademicTerm [year=" + year + ", termNum=" + termNum + "]";
+	}
+
+	@Override
+	public int compareTo(AcademicTerm o) {
+		int yearComparison = year - o.getYear();
+
+		if (yearComparison != 0) {
+			return yearComparison;
+		}
+
+		return getMonth(termNum) - getMonth(o.getTermNum());
 	}
 
 }

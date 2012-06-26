@@ -6,19 +6,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import schoolsystem.model.schedule.AcademicTerm;
+
 public class Student {
 
 	private final int studentNumber;
-	private StudentStatus status;
+	private final StudentStatus status;
 	private final Curriculum curriculum;
 	private final List<EnrollmentForm> enrollmentForms;
 	private final String studentName;
 
-	public Student(int studentNumber, String studentName, StudentStatus status, Curriculum curriculum) {
+	public Student(int studentNumber, String studentName, StudentStatusType statusType, Curriculum curriculum) {
 		if (studentNumber < 0) {
 			throw new IllegalArgumentException("Student number must not be negative.");
 		}
-		if (status == null) {
+		if (statusType == null) {
 			throw new IllegalArgumentException("Student status must not be null.");
 		}
 		if (curriculum == null) {
@@ -31,7 +33,7 @@ public class Student {
 		this.studentName = studentName;
 		this.enrollmentForms = new ArrayList<EnrollmentForm>();
 		this.studentNumber = studentNumber;
-		this.status = status;
+		this.status = new StudentStatus(statusType);
 		this.curriculum = curriculum;
 	}
 
@@ -49,11 +51,17 @@ public class Student {
 		enrollmentForms.add(enrollmentForm);
 	}
 
-	public void updateStatus() {
-		if (allCurrentTermClassCardsHaveGrades()) {
+	public void updateStatus(AcademicTerm currentAcademicTerm) {
+		if (currentAcademicTerm == null) {
+			throw new IllegalArgumentException("Current academic term must not be null.");
+		}
+
+		boolean studentStatusIsOld = status.statusNeedsUpdate(currentAcademicTerm);
+		
+		if (studentStatusIsOld && allCurrentTermClassCardsHaveGrades()) {
 			TermStatus termStatus = new TermStatus(calculateCurrentTermAverage(), getRemainingUnits(),
 					prerequisitesDone());
-			this.status = status.update(termStatus);
+			status.updateStatus(currentAcademicTerm, termStatus);
 		}
 	}
 
@@ -109,8 +117,8 @@ public class Student {
 		return enrollmentForms.size();
 	}
 
-	public StudentStatus getStatus() {
-		return status;
+	public StudentStatusType getStatusType() {
+		return status.getStatusType();
 	}
 
 	public Curriculum getCurriculum() {
@@ -165,6 +173,10 @@ public class Student {
 
 	public List<EnrollmentForm> getSubmittedEnrollmentForms() {
 		return Collections.unmodifiableList(enrollmentForms);
+	}
+
+	AcademicTerm getStatusAcademicTerm() {
+		return status.getStatusTime();
 	}
 
 }

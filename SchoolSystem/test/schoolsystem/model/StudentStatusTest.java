@@ -13,53 +13,53 @@ public class StudentStatusTest {
 
 	@Test
 	public void unitsRestriction() {
-		assertEquals(15, StudentStatus.NEW.getMinUnits());
-		assertEquals(18, StudentStatus.NEW.getMaxUnits());
+		assertEquals(15, StudentStatusType.NEW.getMinUnits());
+		assertEquals(18, StudentStatusType.NEW.getMaxUnits());
 
-		assertEquals(18, StudentStatus.CONTINUING.getMinUnits());
-		assertEquals(24, StudentStatus.CONTINUING.getMaxUnits());
+		assertEquals(18, StudentStatusType.CONTINUING.getMinUnits());
+		assertEquals(24, StudentStatusType.CONTINUING.getMaxUnits());
 
-		assertEquals(NO_MIN, StudentStatus.GRADUATING.getMinUnits());
-		assertEquals(NO_MAX, StudentStatus.GRADUATING.getMaxUnits());
+		assertEquals(NO_MIN, StudentStatusType.GRADUATING.getMinUnits());
+		assertEquals(NO_MAX, StudentStatusType.GRADUATING.getMaxUnits());
 
-		assertEquals(NO_MIN, StudentStatus.GRADUATE.getMinUnits());
-		assertEquals(INELLIGIBLE_MAX, StudentStatus.GRADUATE.getMaxUnits());
+		assertEquals(NO_MIN, StudentStatusType.GRADUATE.getMinUnits());
+		assertEquals(INELLIGIBLE_MAX, StudentStatusType.GRADUATE.getMaxUnits());
 
-		assertEquals(15, StudentStatus.PROBATIONARY.getMinUnits());
-		assertEquals(18, StudentStatus.PROBATIONARY.getMaxUnits());
+		assertEquals(15, StudentStatusType.PROBATIONARY.getMinUnits());
+		assertEquals(18, StudentStatusType.PROBATIONARY.getMaxUnits());
 
-		assertEquals(NO_MIN, StudentStatus.INELIGIBLE.getMinUnits());
-		assertEquals(INELLIGIBLE_MAX, StudentStatus.INELIGIBLE.getMaxUnits());
+		assertEquals(NO_MIN, StudentStatusType.INELIGIBLE.getMinUnits());
+		assertEquals(INELLIGIBLE_MAX, StudentStatusType.INELIGIBLE.getMaxUnits());
 	}
 
 	@Test
 	public void enrollmentEligibility() {
-		assertTrue(StudentStatus.NEW.isEligibleToEnroll());
-		assertTrue(StudentStatus.CONTINUING.isEligibleToEnroll());
-		assertTrue(StudentStatus.GRADUATING.isEligibleToEnroll());
-		assertFalse(StudentStatus.GRADUATE.isEligibleToEnroll());
-		assertTrue(StudentStatus.PROBATIONARY.isEligibleToEnroll());
-		assertFalse(StudentStatus.INELIGIBLE.isEligibleToEnroll());
+		assertTrue(StudentStatusType.NEW.isEligibleToEnroll());
+		assertTrue(StudentStatusType.CONTINUING.isEligibleToEnroll());
+		assertTrue(StudentStatusType.GRADUATING.isEligibleToEnroll());
+		assertFalse(StudentStatusType.GRADUATE.isEligibleToEnroll());
+		assertTrue(StudentStatusType.PROBATIONARY.isEligibleToEnroll());
+		assertFalse(StudentStatusType.INELIGIBLE.isEligibleToEnroll());
 	}
 
 	@Test
 	public void prerequisites() {
-		assertTrue(StudentStatus.NEW.mustCheckPrerequisites());
-		assertFalse(StudentStatus.NEW.canTakeSubjectsWithPrerequisite());
+		assertTrue(StudentStatusType.NEW.mustCheckPrerequisites());
+		assertFalse(StudentStatusType.NEW.canTakeSubjectsWithPrerequisite());
 		
-		assertTrue(StudentStatus.CONTINUING.mustCheckPrerequisites());
-		assertTrue(StudentStatus.CONTINUING.canTakeSubjectsWithPrerequisite());
+		assertTrue(StudentStatusType.CONTINUING.mustCheckPrerequisites());
+		assertTrue(StudentStatusType.CONTINUING.canTakeSubjectsWithPrerequisite());
 		
-		assertFalse(StudentStatus.GRADUATING.mustCheckPrerequisites());
-		assertTrue(StudentStatus.GRADUATING.canTakeSubjectsWithPrerequisite());
+		assertFalse(StudentStatusType.GRADUATING.mustCheckPrerequisites());
+		assertTrue(StudentStatusType.GRADUATING.canTakeSubjectsWithPrerequisite());
 		
-		assertFalse(StudentStatus.GRADUATE.mustCheckPrerequisites());
-		assertFalse(StudentStatus.GRADUATE.canTakeSubjectsWithPrerequisite());
+		assertFalse(StudentStatusType.GRADUATE.mustCheckPrerequisites());
+		assertFalse(StudentStatusType.GRADUATE.canTakeSubjectsWithPrerequisite());
 		
-		assertTrue(StudentStatus.PROBATIONARY.mustCheckPrerequisites());
-		assertTrue(StudentStatus.PROBATIONARY.canTakeSubjectsWithPrerequisite());
+		assertTrue(StudentStatusType.PROBATIONARY.mustCheckPrerequisites());
+		assertTrue(StudentStatusType.PROBATIONARY.canTakeSubjectsWithPrerequisite());
 		
-		assertFalse(StudentStatus.INELIGIBLE.mustCheckPrerequisites());
-		assertFalse(StudentStatus.INELIGIBLE.canTakeSubjectsWithPrerequisite());
+		assertFalse(StudentStatusType.INELIGIBLE.mustCheckPrerequisites());
+		assertFalse(StudentStatusType.INELIGIBLE.canTakeSubjectsWithPrerequisite());
 	}
 }

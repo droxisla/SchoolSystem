@@ -66,4 +66,8 @@ public class Schedule {
 		return "Schedule [academicTerm=" + academicTerm + ", days=" + days + ", timeRange=" + timeRange + "]";
 	}
 
+	public AcademicTerm getAcademicTerm() {
+		return academicTerm;
+	}
+
 }

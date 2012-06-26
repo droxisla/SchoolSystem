@@ -1,10 +1,10 @@
 package schoolsystem.model;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import schoolsystem.model.schedule.AcademicTerm;
 import schoolsystem.model.schedule.Schedule;
 import schoolsystem.model.schedule.ScheduleConflictException;
 
@@ -25,13 +25,11 @@ public class EnrollmentForm {
 		this.classCards = new ArrayList<ClassCard>();
 		this.sections = new ArrayList<Section>();
 
-		if (!student.getStatus().isEligibleToEnroll()) {
+		if (!student.getStatusType().isEligibleToEnroll()) {
 			throw new IneligibleStudentException();
 		}
 
 		checkIfPreviousTermHasAverage();
-
-		student.updateStatus();
 	}
 
 	private void checkIfPreviousTermHasAverage() {
@@ -75,6 +73,8 @@ public class EnrollmentForm {
 			throw new SectionFullException();
 		}
 
+		checkStudentStatus(section.getSchedule());
+
 		Subject subject = section.getSubject();
 
 		if (student.hasPassedSubject(subject)) {
@@ -88,6 +88,15 @@ public class EnrollmentForm {
 
 		updateTotalUnits(section);
 		sections.add(section);
+	}
+
+	private void checkStudentStatus(Schedule schedule) {
+		AcademicTerm academicTerm = schedule.getAcademicTerm();
+		AcademicTerm studentStatusLastUpdate = student.getStatusAcademicTerm();
+	
+		if (studentStatusLastUpdate!=null && studentStatusLastUpdate.compareTo(academicTerm) != 0) {
+			throw new IllegalStateException("Student status is not up to date.");
+		}
 	}
 
 	private void checkDuplicateSubject(Subject subject) throws SubjectUnitsRestrictionException {
@@ -113,7 +122,7 @@ public class EnrollmentForm {
 	}
 
 	private void checkRequiredPrerequisites(Subject subject) throws UnsatisfiedPrerequisiteException {
-		StudentStatus studentStatus = student.getStatus();
+		StudentStatusType studentStatus = student.getStatusType();
 
 		if (subject.hasPrerequisites()) {
 			if (!studentStatus.canTakeSubjectsWithPrerequisite()) {
@@ -132,7 +141,7 @@ public class EnrollmentForm {
 	}
 
 	private void updateTotalUnits(Section section) throws SubjectUnitsRestrictionException {
-		StudentStatus studentStatus = student.getStatus();
+		StudentStatusType studentStatus = student.getStatusType();
 
 		Subject subject = section.getSubject();
 		totalUnits += subject.getNumberOfUnits();
@@ -143,7 +152,7 @@ public class EnrollmentForm {
 	}
 
 	public void submitForEnrollment() throws SubjectUnitsRestrictionException {
-		StudentStatus studentStatus = student.getStatus();
+		StudentStatusType studentStatus = student.getStatusType();
 		int minUnits = studentStatus.getMinUnits();
 
 		if (totalUnits < minUnits) {
