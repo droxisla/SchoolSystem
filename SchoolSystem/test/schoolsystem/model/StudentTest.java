@@ -51,7 +51,7 @@ public class StudentTest {
 				enrollmentFormBuilder);
 
 		EnrollmentForm enrollmentForm = enrollmentFormBuilder.enroll();
-
+		
 		rateClassCards(enrollmentForm.getClassCards(), grade);
 		return enrollmentForm;
 	}

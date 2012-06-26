@@ -36,7 +36,7 @@ public enum StudentStatus {
 		}
 
 		@Override
-		public boolean canTakePrerequisiteSubjects() {
+		public boolean canTakeSubjectsWithPrerequisite() {
 			return false;
 		};
 	},
@@ -73,7 +73,7 @@ public enum StudentStatus {
 		}
 
 		@Override
-		public boolean canTakePrerequisiteSubjects() {
+		public boolean canTakeSubjectsWithPrerequisite() {
 			return true;
 		};
 	},
@@ -104,7 +104,7 @@ public enum StudentStatus {
 		}
 
 		@Override
-		public boolean canTakePrerequisiteSubjects() {
+		public boolean canTakeSubjectsWithPrerequisite() {
 			return true;
 		};
 	},
@@ -131,11 +131,11 @@ public enum StudentStatus {
 
 		@Override
 		public boolean mustCheckPrerequisites() {
-			return true;
+			return false;
 		}
 
 		@Override
-		public boolean canTakePrerequisiteSubjects() {
+		public boolean canTakeSubjectsWithPrerequisite() {
 			return false;
 		};
 	},
@@ -173,7 +173,7 @@ public enum StudentStatus {
 		}
 
 		@Override
-		public boolean canTakePrerequisiteSubjects() {
+		public boolean canTakeSubjectsWithPrerequisite() {
 			return true;
 		};
 	},
@@ -200,11 +200,11 @@ public enum StudentStatus {
 
 		@Override
 		public boolean mustCheckPrerequisites() {
-			return true;
+			return false;
 		}
 
 		@Override
-		public boolean canTakePrerequisiteSubjects() {
+		public boolean canTakeSubjectsWithPrerequisite() {
 			return false;
 		};
 	};
@@ -221,7 +221,7 @@ public enum StudentStatus {
 
 	public abstract boolean mustCheckPrerequisites();
 
-	public abstract boolean canTakePrerequisiteSubjects();
+	public abstract boolean canTakeSubjectsWithPrerequisite();
 
 	public abstract StudentStatus update(TermStatus ts);
 

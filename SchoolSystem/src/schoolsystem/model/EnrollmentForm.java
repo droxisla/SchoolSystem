@@ -76,7 +76,7 @@ public class EnrollmentForm {
 
 		private void checkRequiredPrerequisites(Subject subject) throws UnsatisfiedPrerequisiteException {
 			if (subject.hasPrerequisites()) {
-				if (!studentStatus.canTakePrerequisiteSubjects()) {
+				if (!studentStatus.canTakeSubjectsWithPrerequisite()) {
 					throw new UnsatisfiedPrerequisiteException("Student cannot take subjects with prerequisite.");
 				}
 
