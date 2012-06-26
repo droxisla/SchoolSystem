@@ -30,7 +30,7 @@ public class Student {
 		this.curriculum = curriculum;
 	}
 
-	public EnrollmentForm getEnrollmentForm() throws IneligibleStudentException {
+	public EnrollmentForm getNewEnrollmentForm() throws IneligibleStudentException {
 		return new EnrollmentForm(this);
 	}
 
@@ -46,11 +46,11 @@ public class Student {
 
 	public void updateStatus() {
 		if (classCardsHaveGrades()) {
-			this.status = status.update(new TermStatus(calculateLastTermAverage(), remainingUnits(), prerequisitesDone()));
+			this.status = status.update(new TermStatus(calculateLastTermAverage(), getRemainingUnits(), prerequisitesDone()));
 		}
 	}
 
-	private int remainingUnits() {
+	private int getRemainingUnits() {
 		int units = curriculum.getTotalUnits();
 		List<Subject> subjects = curriculum.getSubjects();
 		for (Subject s : subjects) {
@@ -156,6 +156,10 @@ public class Student {
 	}
 
 	public boolean hasPassedSubject(Subject subject) {
+		if(subject==null) {
+			return false;
+		}
+		
 		for (EnrollmentForm enrollmentForm : enrollmentForms) {
 			for (ClassCard classCard : enrollmentForm.getClassCards()) {
 				if (classCard.hasPassedSubject(subject)) {
@@ -166,7 +170,7 @@ public class Student {
 		return false;
 	}
  
-	public List<EnrollmentForm> getEnrollmentForms() {
+	public List<EnrollmentForm> getSubmittedEnrollmentForms() {
 		return Collections.unmodifiableList(enrollmentForms);
 	}
 

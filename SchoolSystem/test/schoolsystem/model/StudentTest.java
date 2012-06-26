@@ -43,7 +43,7 @@ public class StudentTest {
 	}
 
 	private EnrollmentForm buildEnrollmentFormThenGradeWith(Student student, Grade grade) throws Exception {
-		EnrollmentForm enrollmentForm = student.getEnrollmentForm();
+		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
 		EnrollmentTests.addUnitsToEnrollmentForm(curriculum, StudentStatus.CONTINUING.getMinUnits(), enrollmentForm);
 
 		enrollmentForm.submitForEnrollment();

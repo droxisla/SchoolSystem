@@ -71,11 +71,20 @@ public class EnrollmentForm {
 					+ "' has been passed in previous terms.");
 		}
 
+		checkDuplicateSubject(subject);
 		checkScheduleConflict(section);
 		checkRequiredPrerequisites(subject);
 		updateTotalUnits(section);
 
 		sections.add(section);
+	}
+
+	private void checkDuplicateSubject(Subject subject) throws SubjectUnitsRestrictionException {
+		for(Section section:sections) {
+			if(section.getSubject().equals(subject)) {
+				throw new SubjectUnitsRestrictionException("Student is enrolling the same subject twice.");
+			}
+		}
 	}
 
 	private void checkScheduleConflict(Section newSection) throws ScheduleConflictException {

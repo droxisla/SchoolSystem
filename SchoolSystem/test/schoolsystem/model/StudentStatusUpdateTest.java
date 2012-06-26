@@ -233,7 +233,7 @@ public class StudentStatusUpdateTest {
 
 	private EnrollmentForm enrollStudentInEighteenUnits(Student student) throws Exception {
 		List<Section> sections = getSixSubjectsNoPrerequisites();
-		EnrollmentForm ef = student.getEnrollmentForm();
+		EnrollmentForm ef = student.getNewEnrollmentForm();
 		ef.addSection(sections.get(0));
 		ef.addSection(sections.get(1));
 		ef.addSection(sections.get(2));
@@ -245,7 +245,7 @@ public class StudentStatusUpdateTest {
 	}
 
 	private EnrollmentForm enrollStudentInEighteenUnits(Student student, List<Section> sections) throws Exception {
-		EnrollmentForm ef = student.getEnrollmentForm();
+		EnrollmentForm ef = student.getNewEnrollmentForm();
 		ef.addSection(sections.get(0));
 		ef.addSection(sections.get(1));
 		ef.addSection(sections.get(2));

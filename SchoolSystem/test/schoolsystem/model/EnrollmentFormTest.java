@@ -40,7 +40,7 @@ public class EnrollmentFormTest {
 		Student student = new Student(1, StudentStatus.GRADUATING, curriculum);
 		Section section = getFirstSubjectSection();
 		
-		EnrollmentForm enrollmentForm = student.getEnrollmentForm();
+		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
 		enrollmentForm.addSection(section);
 		enrollmentForm.submitForEnrollment();
 

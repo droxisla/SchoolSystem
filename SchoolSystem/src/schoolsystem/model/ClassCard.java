@@ -22,6 +22,10 @@ public class ClassCard {
 	}
 	
 	public boolean hasPassedSubject(Subject subject) {
+		if(subject==null) {
+			return false;
+		}
+		
 		if(section.getSubject().equals(subject)) {
 			if(grade.isPassing()) {
 				return true;
