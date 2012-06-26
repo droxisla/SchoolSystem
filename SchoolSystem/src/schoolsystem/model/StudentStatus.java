@@ -80,6 +80,9 @@ public enum StudentStatus {
 	GRADUATING() {
 		@Override
 		public StudentStatus update(TermStatus ts) {
+			if(0 == ts.getUnitsLeft()) {
+				return GRADUATE;
+			}
 			return this;
 		}
 

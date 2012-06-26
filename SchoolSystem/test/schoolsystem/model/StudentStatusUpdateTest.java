@@ -157,6 +157,16 @@ public class StudentStatusUpdateTest {
 		assertEquals(StudentStatus.GRADUATING, graduatingStudent.getStatus());
 	}
 	
+	@Test
+	public void fromGraduatingToGraduate() throws Exception {
+		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
+		Student graduatingStudent = new Student(4, StudentStatus.GRADUATING, curriculum);		
+		EnrollmentForm ef = enrollStudentInEighteenUnits(graduatingStudent);
+		setGradesToPassing(ef.getClassCards());
+		graduatingStudent.updateStatus();
+		assertEquals(StudentStatus.GRADUATE, graduatingStudent.getStatus());
+	}
+	
 	private void setGradesToPassing(List<ClassCard> classCards) {
 		classCards.get(0).setGrade(Grade.G3_00);
 		classCards.get(1).setGrade(Grade.G3_00);
