@@ -10,6 +10,19 @@ import java.util.Map;
 import java.util.Set;
 
 public enum Curriculum {
+	THIRTEEN_SUBJECTS_SIX_PREREQS() {
+		@Override
+		List<Subject> initializeSubjects() {
+			List<Subject> subjects = new ArrayList<Subject>();
+			for(int i = 0; i < 7; i++) {
+				subjects.add(new Subject("S"+i));
+			}
+			for(int i = 7; i < 13; i++) {
+				subjects.add(new Subject("S"+i, Arrays.asList(subjects.get(i-7))));
+			}
+			return Collections.unmodifiableList(subjects);
+		}
+	},
 	TWELVE_SUBJECTS_SIX_PREREQS() {
 		@Override
 		List<Subject> initializeSubjects() {

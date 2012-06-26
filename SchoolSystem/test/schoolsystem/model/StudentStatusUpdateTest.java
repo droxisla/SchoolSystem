@@ -60,6 +60,16 @@ public class StudentStatusUpdateTest {
 	}
 	
 	@Test
+	public void fromContinuingToContinuingOverEighteenUnitsLeft() throws Exception {
+		curriculum = Curriculum.THIRTEEN_SUBJECTS_SIX_PREREQS;
+		continuingStudent = new Student(4, "Juan Cruz", StudentStatus.CONTINUING, curriculum);
+		EnrollmentForm ef = enrollStudentInEighteenUnits(continuingStudent);
+		setGradesToPassing(ef.getClassCards());
+		continuingStudent.updateStatus();
+		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
+	}
+	
+	@Test
 	public void fromContinuingToGraduating() throws Exception {
 		curriculum = Curriculum.TWELVE_SUBJECTS_SIX_PREREQS;
 		continuingStudent = new Student(4, "Juan Cruz", StudentStatus.CONTINUING, curriculum);
@@ -67,7 +77,6 @@ public class StudentStatusUpdateTest {
 		setGradesToPassing(ef.getClassCards());
 		continuingStudent.updateStatus();
 		assertEquals(StudentStatus.GRADUATING, continuingStudent.getStatus());
-		academicTerm = academicTerm.getNextAcademicTerm();
 	}
 
 	@Test
