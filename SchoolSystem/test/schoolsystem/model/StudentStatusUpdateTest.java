@@ -30,6 +30,26 @@ public class StudentStatusUpdateTest {
 		continuingStudent = new Student(2, "Juan Cruz", StudentStatus.CONTINUING, Curriculum.BS_COMPUTER_SCIENCE);
 		probationaryStudent = new Student(3, "Juan Ruz", StudentStatus.PROBATIONARY, Curriculum.BS_COMPUTER_SCIENCE);
 	}
+	
+	@Test
+	public void noGrades() throws Exception{
+		enrollStudentInEighteenUnits(newStudent);
+		newStudent.updateStatus();
+		assertEquals(StudentStatus.NEW, newStudent.getStatus());
+		
+		enrollStudentInEighteenUnits(continuingStudent);
+		continuingStudent.updateStatus();
+		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
+		
+		enrollStudentInEighteenUnits(probationaryStudent);
+		probationaryStudent.updateStatus();
+		assertEquals(StudentStatus.PROBATIONARY, probationaryStudent.getStatus());
+		
+		Student graduatingStudent = new Student(4, "Juan Ruz", StudentStatus.GRADUATING, Curriculum.BS_COMPUTER_SCIENCE);
+		enrollStudentInEighteenUnits(graduatingStudent);
+		graduatingStudent.updateStatus();
+		assertEquals(StudentStatus.GRADUATING, graduatingStudent.getStatus());
+	}
 
 	@Test
 	public void fromNewToContinuingNoPreviousEnrollment() {
@@ -180,6 +200,20 @@ public class StudentStatusUpdateTest {
 		setGradesToFailing(ef.getClassCards());
 		graduatingStudent.updateStatus();
 		assertEquals(StudentStatus.PROBATIONARY, graduatingStudent.getStatus());
+	}
+	
+	@Test
+	public void fromGraduateToGraduate() throws Exception {
+		Student graduateStudent = new Student(4, "Juan dela Pena", StudentStatus.GRADUATE, curriculum);
+		graduateStudent.updateStatus();
+		assertEquals(StudentStatus.GRADUATE, graduateStudent.getStatus());
+	}
+	
+	@Test
+	public void fromIneligibleToIneligible() throws Exception {
+		Student ineligibleStudent = new Student(4, "Juan dela Pena", StudentStatus.INELIGIBLE, curriculum);
+		ineligibleStudent.updateStatus();
+		assertEquals(StudentStatus.INELIGIBLE, ineligibleStudent.getStatus());
 	}
 
 	private void setGradesToPassing(List<ClassCard> classCards) {
