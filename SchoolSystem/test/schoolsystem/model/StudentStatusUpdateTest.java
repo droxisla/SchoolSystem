@@ -60,6 +60,16 @@ public class StudentStatusUpdateTest {
 	}
 	
 	@Test
+	public void fromContinuingToContinuingHasPrerequisitesRemaining() throws Exception {
+		curriculum = Curriculum.EIGHT_SUBJECTS_ONE_PREREQ_SEVENTH;
+		continuingStudent = new Student(4, "Juan Cruz", StudentStatus.CONTINUING, curriculum);
+		EnrollmentForm ef = enrollStudentInEighteenUnits(continuingStudent);
+		setGradesToPassing(ef.getClassCards());
+		continuingStudent.updateStatus();
+		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
+	}
+	
+	@Test
 	public void fromContinuingToContinuingOverEighteenUnitsLeft() throws Exception {
 		curriculum = Curriculum.THIRTEEN_SUBJECTS_SIX_PREREQS;
 		continuingStudent = new Student(4, "Juan Cruz", StudentStatus.CONTINUING, curriculum);
@@ -192,7 +202,7 @@ public class StudentStatusUpdateTest {
 	}
 
 	private EnrollmentForm enrollStudentInEighteenUnits(Student student) throws Exception {
-		List<Section> sections = getSixSubjectsNoPrerequisites();
+		List<Section> sections = getFirstSixSubjects();
 		EnrollmentForm ef = student.getNewEnrollmentForm();
 		ef.addSection(sections.get(0));
 		ef.addSection(sections.get(1));
@@ -216,7 +226,7 @@ public class StudentStatusUpdateTest {
 		return ef;
 	}
 
-	private List<Section> getSixSubjectsNoPrerequisites() throws Exception {
+	private List<Section> getFirstSixSubjects() throws Exception {
 		List<Section> sectionList = new ArrayList<Section>();
 		List<Subject> subjectList = curriculum.getSubjects();
 		int sectionId = 1;
