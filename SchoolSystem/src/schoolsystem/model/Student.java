@@ -50,8 +50,8 @@ public class Student {
 	}
 
 	public void updateStatus() {
-		if (classCardsHaveGrades()) {
-			this.status = status.update(new TermStatus(calculateLastTermAverage(), getRemainingUnits(),
+		if (allCurrentTermClassCardsHaveGrades()) {
+			this.status = status.update(new TermStatus(calculateCurrentTermAverage(), getRemainingUnits(),
 					prerequisitesDone()));
 		}
 	}
@@ -77,24 +77,16 @@ public class Student {
 		return true;
 	}
 
-	private Boolean classCardsHaveGrades() {
+	private boolean allCurrentTermClassCardsHaveGrades() {
 		if (enrollmentForms.isEmpty()) {
 			return false;
 		}
 
-		EnrollmentForm lastTermEnrollmentForm = enrollmentForms.get(enrollmentForms.size() - 1);
-		List<ClassCard> classCards = lastTermEnrollmentForm.getClassCards();
-		if (0 == classCards.size()) {
-			return false;
-		}
-		for (ClassCard c : classCards) {
-			if (null == c)
-				return false;
-		}
-		return true;
+		EnrollmentForm currentTermEnrollmentForm = enrollmentForms.get(enrollmentForms.size() - 1);
+		return currentTermEnrollmentForm.allClassCardsHaveGrades();
 	}
 
-	public BigDecimal calculateLastTermAverage() {
+	public BigDecimal calculateCurrentTermAverage() {
 		BigDecimal average = BigDecimal.ZERO;
 
 		if (enrollmentForms.isEmpty()) {

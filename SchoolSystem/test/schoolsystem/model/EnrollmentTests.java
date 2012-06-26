@@ -362,7 +362,7 @@ public class EnrollmentTests {
 		classCards.get(4).setGrade(Grade.G5_00);
 		classCards.get(5).setGrade(Grade.G5_00);
 
-		assertEquals(0, new BigDecimal("3.00").compareTo(newStudent.calculateLastTermAverage()));
+		assertEquals(0, new BigDecimal("3.00").compareTo(newStudent.calculateCurrentTermAverage()));
 	}
 
 	private List<Section> getSixSectionsNoPrerequisites() throws Exception {

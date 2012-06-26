@@ -22,24 +22,12 @@ public class EnrollmentFormTest {
 		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
 	}
 
-	private Section getFirstSubjectSection() throws ScheduleConflictException {
-		Subject subject = curriculum.getSubjects().get(0);
-		return createSection(1, "A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
-	}
-
-	private Section createSection(int sectionId, String sectionName, Subject subject, ScheduleDays scheduleDays,
-			ScheduleTimes scheduleTimes) throws ScheduleConflictException {
-		Schedule schedule = new Schedule(academicTerm, scheduleDays, scheduleTimes);
-		Teacher teacher = new Teacher(1, "John Doe");
-		return new Section(sectionId, sectionName, subject, schedule, teacher);
-	}
-
 	@Test
 	public void hasSection() throws SectionFullException, SubjectUnitsRestrictionException, ScheduleConflictException,
 			IneligibleStudentException, UnsatisfiedPrerequisiteException {
 		Student student = new Student(1, "Juan dela Cruz", StudentStatus.GRADUATING, curriculum);
 		Section section = getFirstSubjectSection();
-		
+
 		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
 		enrollmentForm.addSection(section);
 		enrollmentForm.submitForEnrollment();
@@ -52,4 +40,17 @@ public class EnrollmentFormTest {
 
 		assertFalse(enrollmentForm.hasSection(sectionNotInEnrollmentForm));
 	}
+
+	private Section getFirstSubjectSection() throws ScheduleConflictException {
+		Subject subject = curriculum.getSubjects().get(0);
+		return createSection(1, "A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
+	}
+
+	private Section createSection(int sectionId, String sectionName, Subject subject, ScheduleDays scheduleDays,
+			ScheduleTimes scheduleTimes) throws ScheduleConflictException {
+		Schedule schedule = new Schedule(academicTerm, scheduleDays, scheduleTimes);
+		Teacher teacher = new Teacher(1, "John Doe");
+		return new Section(sectionId, sectionName, subject, schedule, teacher);
+	}
+
 }
