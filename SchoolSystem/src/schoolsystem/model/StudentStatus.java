@@ -80,7 +80,9 @@ public enum StudentStatus {
 	GRADUATING() {
 		@Override
 		public StudentStatus update(TermStatus ts) {
-			if(0 == ts.getUnitsLeft()) {
+			if (ts.getAverage().equals(BigDecimal.ZERO)) {
+				return this;
+			} else if(0 == ts.getUnitsLeft()) {
 				return GRADUATE;
 			} else if (!Grade.isPassing(ts.getAverage())) {
 				return PROBATIONARY;
