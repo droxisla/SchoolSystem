@@ -1,6 +1,13 @@
 package schoolsystem.model;
-
-import java.util.*;
+ 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public enum Curriculum {
 	SIX_SUBJECTS_NO_PREREQS() {
@@ -91,12 +98,25 @@ public enum Curriculum {
 	private List<Subject> subjects;
 	private Map<String, Subject> subjectMapByName;
 	private Set<Subject> prerequisites;
+	private static int DEFAULT_SUBJECT_UNITS = 3;
 
 	Curriculum() {
-		subjects = initializeSubjects();
-		subjectMapByName = new HashMap<String, Subject>();
-		prerequisites = new HashSet<Subject>();
+		subjects = initializeSubjects();	
+		initializeSubjectMapByName();
+		createPrerequisiteSet();
+	}
 
+	private void createPrerequisiteSet() {
+		prerequisites = new HashSet<Subject>();
+		for(Subject s: subjects) {
+			for(Subject p : s.getPrerequisites()) {
+				prerequisites.add(p);
+			}
+		}
+	}
+
+	private void initializeSubjectMapByName() throws AssertionError {
+		subjectMapByName = new HashMap<String, Subject>();
 		for (Subject subject : subjects) {
 			String subjectName = subject.getName().toLowerCase();
 
@@ -106,18 +126,12 @@ public enum Curriculum {
 
 			subjectMapByName.put(subjectName, subject);
 		}
-		
-		for(Subject s: subjects) {
-			for(Subject p : s.getPrerequisites()) {
-				prerequisites.add(p);
-			}
-		}
 	}
 
 	abstract List<Subject> initializeSubjects();
 	
 	public int getTotalUnits() {
-		return subjects.size() * 3;
+		return subjects.size() * DEFAULT_SUBJECT_UNITS;
 	}
 
 	public List<Subject> getSubjects() {

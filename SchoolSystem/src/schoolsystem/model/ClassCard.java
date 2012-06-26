@@ -1,6 +1,5 @@
 package schoolsystem.model;
-
-
+ 
 public class ClassCard {
 
 	private final Student student;
@@ -20,6 +19,15 @@ public class ClassCard {
 		this.student = enrollmentForm.getStudent();
 		this.section.addClassCard(this);
 		this.grade = Grade.NO_GRADE;
+	}
+	
+	public boolean hasPassedSubject(Subject subject) {
+		if(section.getSubject().equals(subject)) {
+			if(grade.isPassing()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public Grade getGrade() {
@@ -68,14 +76,4 @@ public class ClassCard {
 			return false;
 		return true;
 	}
-
-	public boolean hasPassedSubject(Subject subject) {
-		if(section.getSubject().equals(subject)) {
-			if(grade.isPassing()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 }

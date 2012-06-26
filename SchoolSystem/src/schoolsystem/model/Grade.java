@@ -15,21 +15,21 @@ public enum Grade {
 	G2_75("2.75", true), 
 	G3_00("3.00", true), 
 	G5_00("5.00", false);
-
-	private static BigDecimal minPassingGrade;
-	private static BigDecimal maxPassingGrade;
+ 
+	private static BigDecimal bestPassingGrade;
+	private static BigDecimal worstPassingGrade;
 
 	static {
 		for (Grade grade : Grade.values()) {
 			if (grade.isPassing()) {
 				BigDecimal gradeValue = grade.value();
 
-				if (minPassingGrade == null || minPassingGrade.compareTo(gradeValue) > 0) {
-					minPassingGrade = gradeValue;
+				if (bestPassingGrade == null || bestPassingGrade.compareTo(gradeValue) > 0) {
+					bestPassingGrade = gradeValue;
 				}
 
-				if (maxPassingGrade == null || maxPassingGrade.compareTo(gradeValue) < 0) {
-					maxPassingGrade = gradeValue;
+				if (worstPassingGrade == null || worstPassingGrade.compareTo(gradeValue) < 0) {
+					worstPassingGrade = gradeValue;
 				}
 			}
 		}
@@ -52,7 +52,7 @@ public enum Grade {
 	}
 
 	public static boolean isPassing(BigDecimal average) {
-		if (minPassingGrade.compareTo(average) <= 0 && maxPassingGrade.compareTo(average) >= 0) {
+		if (bestPassingGrade.compareTo(average) <= 0 && worstPassingGrade.compareTo(average) >= 0) {
 			return true;
 		}
 

@@ -25,11 +25,7 @@ public class CurriculumTests {
 		Set<Subject> csPrereqs = Curriculum.BS_COMPUTER_SCIENCE.getPrerequisites();
 		assertTrue(prereqs.containsAll(csPrereqs));
 	}
-
-	@Test
-	public void createCurriculum() {
-		assertEquals(48, Curriculum.BS_COMPUTER_SCIENCE.getSubjects().size());
-	}
+	
 
 	@Test
 	public void subjectHasPrerequisites() {
