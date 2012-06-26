@@ -54,7 +54,7 @@ public class StudentStatusUpdateTest {
 	}
 	
 	@Test
-	//TODO: Incomplete
+	//TODO: Shorten? Consider creating a simpler Curriculum
 	public void fromContinuingToGraduating() throws Exception {
 		EnrollmentForm ef = enrollStudentInEighteenUnits(continuingStudent);		
 		setGradesToPassing(ef.getClassCards());
@@ -108,8 +108,6 @@ public class StudentStatusUpdateTest {
 		setGradesToPassing(ef.getClassCards());
 		continuingStudent.updateStatus();
 		assertEquals(StudentStatus.GRADUATING, continuingStudent.getStatus());
-		SectionManager.getInstance().reset();
-		//if remainingUnits <= 18 and all prereqs taken.
 	}
 	
 	@Test
@@ -140,6 +138,23 @@ public class StudentStatusUpdateTest {
 		setGradesToFailing(ef.getClassCards());
 		probationaryStudent.updateStatus();
 		assertEquals(StudentStatus.INELIGIBLE, probationaryStudent.getStatus());
+	}
+	
+	@Test
+	public void fromGraduatingToGraduating() throws Exception {
+		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
+		Student graduatingStudent = new Student(4, StudentStatus.GRADUATING, curriculum);		
+		EnrollmentForm ef = enrollStudentInEighteenUnits(graduatingStudent);
+		List<ClassCard> classCards = ef.getClassCards();
+		for(int i = 0; i < classCards.size(); i++) {
+			if(i == 0) {
+				classCards.get(i).setGrade(Grade.G5_00);
+			} else {
+				classCards.get(i).setGrade(Grade.G1_00);
+			}
+		}
+		graduatingStudent.updateStatus();
+		assertEquals(StudentStatus.GRADUATING, graduatingStudent.getStatus());
 	}
 	
 	private void setGradesToPassing(List<ClassCard> classCards) {

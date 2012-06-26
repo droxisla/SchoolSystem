@@ -3,8 +3,18 @@ package schoolsystem.model;
 import java.util.*;
 
 public enum Curriculum {
+	SIX_SUBJECTS_NO_PREREQS() {
+		@Override
+		List<Subject> initializeSubjects() {
+			List<Subject> subjects = new ArrayList<Subject>();
+			for(int i = 0; i < 6; i++) {
+				subjects.add(new Subject("S"+i));
+			}
+			return Collections.unmodifiableList(subjects);
+		}
+	},
 	BS_COMPUTER_SCIENCE() {
-
+		@Override
 		List<Subject> initializeSubjects() {
 			Subject ph101 = new Subject("PH 101");
 			Subject ph102 = new Subject("PH 102", Arrays.asList(ph101));
