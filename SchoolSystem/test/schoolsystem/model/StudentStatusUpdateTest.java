@@ -181,6 +181,20 @@ public class StudentStatusUpdateTest {
 		graduatingStudent.updateStatus();
 		assertEquals(StudentStatus.PROBATIONARY, graduatingStudent.getStatus());
 	}
+	
+	@Test
+	public void fromGraduateToGraduate() throws Exception {
+		Student graduateStudent = new Student(4, "Juan dela Pena", StudentStatus.GRADUATE, curriculum);
+		graduateStudent.updateStatus();
+		assertEquals(StudentStatus.GRADUATE, graduateStudent.getStatus());
+	}
+	
+	@Test
+	public void fromIneligibleToIneligible() throws Exception {
+		Student ineligibleStudent = new Student(4, "Juan dela Pena", StudentStatus.INELIGIBLE, curriculum);
+		ineligibleStudent.updateStatus();
+		assertEquals(StudentStatus.INELIGIBLE, ineligibleStudent.getStatus());
+	}
 
 	private void setGradesToPassing(List<ClassCard> classCards) {
 		classCards.get(0).setGrade(Grade.G3_00);
