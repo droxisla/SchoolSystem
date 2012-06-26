@@ -1,6 +1,7 @@
 package schoolsystem.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import schoolsystem.model.EnrollmentForm.EnrollmentFormBuilder;
-import schoolsystem.model.schedule.ScheduleConflictException;
 
 public class StudentTest {
 

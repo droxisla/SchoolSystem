@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public enum StudentStatus {
 
-	NEW(15, 18, true, true, false) {
+	NEW() {
 		public StudentStatus update(BigDecimal average) {
 			if (average.equals(BigDecimal.ZERO)) {
 				return this;
@@ -13,9 +13,35 @@ public enum StudentStatus {
 			} else {
 				return PROBATIONARY;
 			}
+		}
+
+		@Override
+		public int getMinUnits() {
+			return 15;
+		}
+
+		@Override
+		public int getMaxUnits() {
+			return 18;
+		}
+
+		@Override
+		public boolean isEligibleToEnroll() {
+			return true;
+		}
+
+		@Override
+		public boolean mustCheckPrerequisites() {
+			return true;
+		}
+
+		@Override
+		public boolean canTakePrerequisiteSubjects() {
+			return false;
 		};
 	},
-	CONTINUING(18, 24, true, true, true) {
+
+	CONTINUING() {
 		public StudentStatus update(BigDecimal average) {
 			if (average.equals(BigDecimal.ZERO)) {
 				return this;
@@ -23,19 +49,97 @@ public enum StudentStatus {
 				return PROBATIONARY;
 			}
 			return this;
+		}
+
+		@Override
+		public int getMinUnits() {
+			return 18;
+		}
+
+		@Override
+		public int getMaxUnits() {
+			return 24;
+		}
+
+		@Override
+		public boolean isEligibleToEnroll() {
+			return true;
+		}
+
+		@Override
+		public boolean mustCheckPrerequisites() {
+			return true;
+		}
+
+		@Override
+		public boolean canTakePrerequisiteSubjects() {
+			return true;
 		};
 	},
-	GRADUATING(true, false, true) {
+
+	GRADUATING() {
 		public StudentStatus update(BigDecimal average) {
 			return this;
+		}
+
+		@Override
+		public int getMinUnits() {
+			return 1;
+		}
+
+		@Override
+		public int getMaxUnits() {
+			return Integer.MAX_VALUE;
+		}
+
+		@Override
+		public boolean isEligibleToEnroll() {
+			return true;
+		}
+
+		@Override
+		public boolean mustCheckPrerequisites() {
+			return false;
+		}
+
+		@Override
+		public boolean canTakePrerequisiteSubjects() {
+			return true;
 		};
 	},
-	GRADUATE(false, true, false) {
+
+	GRADUATE() {
 		public StudentStatus update(BigDecimal average) {
 			return this;
+		}
+
+		@Override
+		public int getMinUnits() {
+			return 1;
+		}
+
+		@Override
+		public int getMaxUnits() {
+			return Integer.MAX_VALUE;
+		}
+
+		@Override
+		public boolean isEligibleToEnroll() {
+			return false;
+		}
+
+		@Override
+		public boolean mustCheckPrerequisites() {
+			return true;
+		}
+
+		@Override
+		public boolean canTakePrerequisiteSubjects() {
+			return false;
 		};
 	},
-	PROBATIONARY(true, true, true) {
+
+	PROBATIONARY() {
 		public StudentStatus update(BigDecimal average) {
 			if (average.equals(BigDecimal.ZERO)) {
 				return this;
@@ -45,56 +149,78 @@ public enum StudentStatus {
 			} else {
 				return INELIGIBLE;
 			}
+		}
+
+		@Override
+		public int getMinUnits() {
+			return 15;
+		}
+
+		@Override
+		public int getMaxUnits() {
+			return 18;
+		}
+
+		@Override
+		public boolean isEligibleToEnroll() {
+			return true;
+		}
+
+		@Override
+		public boolean mustCheckPrerequisites() {
+			return true;
+		}
+
+		@Override
+		public boolean canTakePrerequisiteSubjects() {
+			return true;
 		};
 	},
-	INELIGIBLE(false, true, false) {
+
+	INELIGIBLE() {
 		public StudentStatus update(BigDecimal average) {
 			return this;
+		}
+
+		@Override
+		public int getMinUnits() {
+			return Integer.MAX_VALUE;
+		}
+
+		@Override
+		public int getMaxUnits() {
+			return 0;
+		}
+
+		@Override
+		public boolean isEligibleToEnroll() {
+			return false;
+		}
+
+		@Override
+		public boolean mustCheckPrerequisites() {
+			return true;
+		}
+
+		@Override
+		public boolean canTakePrerequisiteSubjects() {
+			return false;
 		};
 	};
 
-	private final int minUnits;
-	private final int maxUnits;
-	private final boolean isEligibleToEnroll;
-	private final boolean mustCheckPrerequisites;
-	private final boolean canTakePrerequisiteSubjects;
+	StudentStatus() {
 
-	StudentStatus(boolean isEligibleToEnroll, boolean mustCheckPrerequisites, boolean canTakeSubjectsWithPrerequisites) {
-		this(1, Integer.MAX_VALUE, isEligibleToEnroll, mustCheckPrerequisites, canTakeSubjectsWithPrerequisites);
 	}
 
-	StudentStatus(int minUnits, int maxUnits, boolean isEligibleToEnroll, boolean mustCheckPrerequisites,
-			boolean canTakePrerequisiteSubjects) {
+	public abstract int getMinUnits();
 
-		assert minUnits >= 0;
-		assert maxUnits >= 0;
+	public abstract int getMaxUnits();
 
-		this.minUnits = minUnits;
-		this.maxUnits = maxUnits;
-		this.isEligibleToEnroll = isEligibleToEnroll;
-		this.mustCheckPrerequisites = mustCheckPrerequisites;
-		this.canTakePrerequisiteSubjects = canTakePrerequisiteSubjects;
-	}
+	public abstract boolean isEligibleToEnroll();
 
-	public int getMinUnits() {
-		return minUnits;
-	}
+	public abstract boolean mustCheckPrerequisites();
 
-	public int getMaxUnits() {
-		return maxUnits;
-	}
-
-	public boolean isEligibleToEnroll() {
-		return isEligibleToEnroll;
-	}
-
-	public boolean mustCheckPrerequisites() {
-		return mustCheckPrerequisites;
-	}
-
-	public boolean canTakePrerequisiteSubjects() {
-		return canTakePrerequisiteSubjects;
-	}
+	public abstract boolean canTakePrerequisiteSubjects();
 
 	public abstract StudentStatus update(BigDecimal average);
 

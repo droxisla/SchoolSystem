@@ -89,7 +89,7 @@ public class EnrollmentTests {
 			term1ClassCard.setGrade(Grade.G1_75);
 		}
 
-		Subject subject = getBSCSSubject("NSTP 1");
+		Subject subject = getBSCSSubject("HI 16");
 		Section section = createSection("G", subject, ScheduleDays.WED_AND_SAT, ScheduleTimes.FROM_1130_TO_1300);
 
 		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
@@ -105,7 +105,7 @@ public class EnrollmentTests {
 			term1ClassCard.setGrade(Grade.G5_00);
 		}
 
-		Subject subject = getBSCSSubject("NSTP 1");
+		Subject subject = getBSCSSubject("HI 16");
 		Section section = createSection("G", subject, ScheduleDays.WED_AND_SAT, ScheduleTimes.FROM_1130_TO_1300);
 
 		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
@@ -130,9 +130,9 @@ public class EnrollmentTests {
 	private void enrollTerm2WithPrereq(Student student) throws Exception {
 		StudentStatus status = student.getStatus();
 		EnrollmentFormBuilder term2EnrollmentFormBuilder = student.getEnrollmentFormBuilder();
-		addUnitsToEnrollmentForm(curriculum, 10, status.getMinUnits(), term2EnrollmentFormBuilder);
+		addUnitsToEnrollmentForm(curriculum, 7, status.getMinUnits(), term2EnrollmentFormBuilder);
 
-		Subject subjectWithPrereq = getBSCSSubject("NSTP 2");
+		Subject subjectWithPrereq = getBSCSSubject("HI 166");
 		Section sectionWithPrereq = createSection("AV", subjectWithPrereq, ScheduleDays.WED_AND_SAT,
 				ScheduleTimes.FROM_1600_TO_1730);
 		term2EnrollmentFormBuilder.addSection(sectionWithPrereq);
@@ -146,7 +146,7 @@ public class EnrollmentTests {
 		EnrollmentFormBuilder term1EnrollmentFormBuilder = student.getEnrollmentFormBuilder();
 		addUnitsToEnrollmentForm(curriculum, status.getMinUnits(), term1EnrollmentFormBuilder);
 
-		Subject prereqSubject = getBSCSSubject("NSTP 1");
+		Subject prereqSubject = getBSCSSubject("HI 16");
 		Section prereqSection = createSection("AV", prereqSubject, ScheduleDays.WED_AND_SAT,
 				ScheduleTimes.FROM_1000_TO_1130);
 		term1EnrollmentFormBuilder.addSection(prereqSection);
@@ -155,7 +155,7 @@ public class EnrollmentTests {
 	}
 
 	private Subject getBSCSSubject(String subjectName) {
-		List<Subject> subjects = curriculum.BS_COMPUTER_SCIENCE.findSubject(subjectName);
+		List<Subject> subjects = Curriculum.BS_COMPUTER_SCIENCE.findSubject(subjectName);
 		assertTrue(subjects.size() == 1);
 		return subjects.get(0);
 	}
