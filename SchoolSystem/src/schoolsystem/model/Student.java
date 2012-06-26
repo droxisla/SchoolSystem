@@ -51,8 +51,9 @@ public class Student {
 
 	public void updateStatus() {
 		if (allCurrentTermClassCardsHaveGrades()) {
-			this.status = status.update(new TermStatus(calculateCurrentTermAverage(), getRemainingUnits(),
-					prerequisitesDone()));
+			TermStatus termStatus = new TermStatus(calculateCurrentTermAverage(), getRemainingUnits(),
+					prerequisitesDone());
+			this.status = status.update(termStatus);
 		}
 	}
 
@@ -77,7 +78,7 @@ public class Student {
 		return true;
 	}
 
-	public boolean allCurrentTermClassCardsHaveGrades() { //TODO write test
+	boolean allCurrentTermClassCardsHaveGrades() {
 		if (enrollmentForms.isEmpty()) {
 			return false;
 		}
@@ -87,27 +88,21 @@ public class Student {
 	}
 
 	public BigDecimal calculateCurrentTermAverage() {
-		BigDecimal average = BigDecimal.ZERO;
-
-		if (enrollmentForms.isEmpty()) {
-			return average;
+		if (enrollmentForms.isEmpty() || !allCurrentTermClassCardsHaveGrades()) {
+			return BigDecimal.ZERO;
 		}
 
-		EnrollmentForm lastTermEnrollmentForm = enrollmentForms.get(enrollmentForms.size() - 1);
+		BigDecimal average = BigDecimal.ZERO;
 
+		EnrollmentForm lastTermEnrollmentForm = enrollmentForms.get(enrollmentForms.size() - 1);
 		List<ClassCard> classCards = lastTermEnrollmentForm.getClassCards();
+
 		for (ClassCard c : classCards) {
 			Grade grade = c.getGrade();
-
-			if (grade == Grade.NO_GRADE) {
-				return BigDecimal.ZERO;
-			}
-
 			average = average.add(grade.value());
 		}
 
-		average = average.divide(new BigDecimal(classCards.size()), 2, BigDecimal.ROUND_CEILING);
-		return average;
+		return average.divide(new BigDecimal(classCards.size()), 2, BigDecimal.ROUND_CEILING);
 	}
 
 	public int getNumEnrollmentForms() {

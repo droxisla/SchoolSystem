@@ -133,23 +133,23 @@ public enum Curriculum  {
 
 	};
 
-	private List<Subject> subjects;
+	private List<Subject> allSubjects;
 	private Map<String, Subject> subjectMapByName;
-	private Set<Subject> prerequisites;
+	private Set<Subject> prerequisiteSubjects;
 	private final int totalUnits;
 
 	Curriculum() {
-		subjects = initializeSubjects();	
+		allSubjects = initializeSubjects();	
 		totalUnits = computeTotalUnits();
 		initializeSubjectMapByName();
 		createPrerequisiteSet();
 	}
 	
 	private void createPrerequisiteSet() {
-		prerequisites = new HashSet<Subject>();
-		for(Subject s: subjects) {
+		prerequisiteSubjects = new HashSet<Subject>();
+		for(Subject s: allSubjects) {
 			for(Subject p : s.getPrerequisites()) {
-				prerequisites.add(p);
+				prerequisiteSubjects.add(p);
 			}
 		}
 	}
@@ -157,7 +157,7 @@ public enum Curriculum  {
 	private int computeTotalUnits() {
 		int totalUnits = 0;
 
-		for (Subject subject : subjects) {
+		for (Subject subject : allSubjects) {
 			totalUnits += subject.getNumberOfUnits();
 		}
 
@@ -166,7 +166,7 @@ public enum Curriculum  {
 
 	private void initializeSubjectMapByName() throws AssertionError {
 		subjectMapByName = new HashMap<String, Subject>();
-		for (Subject subject : subjects) {
+		for (Subject subject : allSubjects) {
 			String subjectName = subject.getName().toLowerCase();
 
 			if (subjectMapByName.containsKey(subjectName)) {
@@ -184,11 +184,11 @@ public enum Curriculum  {
 	}
 
 	public List<Subject> getSubjects() {
-		return subjects;
+		return allSubjects;
 	}
 	
 	public Set<Subject> getPrerequisites() {
-		return prerequisites;
+		return prerequisiteSubjects;
 	}
 
 	public List<Subject> findSubject(String subjectName) {
