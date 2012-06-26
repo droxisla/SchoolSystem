@@ -3,7 +3,6 @@ package schoolsystem.model;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -214,18 +213,6 @@ public class StudentStatusUpdateTest {
 		return ef;
 	}
 
-	private EnrollmentForm enrollStudentInEighteenUnits(Student student, List<Section> sections) throws Exception {
-		EnrollmentForm ef = student.getNewEnrollmentForm();
-		ef.addSection(sections.get(0));
-		ef.addSection(sections.get(1));
-		ef.addSection(sections.get(2));
-		ef.addSection(sections.get(3));
-		ef.addSection(sections.get(4));
-		ef.addSection(sections.get(5));
-		ef.submitForEnrollment();
-		return ef;
-	}
-
 	private List<Section> getFirstSixSubjects() throws Exception {
 		List<Section> sectionList = new ArrayList<Section>();
 		List<Subject> subjectList = curriculum.getSubjects();
@@ -243,24 +230,6 @@ public class StudentStatusUpdateTest {
 				ScheduleTimes.FROM_1430_TO_1600));
 		sectionList.add(createSection(sectionId++, "A", subjectList.get(5), ScheduleDays.MON_AND_THU,
 				ScheduleTimes.FROM_1600_TO_1730));
-		return sectionList;
-	}
-
-	private List<Section> createManySections(List<String> sectionNames) throws Exception {
-		List<Section> sectionList = new ArrayList<Section>();
-		int sectionId = 1;
-		sectionList.add(createSection(sectionId++, "A", curriculum.findSubject(sectionNames.get(0)).get(0),
-				ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000));
-		sectionList.add(createSection(sectionId++, "A", curriculum.findSubject(sectionNames.get(1)).get(0),
-				ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1000_TO_1130));
-		sectionList.add(createSection(sectionId++, "A", curriculum.findSubject(sectionNames.get(2)).get(0),
-				ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1130_TO_1300));
-		sectionList.add(createSection(sectionId++, "A", curriculum.findSubject(sectionNames.get(3)).get(0),
-				ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1300_TO_1430));
-		sectionList.add(createSection(sectionId++, "A", curriculum.findSubject(sectionNames.get(4)).get(0),
-				ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1430_TO_1600));
-		sectionList.add(createSection(sectionId++, "A", curriculum.findSubject(sectionNames.get(5)).get(0),
-				ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1600_TO_1730));
 		return sectionList;
 	}
 
