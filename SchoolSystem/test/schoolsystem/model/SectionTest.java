@@ -22,6 +22,18 @@ public class SectionTest {
 		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
 	}
 
+	@Test(expected = ScheduleConflictException.class)
+	public void teacherHasScheduleConflict() throws ScheduleConflictException {
+		Teacher teacher = createTeacher();
+		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
+
+		Subject subject1 = createSubject();
+		new Section(1, "S19", subject1, schedule, teacher);
+
+		Subject subject2 = createSubject();
+		new Section(2, "S20", subject2, schedule, teacher);
+	}
+	
 	@Test
 	public void teacherHasNoScheduleConflict() throws ScheduleConflictException {
 		Teacher teacher = createTeacher();
@@ -46,18 +58,6 @@ public class SectionTest {
 		assertEquals(section.getSectionName(), sectionName);
 		assertEquals(section.getTeacher(), teacher);
 		assertEquals(section.getSubject(), subject);
-	}
-
-	@Test(expected = ScheduleConflictException.class)
-	public void teacherHasScheduleConflict() throws ScheduleConflictException {
-		Teacher teacher = createTeacher();
-		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
-
-		Subject subject1 = createSubject();
-		new Section(1, "S19", subject1, schedule, teacher);
-
-		Subject subject2 = createSubject();
-		new Section(2, "S20", subject2, schedule, teacher);
 	}
 
 	private Teacher createTeacher() {
