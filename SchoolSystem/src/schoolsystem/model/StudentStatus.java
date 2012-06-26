@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public enum StudentStatus {
 
 	NEW() {
-		public StudentStatus update(BigDecimal average) {
+		public StudentStatus update(BigDecimal average, int unitsLeft, boolean prerequisitesDone) {
 			if (average.equals(BigDecimal.ZERO)) {
 				return this;
 			} else if (Grade.isPassing(average)) {
@@ -40,13 +40,14 @@ public enum StudentStatus {
 			return false;
 		};
 	},
-
 	CONTINUING() {
-		public StudentStatus update(BigDecimal average) {
+		public StudentStatus update(BigDecimal average, int unitsLeft, boolean prerequisitesDone) {
 			if (average.equals(BigDecimal.ZERO)) {
 				return this;
 			} else if (!Grade.isPassing(average)) {
 				return PROBATIONARY;
+			} else if (unitsLeft <= 18 && prerequisitesDone) {
+				return GRADUATING;
 			}
 			return this;
 		}
@@ -76,9 +77,9 @@ public enum StudentStatus {
 			return true;
 		};
 	},
-
 	GRADUATING() {
-		public StudentStatus update(BigDecimal average) {
+		@Override
+		public StudentStatus update(BigDecimal average, int unitsLeft, boolean prerequisitesDone) {
 			return this;
 		}
 
@@ -107,9 +108,9 @@ public enum StudentStatus {
 			return true;
 		};
 	},
-
 	GRADUATE() {
-		public StudentStatus update(BigDecimal average) {
+		@Override
+		public StudentStatus update(BigDecimal average, int unitsLeft, boolean prerequisitesDone) {
 			return this;
 		}
 
@@ -138,9 +139,9 @@ public enum StudentStatus {
 			return false;
 		};
 	},
-
 	PROBATIONARY() {
-		public StudentStatus update(BigDecimal average) {
+		@Override
+		public StudentStatus update(BigDecimal average, int unitsLeft, boolean prerequisitesDone) {
 			if (average.equals(BigDecimal.ZERO)) {
 				return this;
 			} else if (Grade.isPassing(average)) {
@@ -176,9 +177,9 @@ public enum StudentStatus {
 			return true;
 		};
 	},
-
 	INELIGIBLE() {
-		public StudentStatus update(BigDecimal average) {
+		@Override
+		public StudentStatus update(BigDecimal average, int unitsLeft, boolean prerequisitesDone) {
 			return this;
 		}
 
@@ -222,6 +223,6 @@ public enum StudentStatus {
 
 	public abstract boolean canTakePrerequisiteSubjects();
 
-	public abstract StudentStatus update(BigDecimal average);
+	public abstract StudentStatus update(BigDecimal average, int unitsLeft, boolean prerequisitesDone);
 
 }

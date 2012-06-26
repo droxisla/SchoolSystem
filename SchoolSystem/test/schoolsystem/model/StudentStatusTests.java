@@ -56,24 +56,59 @@ public class StudentStatusTests {
 	@Test
 	//TODO: Incomplete
 	public void fromContinuingToGraduating() throws Exception {
-		EnrollmentForm ef = enrollStudentInEighteenUnits(continuingStudent);
-		assertEquals(1, continuingStudent.getNumEnrollmentForms());
-		
+		EnrollmentForm ef = enrollStudentInEighteenUnits(continuingStudent);		
 		setGradesToPassing(ef.getClassCards());
 		continuingStudent.updateStatus();
 		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
 		SectionManager.getInstance().reset();
 		
-		List<String> sectionNames = new ArrayList<String>(Arrays.asList("PH 101", "TH 121", "FIL 11", "PE 1", "MA 18A", "MA 18B"));
-		
+		List<String> sectionNames = new ArrayList<String>(Arrays.asList("PH 101", "TH 121", "FIL 11", "PE 1", "MA 18A", "MA 18B"));		
 		List<Section> sectionList = createManySections(sectionNames);
-		
-		ef = enrollStudentInEighteenUnits(continuingStudent, sectionList);
-		assertEquals(2, continuingStudent.getNumEnrollmentForms());
-		
+		ef = enrollStudentInEighteenUnits(continuingStudent, sectionList);		
 		setGradesToPassing(ef.getClassCards());
 		continuingStudent.updateStatus();
 		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
+		SectionManager.getInstance().reset();
+		
+		sectionNames = new ArrayList<String>(Arrays.asList("PH 102", "TH 131", "AMC 124", "PE 2", "CS 21A", "CS 21B"));		
+		sectionList = createManySections(sectionNames);		
+		ef = enrollStudentInEighteenUnits(continuingStudent, sectionList);		
+		setGradesToPassing(ef.getClassCards());
+		continuingStudent.updateStatus();
+		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
+		SectionManager.getInstance().reset();
+		
+		sectionNames = new ArrayList<String>(Arrays.asList("FIL 12", "PE 3", "NSTP 1", "EN 11", "LIT 13", "HI 16"));		
+		sectionList = createManySections(sectionNames);		
+		ef = enrollStudentInEighteenUnits(continuingStudent, sectionList);		
+		setGradesToPassing(ef.getClassCards());
+		continuingStudent.updateStatus();
+		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
+		SectionManager.getInstance().reset();
+		
+		sectionNames = new ArrayList<String>(Arrays.asList("CS 123", "CS 152A", "CS 152B", "PH 103", "PH 104", "TH 141"));		
+		sectionList = createManySections(sectionNames);		
+		ef = enrollStudentInEighteenUnits(continuingStudent, sectionList);		
+		setGradesToPassing(ef.getClassCards());
+		continuingStudent.updateStatus();
+		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
+		SectionManager.getInstance().reset();
+		
+		sectionNames = new ArrayList<String>(Arrays.asList("TH 151", "FIL 14", "PE 4", "AMC 125", "NSTP 2", "EN 12"));		
+		sectionList = createManySections(sectionNames);		
+		ef = enrollStudentInEighteenUnits(continuingStudent, sectionList);		
+		setGradesToPassing(ef.getClassCards());
+		continuingStudent.updateStatus();
+		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
+		SectionManager.getInstance().reset();
+		
+		sectionNames = new ArrayList<String>(Arrays.asList("LIT 14", "HI 166", "CS 110", "CS 122", "CS 165", "CS 119.1"));		
+		sectionList = createManySections(sectionNames);		
+		ef = enrollStudentInEighteenUnits(continuingStudent, sectionList);		
+		setGradesToPassing(ef.getClassCards());
+		continuingStudent.updateStatus();
+		assertEquals(StudentStatus.GRADUATING, continuingStudent.getStatus());
+		SectionManager.getInstance().reset();
 		//if remainingUnits <= 18 and all prereqs taken.
 	}
 	
@@ -108,19 +143,19 @@ public class StudentStatusTests {
 	}
 	
 	private void setGradesToPassing(List<ClassCard> classCards) {
-		classCards.get(0).setGrade(Grade.G1_00);
-		classCards.get(1).setGrade(Grade.G1_00);
+		classCards.get(0).setGrade(Grade.G3_00);
+		classCards.get(1).setGrade(Grade.G3_00);
 		classCards.get(2).setGrade(Grade.G3_00);
 		classCards.get(3).setGrade(Grade.G3_00);
-		classCards.get(4).setGrade(Grade.G5_00);
-		classCards.get(5).setGrade(Grade.G5_00);
+		classCards.get(4).setGrade(Grade.G3_00);
+		classCards.get(5).setGrade(Grade.G3_00);
 	}
 	
 	private void setGradesToFailing(List<ClassCard> classCards) {
 		classCards.get(0).setGrade(Grade.G5_00);
-		classCards.get(1).setGrade(Grade.G1_00);
-		classCards.get(2).setGrade(Grade.G3_00);
-		classCards.get(3).setGrade(Grade.G3_00);
+		classCards.get(1).setGrade(Grade.G5_00);
+		classCards.get(2).setGrade(Grade.G5_00);
+		classCards.get(3).setGrade(Grade.G5_00);
 		classCards.get(4).setGrade(Grade.G5_00);
 		classCards.get(5).setGrade(Grade.G5_00);
 	}
