@@ -12,37 +12,40 @@ public class Teacher {
 	private final Map<Schedule, Section> scheduledSections;
 
 	public Teacher(int facultyNumber, String name) {
-		if(name==null) {
-			throw new IllegalArgumentException("Teacher's name must not be null.");
+		if (name == null) {
+			throw new IllegalArgumentException(
+					"Teacher's name must not be null.");
 		}
-		if(facultyNumber<0) {
-			throw new IllegalArgumentException("Faculty number must not be negative.");
+		if (facultyNumber < 0) {
+			throw new IllegalArgumentException(
+					"Faculty number must not be negative.");
 		}
-		
-		this.scheduledSections = new HashMap<Schedule,Section>();
+
+		this.scheduledSections = new HashMap<Schedule, Section>();
 		this.facultyNumber = facultyNumber;
 		this.name = name;
 	}
-	
+
 	public boolean hasScheduledClass(Schedule schedule) {
 		return scheduledSections.containsKey(schedule);
 	}
-	
+
 	public boolean hasSection(Section section) {
 		Schedule schedule = section.getSchedule();
-		if(hasScheduledClass(schedule)) {
+		if (hasScheduledClass(schedule)) {
 			return scheduledSections.get(schedule).equals(section);
 		}
 		return false;
 	}
-	
+
 	void addSection(Section section) {
-		assert section!=null;
-		
-		if(!section.getTeacher().equals(this)) {
-			throw new IllegalArgumentException("Section being added does not belong to the teacher");
+		assert section != null;
+
+		if (!section.getTeacher().equals(this)) {
+			throw new IllegalArgumentException(
+					"Section being added does not belong to the teacher");
 		}
-		
+
 		scheduledSections.put(section.getSchedule(), section);
 	}
 
