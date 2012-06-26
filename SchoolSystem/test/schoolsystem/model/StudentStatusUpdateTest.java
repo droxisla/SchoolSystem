@@ -9,7 +9,7 @@ import schoolsystem.model.schedule.*;
 
 import java.util.*;
 
-public class StudentStatusTests {
+public class StudentStatusUpdateTest {
 	private Curriculum curriculum;
 	private AcademicTerm academicTerm;
 	private Student newStudent;

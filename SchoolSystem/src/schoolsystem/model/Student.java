@@ -52,7 +52,7 @@ public class Student {
 
 	public void updateStatus() {
 		if (classCardsHaveGrades()) {
-			this.status = status.update(calculateAverage(), remainingUnits(), prerequisitesDone());
+			this.status = status.update(new TermStatus(calculateAverage(), remainingUnits(), prerequisitesDone()));
 		}
 	}
 	

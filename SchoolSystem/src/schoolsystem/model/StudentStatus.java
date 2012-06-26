@@ -5,10 +5,10 @@ import java.math.BigDecimal;
 public enum StudentStatus {
 
 	NEW() {
-		public StudentStatus update(BigDecimal average, int unitsLeft, boolean prerequisitesDone) {
-			if (average.equals(BigDecimal.ZERO)) {
+		public StudentStatus update(TermStatus ts) {
+			if (ts.getAverage().equals(BigDecimal.ZERO)) {
 				return this;
-			} else if (Grade.isPassing(average)) {
+			} else if (Grade.isPassing(ts.getAverage())) {
 				return CONTINUING;
 			} else {
 				return PROBATIONARY;
@@ -41,12 +41,12 @@ public enum StudentStatus {
 		};
 	},
 	CONTINUING() {
-		public StudentStatus update(BigDecimal average, int unitsLeft, boolean prerequisitesDone) {
-			if (average.equals(BigDecimal.ZERO)) {
+		public StudentStatus update(TermStatus ts) {
+			if (ts.getAverage().equals(BigDecimal.ZERO)) {
 				return this;
-			} else if (!Grade.isPassing(average)) {
+			} else if (!Grade.isPassing(ts.getAverage())) {
 				return PROBATIONARY;
-			} else if (unitsLeft <= 18 && prerequisitesDone) {
+			} else if (ts.getUnitsLeft() <= 18 && ts.isPrerequisitesDone()) {
 				return GRADUATING;
 			}
 			return this;
@@ -79,7 +79,7 @@ public enum StudentStatus {
 	},
 	GRADUATING() {
 		@Override
-		public StudentStatus update(BigDecimal average, int unitsLeft, boolean prerequisitesDone) {
+		public StudentStatus update(TermStatus ts) {
 			return this;
 		}
 
@@ -110,7 +110,7 @@ public enum StudentStatus {
 	},
 	GRADUATE() {
 		@Override
-		public StudentStatus update(BigDecimal average, int unitsLeft, boolean prerequisitesDone) {
+		public StudentStatus update(TermStatus ts) {
 			return this;
 		}
 
@@ -141,10 +141,10 @@ public enum StudentStatus {
 	},
 	PROBATIONARY() {
 		@Override
-		public StudentStatus update(BigDecimal average, int unitsLeft, boolean prerequisitesDone) {
-			if (average.equals(BigDecimal.ZERO)) {
+		public StudentStatus update(TermStatus ts) {
+			if (ts.getAverage().equals(BigDecimal.ZERO)) {
 				return this;
-			} else if (Grade.isPassing(average)) {
+			} else if (Grade.isPassing(ts.getAverage())) {
 				return CONTINUING;
 				// TODO: to grad
 			} else {
@@ -179,7 +179,7 @@ public enum StudentStatus {
 	},
 	INELIGIBLE() {
 		@Override
-		public StudentStatus update(BigDecimal average, int unitsLeft, boolean prerequisitesDone) {
+		public StudentStatus update(TermStatus ts) {
 			return this;
 		}
 
@@ -223,6 +223,6 @@ public enum StudentStatus {
 
 	public abstract boolean canTakePrerequisiteSubjects();
 
-	public abstract StudentStatus update(BigDecimal average, int unitsLeft, boolean prerequisitesDone);
+	public abstract StudentStatus update(TermStatus ts);
 
 }
