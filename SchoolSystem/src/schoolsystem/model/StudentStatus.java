@@ -120,7 +120,7 @@ public enum StudentStatus {
 
 		@Override
 		public int getMaxUnits() {
-			return Integer.MAX_VALUE;
+			return 0;
 		}
 
 		@Override
@@ -184,7 +184,7 @@ public enum StudentStatus {
 
 		@Override
 		public int getMinUnits() {
-			return Integer.MAX_VALUE;
+			return 1;
 		}
 
 		@Override
