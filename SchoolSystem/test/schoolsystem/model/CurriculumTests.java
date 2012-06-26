@@ -27,11 +27,6 @@ public class CurriculumTests {
 	}
 
 	@Test
-	public void createCurriculum() {
-		assertEquals(48, Curriculum.BS_COMPUTER_SCIENCE.getSubjects().size());
-	}
-
-	@Test
 	public void subjectHasPrerequisites() {
 		Subject subjectWithNoPrerequisites = new Subject("FLC 1");
 		assertTrue(subjectWithNoPrerequisites.getPrerequisites().isEmpty());
