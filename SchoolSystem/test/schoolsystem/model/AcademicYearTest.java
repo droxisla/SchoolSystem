@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import schoolsystem.model.schedule.*;
 
-public class AcademicYearTests {
+public class AcademicYearTest {
 
 	@Test
 	public void createCurrentAcademicTerm() {
