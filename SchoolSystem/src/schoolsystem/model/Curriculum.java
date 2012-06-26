@@ -136,7 +136,6 @@ public enum Curriculum {
 	private List<Subject> subjects;
 	private Map<String, Subject> subjectMapByName;
 	private Set<Subject> prerequisites;
-	private static int DEFAULT_SUBJECT_UNITS = 3;
 
 	Curriculum() {
 		subjects = initializeSubjects();	
@@ -169,7 +168,11 @@ public enum Curriculum {
 	abstract List<Subject> initializeSubjects();
 	
 	public int getTotalUnits() {
-		return subjects.size() * DEFAULT_SUBJECT_UNITS;
+		int units = 0;
+		for(Subject s: subjects) {
+			units += s.getNumberOfUnits();
+		}
+		return units;
 	}
 
 	public List<Subject> getSubjects() {
