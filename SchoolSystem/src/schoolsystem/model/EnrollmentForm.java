@@ -37,9 +37,9 @@ public class EnrollmentForm {
 	private void checkIfPreviousTermHasAverage() {
 		boolean enrolledLastTerm = student.getNumEnrollmentForms() > 0;
 		if (enrolledLastTerm) {
-			boolean previousTermSubjectsHaveGrade = student.calculateCurrentTermAverage().equals(BigDecimal.ZERO);
+			boolean previousTermSubjectsHaveGrade = student.allCurrentTermClassCardsHaveGrades();
 
-			if (previousTermSubjectsHaveGrade) {
+			if (!previousTermSubjectsHaveGrade) {
 				throw new IllegalStateException(
 						"Student cannot enroll since some of the class cards from previous term has no grade.");
 			}
@@ -50,7 +50,7 @@ public class EnrollmentForm {
 		if (classCards.isEmpty()) {
 			return false;
 		}
-		
+
 		for (ClassCard c : classCards) {
 			if (c.getGrade() == Grade.NO_GRADE) {
 				return false;

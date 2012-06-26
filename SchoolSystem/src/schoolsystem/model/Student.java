@@ -77,7 +77,7 @@ public class Student {
 		return true;
 	}
 
-	private boolean allCurrentTermClassCardsHaveGrades() {
+	public boolean allCurrentTermClassCardsHaveGrades() { //TODO write test
 		if (enrollmentForms.isEmpty()) {
 			return false;
 		}
