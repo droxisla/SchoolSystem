@@ -12,7 +12,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import schoolsystem.model.EnrollmentForm.EnrollmentFormBuilder;
 import schoolsystem.model.schedule.AcademicTerm;
 import schoolsystem.model.schedule.Schedule;
 import schoolsystem.model.schedule.ScheduleConflictException;
@@ -49,7 +48,11 @@ public class EnrollmentTests {
 			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
 		Student student = new Student(1, StudentStatus.GRADUATING, curriculum);
 		Section section = getFirstSubjectSection();
-		student.getEnrollmentFormBuilder().addSection(section).enroll();
+		
+		EnrollmentForm ef = student.getEnrollmentForm();
+		ef.addSection(section);
+		ef.submitForEnrollment();
+		
 		assertEquals(1, student.getNumEnrollmentForms());
 	}
 
@@ -91,8 +94,8 @@ public class EnrollmentTests {
 		Subject subject = getBSCSSubject("HI 16");
 		Section section = createSection(5, "G", subject, ScheduleDays.WED_AND_SAT, ScheduleTimes.FROM_1130_TO_1300);
 
-		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
-		enrollmentFormBuilder.addSection(section);
+		EnrollmentForm enrollmentForm = student.getEnrollmentForm();
+		enrollmentForm.addSection(section);
 	}
 
 	@Test
@@ -107,8 +110,8 @@ public class EnrollmentTests {
 		Subject subject = getBSCSSubject("HI 16");
 		Section section = createSection(5, "G", subject, ScheduleDays.WED_AND_SAT, ScheduleTimes.FROM_1130_TO_1300);
 
-		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
-		enrollmentFormBuilder.addSection(section);
+		EnrollmentForm enrollmentForm = student.getEnrollmentForm();
+		enrollmentForm.addSection(section);
 	}
 
 	@Test
@@ -128,29 +131,29 @@ public class EnrollmentTests {
 
 	private void enrollTerm2WithPrereq(Student student) throws Exception {
 		StudentStatus status = student.getStatus();
-		EnrollmentFormBuilder term2EnrollmentFormBuilder = student.getEnrollmentFormBuilder();
-		addUnitsToEnrollmentForm(curriculum, 7, status.getMinUnits(), term2EnrollmentFormBuilder);
+		EnrollmentForm term2EnrollmentForm = student.getEnrollmentForm();
+		addUnitsToEnrollmentForm(curriculum, 7, status.getMinUnits(), term2EnrollmentForm);
 
 		Subject subjectWithPrereq = getBSCSSubject("HI 166");
 		Section sectionWithPrereq = createSection(5, "AV", subjectWithPrereq, ScheduleDays.WED_AND_SAT,
 				ScheduleTimes.FROM_1600_TO_1730);
-		term2EnrollmentFormBuilder.addSection(sectionWithPrereq);
+		term2EnrollmentForm.addSection(sectionWithPrereq);
 
-		term2EnrollmentFormBuilder.enroll();
+		term2EnrollmentForm.submitForEnrollment();
 	}
 
 	private void enrollTerm1WithNoPrereq(Student student) throws Exception {
 		StudentStatus status = student.getStatus();
 
-		EnrollmentFormBuilder term1EnrollmentFormBuilder = student.getEnrollmentFormBuilder();
-		addUnitsToEnrollmentForm(curriculum, status.getMinUnits(), term1EnrollmentFormBuilder);
+		EnrollmentForm term1EnrollmentForm = student.getEnrollmentForm();
+		addUnitsToEnrollmentForm(curriculum, status.getMinUnits(), term1EnrollmentForm);
 
 		Subject prereqSubject = getBSCSSubject("HI 16");
 		Section prereqSection = createSection(5, "AV", prereqSubject, ScheduleDays.WED_AND_SAT,
 				ScheduleTimes.FROM_1000_TO_1130);
-		term1EnrollmentFormBuilder.addSection(prereqSection);
+		term1EnrollmentForm.addSection(prereqSection);
 
-		term1EnrollmentFormBuilder.enroll();
+		term1EnrollmentForm.submitForEnrollment();
 	}
 
 	private Subject getBSCSSubject(String subjectName) {
@@ -165,12 +168,13 @@ public class EnrollmentTests {
 		Section sectionWithPrereq = createSection(5, "C", subjectWithPrereq, ScheduleDays.WED_AND_SAT,
 				ScheduleTimes.FROM_1600_TO_1730);
 
-		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
+		EnrollmentForm enrollmentForm = student.getEnrollmentForm();
 
 		StudentStatus studentStatus = student.getStatus();
-		addUnitsToEnrollmentForm(curriculum, studentStatus.getMinUnits(), enrollmentFormBuilder);
+		addUnitsToEnrollmentForm(curriculum, studentStatus.getMinUnits(), enrollmentForm);
 
-		enrollmentFormBuilder.addSection(sectionWithPrereq).enroll();
+		enrollmentForm.addSection(sectionWithPrereq);
+		enrollmentForm.submitForEnrollment();
 	}
 
 	private Subject getSubjectWithPrereq() {
@@ -189,13 +193,13 @@ public class EnrollmentTests {
 	@Test(expected = IneligibleStudentException.class)
 	public void enrollIneligibleStudent() throws SectionFullException, IneligibleStudentException {
 		Student ineligibleStudent = new Student(2, StudentStatus.INELIGIBLE, Curriculum.BS_COMPUTER_SCIENCE);
-		ineligibleStudent.getEnrollmentFormBuilder();
+		ineligibleStudent.getEnrollmentForm();
 	}
 
 	@Test(expected = IneligibleStudentException.class)
 	public void enrollGraduatedStudent() throws SectionFullException, IneligibleStudentException {
 		Student graduatedStudent = new Student(2, StudentStatus.GRADUATE, Curriculum.BS_COMPUTER_SCIENCE);
-		graduatedStudent.getEnrollmentFormBuilder();
+		graduatedStudent.getEnrollmentForm();
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
@@ -252,8 +256,11 @@ public class EnrollmentTests {
 			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
 		Section section = getFirstSubjectSection();
 		for (int i = 1; i <= Section.MAX_STUDENTS + 1; i++) {
+
 			Student student = new Student(i, StudentStatus.GRADUATING, curriculum);
-			student.getEnrollmentFormBuilder().addSection(section).enroll();
+			EnrollmentForm enrollmentForm = student.getEnrollmentForm();
+			enrollmentForm.addSection(section);
+			enrollmentForm.submitForEnrollment();
 		}
 	}
 
@@ -271,11 +278,11 @@ public class EnrollmentTests {
 		Teacher teacher2 = new Teacher(1, "Carlos Garcia");
 		Section section2 = new Section(2, "S20", subject2, schedule, teacher2);
 
-		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
-		enrollmentFormBuilder.addSection(section1);
-		enrollmentFormBuilder.addSection(section2);
+		EnrollmentForm enrollmentForm = student.getEnrollmentForm();
+		enrollmentForm.addSection(section1);
+		enrollmentForm.addSection(section2);
 
-		enrollmentFormBuilder.enroll();
+		enrollmentForm.submitForEnrollment();
 	}
 
 	@Test(expected = ScheduleConflictException.class)
@@ -287,20 +294,27 @@ public class EnrollmentTests {
 		Teacher teacher1 = new Teacher(1, "Juan Nakpil");
 		Section section1 = new Section(1, "S19", subject1, schedule, teacher1);
 
-		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
-		enrollmentFormBuilder.addSection(section1);
-		enrollmentFormBuilder.addSection(section1);
+		EnrollmentForm enrollmentForm = student.getEnrollmentForm();
+		enrollmentForm.addSection(section1);
+		enrollmentForm.addSection(section1);
 
-		enrollmentFormBuilder.enroll();
+		enrollmentForm.submitForEnrollment();
 	}
 
 	@Test
 	public void passingAverage() throws Exception {
 		Student newStudent = new Student(1, StudentStatus.NEW, curriculum);
 		List<Section> sections = getSixSectionsNoPrerequisites();
-		EnrollmentForm ef = newStudent.getEnrollmentFormBuilder().addSection(sections.get(0))
-				.addSection(sections.get(1)).addSection(sections.get(2)).addSection(sections.get(3))
-				.addSection(sections.get(4)).addSection(sections.get(5)).enroll();
+
+		EnrollmentForm ef = newStudent.getEnrollmentForm();
+		ef.addSection(sections.get(0));
+		ef.addSection(sections.get(1));
+		ef.addSection(sections.get(2));
+		ef.addSection(sections.get(3));
+		ef.addSection(sections.get(4));
+		ef.addSection(sections.get(5));
+		ef.submitForEnrollment();
+
 		List<ClassCard> classCards = ef.getClassCards();
 		classCards.get(0).setGrade(Grade.G1_00);
 		classCards.get(1).setGrade(Grade.G1_00);
@@ -338,28 +352,28 @@ public class EnrollmentTests {
 
 		subject = subjectList.get(5);
 		assertTrue(!subject.hasPrerequisites());
-		sectionList.add(createSection(6,"A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1600_TO_1730));
+		sectionList.add(createSection(6, "A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1600_TO_1730));
 
 		return sectionList;
 	}
 
 	private void enrollUnits(Student student, int subjectStartIndex, int unitsToTake) throws Exception {
-		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
+		EnrollmentForm enrollmentFormBuilder = student.getEnrollmentForm();
 		addUnitsToEnrollmentForm(curriculum, subjectStartIndex, unitsToTake, enrollmentFormBuilder);
-		enrollmentFormBuilder.enroll();
+		enrollmentFormBuilder.submitForEnrollment();
 	}
 
 	private void enrollUnits(Student student, int unitsToTake) throws Exception {
 		enrollUnits(student, 0, unitsToTake);
 	}
 
-	static void addUnitsToEnrollmentForm(Curriculum curriculum, int unitsToTake,
-			EnrollmentFormBuilder enrollmentFormBuilder) throws Exception {
-		addUnitsToEnrollmentForm(curriculum, 0, unitsToTake, enrollmentFormBuilder);
+	static void addUnitsToEnrollmentForm(Curriculum curriculum, int unitsToTake, EnrollmentForm enrollmentForm)
+			throws Exception {
+		addUnitsToEnrollmentForm(curriculum, 0, unitsToTake, enrollmentForm);
 	}
 
 	static void addUnitsToEnrollmentForm(Curriculum curriculum, int subjectStartIndex, int unitsToTake,
-			EnrollmentFormBuilder enrollmentFormBuilder) throws Exception {
+			EnrollmentForm enrollmentForm) throws Exception {
 
 		Iterator<Subject> subjectsIterator = curriculum.getSubjects().iterator();
 		ScheduleDays[] scheduleDaysList = ScheduleDays.values();
@@ -398,7 +412,7 @@ public class EnrollmentTests {
 			String sectionName = "A_" + scheduleDaysIndex + "_" + scheduleTimesIndex;
 			Section section = createSection(subjectIndex + 200, sectionName, subject, scheduleDays, scheduleTimes);
 
-			enrollmentFormBuilder.addSection(section);
+			enrollmentForm.addSection(section);
 		}
 	}
 

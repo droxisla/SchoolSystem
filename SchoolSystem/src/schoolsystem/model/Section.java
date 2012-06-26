@@ -41,7 +41,7 @@ public class Section {
 		this.name = name;
 		this.subject = subject;
 		this.schedule = schedule;
-		this.classCards = new HashSet<ClassCard>(); //TODO classCards singleton
+		this.classCards = new HashSet<ClassCard>();
 
 		if (teacher.hasScheduledClass(schedule)) {
 			boolean scheduledClassIsSameSection = teacher.hasSection(this);

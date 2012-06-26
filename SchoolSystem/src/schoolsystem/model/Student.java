@@ -1,9 +1,10 @@
 package schoolsystem.model;
 
 import java.math.BigDecimal;
-import java.util.*;
-
-import schoolsystem.model.EnrollmentForm.EnrollmentFormBuilder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 public class Student {
 
@@ -29,8 +30,8 @@ public class Student {
 		this.curriculum = curriculum;
 	}
 
-	public EnrollmentFormBuilder getEnrollmentFormBuilder() throws IneligibleStudentException {
-		return new EnrollmentForm.EnrollmentFormBuilder(this);
+	public EnrollmentForm getEnrollmentForm() throws IneligibleStudentException {
+		return new EnrollmentForm(this);
 	}
 
 	void addEnrollmentForm(EnrollmentForm enrollmentForm) {

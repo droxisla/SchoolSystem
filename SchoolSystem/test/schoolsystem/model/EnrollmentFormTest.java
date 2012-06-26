@@ -39,7 +39,10 @@ public class EnrollmentFormTest {
 			IneligibleStudentException, UnsatisfiedPrerequisiteException {
 		Student student = new Student(1, StudentStatus.GRADUATING, curriculum);
 		Section section = getFirstSubjectSection();
-		EnrollmentForm enrollmentForm = student.getEnrollmentFormBuilder().addSection(section).enroll();
+		
+		EnrollmentForm enrollmentForm = student.getEnrollmentForm();
+		enrollmentForm.addSection(section);
+		enrollmentForm.submitForEnrollment();
 
 		assertTrue(enrollmentForm.hasSection(section));
 

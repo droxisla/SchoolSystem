@@ -59,6 +59,7 @@ public class SectionTest {
 		Subject subject2 = createSubject();
 		new Section(2, "S20", subject2, schedule, teacher);
 	}
+	
 
 	private Teacher createTeacher() {
 		return new Teacher(1, "John Smith");

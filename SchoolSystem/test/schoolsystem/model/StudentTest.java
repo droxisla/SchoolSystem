@@ -9,8 +9,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import schoolsystem.model.EnrollmentForm.EnrollmentFormBuilder;
-
 public class StudentTest {
 
 	private Curriculum curriculum;
@@ -31,7 +29,7 @@ public class StudentTest {
 			assertTrue(student.hasPassedSubject(subject));
 		}
 	}
-	
+
 	@Test
 	public void hasFailedSubject() throws Exception {
 		Student student = new Student(1, StudentStatus.CONTINUING, curriculum);
@@ -45,12 +43,11 @@ public class StudentTest {
 	}
 
 	private EnrollmentForm buildEnrollmentFormThenGradeWith(Student student, Grade grade) throws Exception {
-		EnrollmentFormBuilder enrollmentFormBuilder = student.getEnrollmentFormBuilder();
-		EnrollmentTests.addUnitsToEnrollmentForm(curriculum, StudentStatus.CONTINUING.getMinUnits(),
-				enrollmentFormBuilder);
+		EnrollmentForm enrollmentForm = student.getEnrollmentForm();
+		EnrollmentTests.addUnitsToEnrollmentForm(curriculum, StudentStatus.CONTINUING.getMinUnits(), enrollmentForm);
 
-		EnrollmentForm enrollmentForm = enrollmentFormBuilder.enroll();
-		
+		enrollmentForm.submitForEnrollment();
+
 		rateClassCards(enrollmentForm.getClassCards(), grade);
 		return enrollmentForm;
 	}

@@ -1,13 +1,19 @@
 package schoolsystem.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import schoolsystem.model.schedule.*;
-
-import java.util.*;
+import schoolsystem.model.schedule.AcademicTerm;
+import schoolsystem.model.schedule.Schedule;
+import schoolsystem.model.schedule.ScheduleConflictException;
+import schoolsystem.model.schedule.ScheduleDays;
+import schoolsystem.model.schedule.ScheduleTimes;
 
 public class StudentStatusUpdateTest {
 	private Curriculum curriculum;
@@ -18,7 +24,8 @@ public class StudentStatusUpdateTest {
 
 	@Before
 	public void createFixture() throws Exception {
-		academicTerm = AcademicTerm.academicTermAfterCurrent();		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
+		academicTerm = AcademicTerm.academicTermAfterCurrent();
+		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
 		newStudent = new Student(1, StudentStatus.NEW, Curriculum.BS_COMPUTER_SCIENCE);
 		continuingStudent = new Student(2, StudentStatus.CONTINUING, Curriculum.BS_COMPUTER_SCIENCE);
 		probationaryStudent = new Student(3, StudentStatus.PROBATIONARY, Curriculum.BS_COMPUTER_SCIENCE);
@@ -52,7 +59,7 @@ public class StudentStatusUpdateTest {
 	}
 
 	@Test
-	//TODO: Shorten? Consider creating a simpler Curriculum
+	// TODO: Shorten? Consider creating a simpler Curriculum
 	public void fromContinuingToGraduating() throws Exception {
 		EnrollmentForm ef = enrollStudentInEighteenUnits(continuingStudent);
 		setGradesToPassing(ef.getClassCards());
@@ -144,21 +151,21 @@ public class StudentStatusUpdateTest {
 	@Test
 	public void fromProbationaryToGraduate() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
-		probationaryStudent = new Student(4, StudentStatus.PROBATIONARY, curriculum);		
+		probationaryStudent = new Student(4, StudentStatus.PROBATIONARY, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(probationaryStudent);
 		setGradesToPassing(ef.getClassCards());
 		probationaryStudent.updateStatus();
 		assertEquals(StudentStatus.GRADUATE, probationaryStudent.getStatus());
 	}
-	
+
 	@Test
 	public void fromProbationaryToGraduating() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
-		probationaryStudent = new Student(4, StudentStatus.PROBATIONARY, curriculum);		
+		probationaryStudent = new Student(4, StudentStatus.PROBATIONARY, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(probationaryStudent);
 		List<ClassCard> classCards = ef.getClassCards();
-		for(int i = 0; i < classCards.size(); i++) {
-			if(i == 0) {
+		for (int i = 0; i < classCards.size(); i++) {
+			if (i == 0) {
 				classCards.get(i).setGrade(Grade.G5_00);
 			} else {
 				classCards.get(i).setGrade(Grade.G1_00);
@@ -167,15 +174,15 @@ public class StudentStatusUpdateTest {
 		probationaryStudent.updateStatus();
 		assertEquals(StudentStatus.GRADUATING, probationaryStudent.getStatus());
 	}
-	
+
 	@Test
 	public void fromGraduatingToGraduating() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
-		Student graduatingStudent = new Student(4, StudentStatus.GRADUATING, curriculum);		
+		Student graduatingStudent = new Student(4, StudentStatus.GRADUATING, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(graduatingStudent);
 		List<ClassCard> classCards = ef.getClassCards();
-		for(int i = 0; i < classCards.size(); i++) {
-			if(i == 0) {
+		for (int i = 0; i < classCards.size(); i++) {
+			if (i == 0) {
 				classCards.get(i).setGrade(Grade.G5_00);
 			} else {
 				classCards.get(i).setGrade(Grade.G1_00);
@@ -184,27 +191,27 @@ public class StudentStatusUpdateTest {
 		graduatingStudent.updateStatus();
 		assertEquals(StudentStatus.GRADUATING, graduatingStudent.getStatus());
 	}
-	
+
 	@Test
 	public void fromGraduatingToGraduate() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
-		Student graduatingStudent = new Student(4, StudentStatus.GRADUATING, curriculum);		
+		Student graduatingStudent = new Student(4, StudentStatus.GRADUATING, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(graduatingStudent);
 		setGradesToPassing(ef.getClassCards());
 		graduatingStudent.updateStatus();
 		assertEquals(StudentStatus.GRADUATE, graduatingStudent.getStatus());
 	}
-	
+
 	@Test
 	public void fromGraduatingtoProbationary() throws Exception {
 		curriculum = Curriculum.SIX_SUBJECTS_NO_PREREQS;
-		Student graduatingStudent = new Student(4, StudentStatus.GRADUATING, curriculum);		
+		Student graduatingStudent = new Student(4, StudentStatus.GRADUATING, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(graduatingStudent);
 		setGradesToFailing(ef.getClassCards());
 		graduatingStudent.updateStatus();
 		assertEquals(StudentStatus.PROBATIONARY, graduatingStudent.getStatus());
 	}
-	
+
 	private void setGradesToPassing(List<ClassCard> classCards) {
 		classCards.get(0).setGrade(Grade.G3_00);
 		classCards.get(1).setGrade(Grade.G3_00);
@@ -225,15 +232,27 @@ public class StudentStatusUpdateTest {
 
 	private EnrollmentForm enrollStudentInEighteenUnits(Student student) throws Exception {
 		List<Section> sections = getSixSubjectsNoPrerequisites();
-		return student.getEnrollmentFormBuilder().addSection(sections.get(0)).addSection(sections.get(1))
-				.addSection(sections.get(2)).addSection(sections.get(3)).addSection(sections.get(4))
-				.addSection(sections.get(5)).enroll();
+		EnrollmentForm ef = student.getEnrollmentForm();
+		ef.addSection(sections.get(0));
+		ef.addSection(sections.get(1));
+		ef.addSection(sections.get(2));
+		ef.addSection(sections.get(3));
+		ef.addSection(sections.get(4));
+		ef.addSection(sections.get(5));
+		ef.submitForEnrollment();
+		return ef;
 	}
 
 	private EnrollmentForm enrollStudentInEighteenUnits(Student student, List<Section> sections) throws Exception {
-		return student.getEnrollmentFormBuilder().addSection(sections.get(0)).addSection(sections.get(1))
-				.addSection(sections.get(2)).addSection(sections.get(3)).addSection(sections.get(4))
-				.addSection(sections.get(5)).enroll();
+		EnrollmentForm ef = student.getEnrollmentForm();
+		ef.addSection(sections.get(0));
+		ef.addSection(sections.get(1));
+		ef.addSection(sections.get(2));
+		ef.addSection(sections.get(3));
+		ef.addSection(sections.get(4));
+		ef.addSection(sections.get(5));
+		ef.submitForEnrollment();
+		return ef;
 	}
 
 	private List<Section> getSixSubjectsNoPrerequisites() throws Exception {

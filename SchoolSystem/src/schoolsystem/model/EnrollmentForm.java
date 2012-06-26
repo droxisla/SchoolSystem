@@ -15,134 +15,134 @@ public class EnrollmentForm {
 	private final Student student;
 	private final List<ClassCard> classCards;
 	private final List<Section> sections;
+	private int totalUnits;
 
-	static class EnrollmentFormBuilder {
-		private final Student student;
-		private final StudentStatus studentStatus;
-		private final List<Section> sections;
-		private int totalUnits;
-
-		EnrollmentFormBuilder(Student student) throws IneligibleStudentException {
-			assert student != null;
-
-			this.student = student;
-			this.totalUnits = 0;
-			this.studentStatus = student.getStatus();
-			this.sections = new ArrayList<Section>();
-
-			if (!studentStatus.isEligibleToEnroll()) {
-				throw new IneligibleStudentException();
-			}
-
-			checkIfPreviousTermHasAverage();
-		}
-
-		private void checkIfPreviousTermHasAverage() {
-			boolean enrolledLastTerm = student.getNumEnrollmentForms() > 0;
-			if (enrolledLastTerm) {
-				boolean previousTermSubjectsHaveGrade = student.calculateAverage().equals(BigDecimal.ZERO);
-
-				if (previousTermSubjectsHaveGrade) {
-					throw new IllegalStateException(
-							"Student cannot enroll since some of the class cards from previous term has no grade.");
-				}
-			}
-		}
-
-		public EnrollmentFormBuilder addSection(Section section) throws SectionFullException,
-				SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
-			if (section == null) {
-				throw new IllegalArgumentException("Section cannot be null.");
-			}
-
-			if (section.isFull()) {
-				throw new SectionFullException();
-			}
-			
-			final Subject subject = section.getSubject();
-			
-			if(student.hasPassedSubject(subject)) {
-				throw new SubjectUnitsRestrictionException("The subject '"+subject+"' has been passed in previous terms.");
-			}
-
-			checkScheduleConflict(section);
-			checkRequiredPrerequisites(subject);
-			addUnits(section);
-
-			sections.add(section);
-
-			return this;
-		}
-
-		private void checkRequiredPrerequisites(Subject subject) throws UnsatisfiedPrerequisiteException {
-			if (subject.hasPrerequisites()) {
-				if (!studentStatus.canTakeSubjectsWithPrerequisite()) {
-					throw new UnsatisfiedPrerequisiteException("Student cannot take subjects with prerequisite.");
-				}
-
-				if (studentStatus.mustCheckPrerequisites()) {
-					for (Subject prereqSubject : subject.getPrerequisites()) {
-						if (!student.hasPassedSubject(prereqSubject)) {
-							throw new UnsatisfiedPrerequisiteException("The prerequisite subject '" + prereqSubject
-									+ "' of '" + subject + "' must be passed first.");
-						}
-					}
-				}
-			}
-		}
-
-		private void addUnits(Section section) throws SubjectUnitsRestrictionException {
-			Subject subject = section.getSubject();
-			totalUnits += subject.getNumberOfUnits();
-
-			if (totalUnits > studentStatus.getMaxUnits()) {
-				throw new SubjectUnitsRestrictionException();
-			}
-		}
-
-		private void checkScheduleConflict(Section newSection) throws ScheduleConflictException {
-			Schedule schedule = newSection.getSchedule();
-
-			for (Section addedSection : sections) {
-				if (addedSection.getSchedule().equals(schedule)) {
-					if (addedSection.equals(newSection)) {
-						throw new ScheduleConflictException("Section '" + addedSection + "' is being enrolled twice.");
-					}
-					throw new ScheduleConflictException("Section '" + addedSection
-							+ "' conflicts with other section schedule.");
-				}
-			}
-		}
-
-		public EnrollmentForm enroll() throws SectionFullException, IneligibleStudentException,
-				SubjectUnitsRestrictionException {
-			if (totalUnits < studentStatus.getMinUnits()) {
-				throw new SubjectUnitsRestrictionException();
-			}
-
-			return new EnrollmentForm(student, sections);
-		}
-	}
-
-	private EnrollmentForm() {
+	public EnrollmentForm() { // TODO
 		sections = Collections.emptyList();
 		classCards = Collections.emptyList();
 		student = null;
 	}
 
-	private EnrollmentForm(Student student, List<Section> sections) {
-		assert student != null;
-		assert sections != null && !sections.isEmpty();
-
-		this.sections = Collections.unmodifiableList(sections);
-		this.student = student;
-		this.classCards = new ArrayList<ClassCard>();
-
-		for (Section section : sections) {
-			classCards.add(new ClassCard(this, section));
+	public EnrollmentForm(Student student) throws IneligibleStudentException {
+		if (student == null) {
+			throw new IllegalArgumentException("Student must not be null.");
 		}
 
-		this.student.addEnrollmentForm(this);
+		this.totalUnits = 0;
+		this.student = student;
+		this.classCards = new ArrayList<ClassCard>();
+		this.sections = new ArrayList<Section>();
+
+		if (!student.getStatus().isEligibleToEnroll()) {
+			throw new IneligibleStudentException();
+		}
+
+		checkIfPreviousTermHasAverage();
+	}
+
+	private void checkIfPreviousTermHasAverage() {
+		boolean enrolledLastTerm = student.getNumEnrollmentForms() > 0;
+		if (enrolledLastTerm) {
+			boolean previousTermSubjectsHaveGrade = student.calculateAverage().equals(BigDecimal.ZERO);
+
+			if (previousTermSubjectsHaveGrade) {
+				throw new IllegalStateException(
+						"Student cannot enroll since some of the class cards from previous term has no grade.");
+			}
+		}
+	}
+
+	public void addSection(Section section) throws SectionFullException, SubjectUnitsRestrictionException,
+			ScheduleConflictException, UnsatisfiedPrerequisiteException {
+		if (hasBeenSubmittedForEnrollment()) {
+			throw new IllegalStateException("Enrollment form has been submitted already.");
+		}
+
+		if (section == null) {
+			throw new IllegalArgumentException("Section cannot be null.");
+		}
+
+		if (section.isFull()) {
+			throw new SectionFullException();
+		}
+
+		Subject subject = section.getSubject();
+
+		if (student.hasPassedSubject(subject)) {
+			throw new SubjectUnitsRestrictionException("The subject '" + subject
+					+ "' has been passed in previous terms.");
+		}
+
+		checkScheduleConflict(section);
+		checkRequiredPrerequisites(subject);
+		updateTotalUnits(section);
+
+		sections.add(section);
+	}
+
+	private void checkScheduleConflict(Section newSection) throws ScheduleConflictException {
+		Schedule schedule = newSection.getSchedule();
+
+		for (Section addedSection : sections) {
+			if (addedSection.getSchedule().equals(schedule)) {
+				if (addedSection.equals(newSection)) {
+					throw new ScheduleConflictException("Section '" + addedSection + "' is being enrolled twice.");
+				}
+				throw new ScheduleConflictException("Section '" + addedSection
+						+ "' conflicts with other section schedule.");
+			}
+		}
+	}
+
+	private void checkRequiredPrerequisites(Subject subject) throws UnsatisfiedPrerequisiteException {
+		StudentStatus studentStatus = student.getStatus();
+
+		if (subject.hasPrerequisites()) {
+			if (!studentStatus.canTakeSubjectsWithPrerequisite()) {
+				throw new UnsatisfiedPrerequisiteException("Student cannot take subjects with prerequisite.");
+			}
+
+			if (studentStatus.mustCheckPrerequisites()) {
+				for (Subject prereqSubject : subject.getPrerequisites()) {
+					if (!student.hasPassedSubject(prereqSubject)) {
+						throw new UnsatisfiedPrerequisiteException("The prerequisite subject '" + prereqSubject
+								+ "' of '" + subject + "' must be passed first.");
+					}
+				}
+			}
+		}
+	}
+
+	private void updateTotalUnits(Section section) throws SubjectUnitsRestrictionException {
+		StudentStatus studentStatus = student.getStatus();
+
+		Subject subject = section.getSubject();
+		totalUnits += subject.getNumberOfUnits();
+
+		if (totalUnits > studentStatus.getMaxUnits()) {
+			throw new SubjectUnitsRestrictionException();
+		}
+	}
+
+	public void submitForEnrollment() throws SubjectUnitsRestrictionException {
+		StudentStatus studentStatus = student.getStatus();
+		int minUnits = studentStatus.getMinUnits();
+		
+		if (totalUnits < minUnits) {
+			throw new SubjectUnitsRestrictionException("Student must take at least "+studentStatus.getMinUnits()+" number of units.");
+		}
+
+		if (!hasBeenSubmittedForEnrollment()) {
+			this.student.addEnrollmentForm(this);
+
+			for (Section section : sections) {
+				classCards.add(new ClassCard(this, section));
+			}
+		}
+	}
+
+	private boolean hasBeenSubmittedForEnrollment() {
+		return !this.classCards.isEmpty();
 	}
 
 	public Student getStudent() {
@@ -154,7 +154,7 @@ public class EnrollmentForm {
 	}
 
 	public List<Section> getSections() {
-		return sections;
+		return Collections.unmodifiableList(sections);
 	}
 
 	public boolean hasSection(Section section) {
