@@ -58,65 +58,16 @@ public class StudentStatusUpdateTest {
 		newStudent.updateStatus();
 		assertEquals(StudentStatus.PROBATIONARY, newStudent.getStatus());
 	}
-
+	
 	@Test
-	// TODO: Shorten? Consider creating a simpler Curriculum
 	public void fromContinuingToGraduating() throws Exception {
+		curriculum = Curriculum.TWELVE_SUBJECTS_SIX_PREREQS;
+		continuingStudent = new Student(4, "Juan Cruz", StudentStatus.CONTINUING, curriculum);
 		EnrollmentForm ef = enrollStudentInEighteenUnits(continuingStudent);
 		setGradesToPassing(ef.getClassCards());
 		continuingStudent.updateStatus();
-		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
-		academicTerm = academicTerm.getNextAcademicTerm();
-
-		List<String> sectionNames = new ArrayList<String>(Arrays.asList("PH 101", "TH 121", "FIL 11", "PE 1", "MA 18A",
-				"MA 18B"));
-		List<Section> sectionList = createManySections(sectionNames);
-		ef = enrollStudentInEighteenUnits(continuingStudent, sectionList);
-		setGradesToPassing(ef.getClassCards());
-		continuingStudent.updateStatus();
-		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
-		academicTerm = academicTerm.getNextAcademicTerm();
-
-		sectionNames = new ArrayList<String>(Arrays.asList("PH 102", "TH 131", "AMC 124", "PE 2", "CS 21A", "CS 21B"));
-		sectionList = createManySections(sectionNames);
-		ef = enrollStudentInEighteenUnits(continuingStudent, sectionList);
-		setGradesToPassing(ef.getClassCards());
-		continuingStudent.updateStatus();
-		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
-		academicTerm = academicTerm.getNextAcademicTerm();
-
-		sectionNames = new ArrayList<String>(Arrays.asList("FIL 12", "PE 3", "NSTP 1", "EN 11", "LIT 13", "HI 16"));
-		sectionList = createManySections(sectionNames);
-		ef = enrollStudentInEighteenUnits(continuingStudent, sectionList);
-		setGradesToPassing(ef.getClassCards());
-		continuingStudent.updateStatus();
-		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
-		academicTerm = academicTerm.getNextAcademicTerm();
-
-		sectionNames = new ArrayList<String>(
-				Arrays.asList("CS 123", "CS 152A", "CS 152B", "PH 103", "PH 104", "TH 141"));
-		sectionList = createManySections(sectionNames);
-		ef = enrollStudentInEighteenUnits(continuingStudent, sectionList);
-		setGradesToPassing(ef.getClassCards());
-		continuingStudent.updateStatus();
-		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
-		academicTerm = academicTerm.getNextAcademicTerm();
-
-		sectionNames = new ArrayList<String>(Arrays.asList("TH 151", "FIL 14", "PE 4", "AMC 125", "NSTP 2", "EN 12"));
-		sectionList = createManySections(sectionNames);
-		ef = enrollStudentInEighteenUnits(continuingStudent, sectionList);
-		setGradesToPassing(ef.getClassCards());
-		continuingStudent.updateStatus();
-		assertEquals(StudentStatus.CONTINUING, continuingStudent.getStatus());
-		academicTerm = academicTerm.getNextAcademicTerm();
-
-		sectionNames = new ArrayList<String>(
-				Arrays.asList("LIT 14", "HI 166", "CS 110", "CS 122", "CS 165", "CS 119.1"));
-		sectionList = createManySections(sectionNames);
-		ef = enrollStudentInEighteenUnits(continuingStudent, sectionList);
-		setGradesToPassing(ef.getClassCards());
-		continuingStudent.updateStatus();
 		assertEquals(StudentStatus.GRADUATING, continuingStudent.getStatus());
+		academicTerm = academicTerm.getNextAcademicTerm();
 	}
 
 	@Test
