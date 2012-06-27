@@ -57,7 +57,7 @@ public class Student {
 		}
 
 		boolean studentStatusIsOld = status.statusNeedsUpdate(currentAcademicTerm);
-		
+
 		if (studentStatusIsOld && allCurrentTermClassCardsHaveGrades()) {
 			TermStatus termStatus = new TermStatus(calculateCurrentTermAverage(), getRemainingUnits(),
 					prerequisitesDone());

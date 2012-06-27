@@ -21,65 +21,159 @@ import schoolsystem.model.schedule.ScheduleTimes;
 public class EnrollmentTests {
 
 	private static final int MAX_UNITS = 3;
-	private static Section createSection(int sectionId, String sectionName, Subject subject, ScheduleDays scheduleDays,
-			ScheduleTimes scheduleTimes) throws ScheduleConflictException {
-		AcademicTerm academicTerm = AcademicTerm.academicTermAfterCurrent();
-		Schedule schedule = new Schedule(academicTerm, scheduleDays, scheduleTimes);
-		Teacher teacher = new Teacher(1, "John Doe");
-		return new Section(sectionId, sectionName, subject, schedule, teacher);
-	}
-	static void addUnitsToEnrollmentForm(Curriculum curriculum, int unitsToTake, EnrollmentForm enrollmentForm)
-			throws Exception {
-		addUnitsToEnrollmentForm(curriculum, 0, unitsToTake, enrollmentForm);
+
+	private Curriculum curriculum;
+	private AcademicTerm academicTerm;
+
+	@Before
+	public void createFixture() throws Exception {
+		academicTerm = AcademicTerm.academicTermAfterCurrent();
+		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
 	}
 
-	static void addUnitsToEnrollmentForm(Curriculum curriculum, int subjectStartIndex, int unitsToTake,
-			EnrollmentForm enrollmentForm) throws Exception {
+	@Test
+	public void enrollStudentWithPrereq() throws Exception {
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.PROBATIONARY, curriculum);
 
-		Iterator<Subject> subjectsIterator = curriculum.getSubjects().iterator();
-		ScheduleDays[] scheduleDaysList = ScheduleDays.values();
-		ScheduleTimes[] scheduleTimesList = ScheduleTimes.values();
+		enrollTerm1WithNoPrereq(student);
 
-		int scheduleDaysIndex = 0;
-		int scheduleTimesIndex = 0;
-		int totalUnits = 0;
-		int subjectIndex = 0;
+		for (ClassCard term1ClassCard : student.getSubmittedEnrollmentForms().get(0).getClassCards()) {
+			term1ClassCard.setGrade(Grade.G1_75);
+		}
 
-		while (totalUnits < unitsToTake) {
-			Subject subject = subjectsIterator.next();
+		enrollTerm2WithPrereq(student);
 
-			if (subject.hasPrerequisites()) {
-				continue;
-			}
+		assertEquals(2, student.getNumEnrollmentForms());
+	}
 
-			ScheduleDays scheduleDays = scheduleDaysList[scheduleDaysIndex];
-			ScheduleTimes scheduleTimes = scheduleTimesList[scheduleTimesIndex];
+	@Test(expected = IneligibleStudentException.class)
+	public void enrollGraduatedStudent() throws SectionFullException, IneligibleStudentException {
+		Student graduatedStudent = new Student(2, "Juan de Cruz", StudentStatusType.GRADUATE,
+				Curriculum.BS_COMPUTER_SCIENCE);
+		graduatedStudent.getNewEnrollmentForm();
+	}
 
-			scheduleTimesIndex++;
-			if (scheduleTimesIndex == scheduleTimesList.length) {
-				scheduleTimesIndex = 0;
-				scheduleDaysIndex++;
-			}
+	@Test(expected = IneligibleStudentException.class)
+	public void enrollIneligibleStudent() throws SectionFullException, IneligibleStudentException {
+		Student ineligibleStudent = new Student(2, "Juan Cruz", StudentStatusType.INELIGIBLE,
+				Curriculum.BS_COMPUTER_SCIENCE);
+		ineligibleStudent.getNewEnrollmentForm();
+	}
 
-			if (subjectStartIndex > subjectIndex) {
-				subjectIndex++;
-				continue;
-			} else {
-				subjectIndex++;
-			}
+	@Test
+	public void enrollEligibleStudentInSectionWithNoPrereq() throws SectionFullException, IneligibleStudentException,
+			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.GRADUATING, curriculum);
+		Section section = getFirstSubjectSection();
 
-			totalUnits += subject.getNumberOfUnits();
+		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
+		enrollmentForm.addSection(section);
+		enrollmentForm.submitForEnrollment();
 
-			String sectionName = "A_" + scheduleDaysIndex + "_" + scheduleTimesIndex;
-			Section section = createSection(subjectIndex + 200, sectionName, subject, scheduleDays, scheduleTimes);
+		assertEquals(1, student.getNumEnrollmentForms());
+	}
 
+	@Test(expected = ScheduleConflictException.class)
+	public void studentWithScheduleConflict() throws Exception {
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.GRADUATING, curriculum);
+
+		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
+
+		Subject subject1 = curriculum.getSubjects().get(0);
+		Teacher teacher1 = new Teacher(1, "Juan Nakpil");
+		Section section1 = new Section(1, "S19", subject1, schedule, teacher1);
+
+		Subject subject2 = curriculum.getSubjects().get(1);
+		Teacher teacher2 = new Teacher(1, "Carlos Garcia");
+		Section section2 = new Section(2, "S20", subject2, schedule, teacher2);
+
+		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
+		enrollmentForm.addSection(section1);
+		enrollmentForm.addSection(section2);
+
+		enrollmentForm.submitForEnrollment();
+	}
+
+	@Test(expected = SubjectUnitsRestrictionException.class)
+	public void probationaryStudentBelowMinimumUnits() throws Exception {
+		StudentStatusType studentStatus = StudentStatusType.PROBATIONARY;
+		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
+		enrollUnits(student, studentStatus.getMinUnits() - MAX_UNITS);
+	}
+
+	@Test(expected = SubjectUnitsRestrictionException.class)
+	public void probationaryStudentExceededMaximumUnits() throws Exception {
+		StudentStatusType studentStatus = StudentStatusType.CONTINUING;
+		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
+		enrollUnits(student, studentStatus.getMaxUnits() + 1);
+	}
+
+	@Test(expected = SubjectUnitsRestrictionException.class)
+	public void continuingStudentBelowMinimumUnits() throws Exception {
+		StudentStatusType studentStatus = StudentStatusType.CONTINUING;
+		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
+		enrollUnits(student, studentStatus.getMinUnits() - MAX_UNITS);
+	}
+
+	@Test(expected = SubjectUnitsRestrictionException.class)
+	public void continuingStudentExceededMaximumUnits() throws Exception {
+		StudentStatusType studentStatus = StudentStatusType.CONTINUING;
+		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
+		enrollUnits(student, studentStatus.getMaxUnits() + 1);
+	}
+
+	@Test(expected = SubjectUnitsRestrictionException.class)
+	public void newStudentBelowMinimumUnits() throws Exception {
+		StudentStatusType studentStatus = StudentStatusType.NEW;
+		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
+		enrollUnits(student, studentStatus.getMinUnits() - MAX_UNITS);
+	}
+
+	@Test(expected = SubjectUnitsRestrictionException.class)
+	public void newStudentExceededMaximumUnits() throws Exception {
+		StudentStatusType studentStatus = StudentStatusType.NEW;
+		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
+		enrollUnits(student, studentStatus.getMaxUnits() + 1);
+	}
+
+	@Test(expected = SectionFullException.class)
+	public void classCardsMustNotExceedMaxCapacity() throws SectionFullException, IneligibleStudentException,
+			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
+		Section section = getFirstSubjectSection();
+		for (int i = 1; i <= Section.MAX_STUDENTS + 1; i++) {
+
+			Student student = new Student(i, "Juan de Cruz", StudentStatusType.GRADUATING, curriculum);
+			EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
 			enrollmentForm.addSection(section);
+			enrollmentForm.submitForEnrollment();
 		}
 	}
 
-	private Curriculum curriculum;
+	@Test(expected = UnsatisfiedPrerequisiteException.class)
+	public void enrollNewStudentsWithUnsatisfiedPrereq() throws Exception {
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.NEW, curriculum);
+		enrollStudentWithPrereq(student);
+	}
 
-	private AcademicTerm academicTerm;
+	@Test(expected = UnsatisfiedPrerequisiteException.class)
+	public void enrollProbationaryStudentsWithUnsatisfiedPrereq() throws Exception {
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.PROBATIONARY, curriculum);
+		enrollStudentWithPrereq(student);
+	}
+
+	@Test(expected = UnsatisfiedPrerequisiteException.class)
+	public void enrollContinuingStudentsWithUnsatisfiedPrereq() throws Exception {
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.CONTINUING, curriculum);
+		enrollStudentWithPrereq(student);
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void enrollStudentWhenPreviousTermHasNoGrades() throws Exception {
+		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.CONTINUING, curriculum);
+
+		enrollTerm1WithNoPrereq(student);
+		enrollTerm2WithPrereq(student);
+	}
 
 	@Test
 	public void addingPreviouslyFailedSubject() throws Exception {
@@ -110,72 +204,6 @@ public class EnrollmentTests {
 		Subject subject = getBSCSSubject("NSTP 1");
 		section = createSection(2, "AC", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_1130_TO_1300);
 		enrollmentForm.addSection(section);
-	}
-
-	@Test(expected = SectionFullException.class)
-	public void classCardsMustNotExceedMaxCapacity() throws SectionFullException, IneligibleStudentException,
-			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
-		Section section = getFirstSubjectSection();
-		for (int i = 1; i <= Section.MAX_STUDENTS + 1; i++) {
-
-			Student student = new Student(i, "Juan de Cruz", StudentStatusType.GRADUATING, curriculum);
-			EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
-			enrollmentForm.addSection(section);
-			enrollmentForm.submitForEnrollment();
-		}
-	}
-
-	@Test(expected = SubjectUnitsRestrictionException.class)
-	public void continuingStudentBelowMinimumUnits() throws Exception {
-		StudentStatusType studentStatus = StudentStatusType.CONTINUING;
-		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
-		enrollUnits(student, studentStatus.getMinUnits() - MAX_UNITS);
-	}
-
-	@Test(expected = SubjectUnitsRestrictionException.class)
-	public void continuingStudentExceededMaximumUnits() throws Exception {
-		StudentStatusType studentStatus = StudentStatusType.CONTINUING;
-		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
-		enrollUnits(student, studentStatus.getMaxUnits() + 1);
-	}
-
-	@Before
-	public void createFixture() throws Exception {
-		academicTerm = AcademicTerm.academicTermAfterCurrent();
-		curriculum = Curriculum.BS_COMPUTER_SCIENCE;
-	}
-
-	@Test(expected = UnsatisfiedPrerequisiteException.class)
-	public void enrollContinuingStudentsWithUnsatisfiedPrereq() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.CONTINUING, curriculum);
-		enrollStudentWithPrereq(student);
-	}
-
-	@Test
-	public void enrollEligibleStudentInSectionWithNoPrereq() throws SectionFullException, IneligibleStudentException,
-			SubjectUnitsRestrictionException, ScheduleConflictException, UnsatisfiedPrerequisiteException {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.GRADUATING, curriculum);
-		Section section = getFirstSubjectSection();
-
-		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
-		enrollmentForm.addSection(section);
-		enrollmentForm.submitForEnrollment();
-
-		assertEquals(1, student.getNumEnrollmentForms());
-	}
-
-	@Test(expected = IneligibleStudentException.class)
-	public void enrollGraduatedStudent() throws SectionFullException, IneligibleStudentException {
-		Student graduatedStudent = new Student(2, "Juan de Cruz", StudentStatusType.GRADUATE,
-				Curriculum.BS_COMPUTER_SCIENCE);
-		graduatedStudent.getNewEnrollmentForm();
-	}
-
-	@Test(expected = IneligibleStudentException.class)
-	public void enrollIneligibleStudent() throws SectionFullException, IneligibleStudentException {
-		Student ineligibleStudent = new Student(2, "Juan Cruz", StudentStatusType.INELIGIBLE,
-				Curriculum.BS_COMPUTER_SCIENCE);
-		ineligibleStudent.getNewEnrollmentForm();
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
@@ -211,62 +239,6 @@ public class EnrollmentTests {
 		enrollmentForm.submitForEnrollment();
 	}
 
-	@Test(expected = UnsatisfiedPrerequisiteException.class)
-	public void enrollNewStudentsWithUnsatisfiedPrereq() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.NEW, curriculum);
-		enrollStudentWithPrereq(student);
-	}
-
-	@Test(expected = UnsatisfiedPrerequisiteException.class)
-	public void enrollProbationaryStudentsWithUnsatisfiedPrereq() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.PROBATIONARY, curriculum);
-		enrollStudentWithPrereq(student);
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public void enrollStudentWhenPreviousTermHasNoGrades() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.CONTINUING, curriculum);
-
-		enrollTerm1WithNoPrereq(student);
-		enrollTerm2WithPrereq(student);
-	}
-
-	@Test
-	public void enrollStudentWithPrereq() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.PROBATIONARY, curriculum);
-
-		enrollTerm1WithNoPrereq(student);
-
-		for (ClassCard term1ClassCard : student.getSubmittedEnrollmentForms().get(0).getClassCards()) {
-			term1ClassCard.setGrade(Grade.G1_75);
-		}
-
-		enrollTerm2WithPrereq(student);
-
-		assertEquals(2, student.getNumEnrollmentForms());
-	}
-
-	@Test(expected = SubjectUnitsRestrictionException.class)
-	public void graduatingStudentEnrollmentFormWithNoUnits() throws Exception {
-		StudentStatusType studentStatus = StudentStatusType.GRADUATING;
-		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
-		enrollUnits(student, 0);
-	}
-
-	@Test(expected = SubjectUnitsRestrictionException.class)
-	public void newStudentBelowMinimumUnits() throws Exception {
-		StudentStatusType studentStatus = StudentStatusType.NEW;
-		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
-		enrollUnits(student, studentStatus.getMinUnits() - MAX_UNITS);
-	}
-
-	@Test(expected = SubjectUnitsRestrictionException.class)
-	public void newStudentExceededMaximumUnits() throws Exception {
-		StudentStatusType studentStatus = StudentStatusType.NEW;
-		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
-		enrollUnits(student, studentStatus.getMaxUnits() + 1);
-	}
-
 	@Test
 	public void passingAverage() throws Exception {
 		Student newStudent = new Student(1, "Juan dela Cruz", StudentStatusType.NEW, curriculum);
@@ -293,17 +265,10 @@ public class EnrollmentTests {
 	}
 
 	@Test(expected = SubjectUnitsRestrictionException.class)
-	public void probationaryStudentBelowMinimumUnits() throws Exception {
-		StudentStatusType studentStatus = StudentStatusType.PROBATIONARY;
+	public void graduatingStudentEnrollmentFormWithNoUnits() throws Exception {
+		StudentStatusType studentStatus = StudentStatusType.GRADUATING;
 		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
-		enrollUnits(student, studentStatus.getMinUnits() - MAX_UNITS);
-	}
-
-	@Test(expected = SubjectUnitsRestrictionException.class)
-	public void probationaryStudentExceededMaximumUnits() throws Exception {
-		StudentStatusType studentStatus = StudentStatusType.CONTINUING;
-		Student student = new Student(2, "Juan Cruz", studentStatus, curriculum);
-		enrollUnits(student, studentStatus.getMaxUnits() + 1);
+		enrollUnits(student, 0);
 	}
 
 	@Test(expected = ScheduleConflictException.class)
@@ -319,27 +284,6 @@ public class EnrollmentTests {
 		Subject subject2 = curriculum.getSubjects().get(1);
 		Teacher teacher2 = new Teacher(2, "Julio Nakpil");
 		Section section2 = new Section(1, "S22", subject2, schedule, teacher2);
-
-		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
-		enrollmentForm.addSection(section1);
-		enrollmentForm.addSection(section2);
-
-		enrollmentForm.submitForEnrollment();
-	}
-
-	@Test(expected = ScheduleConflictException.class)
-	public void studentWithScheduleConflict() throws Exception {
-		Student student = new Student(1, "Juan dela Cruz", StudentStatusType.GRADUATING, curriculum);
-
-		Schedule schedule = new Schedule(academicTerm, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
-
-		Subject subject1 = curriculum.getSubjects().get(0);
-		Teacher teacher1 = new Teacher(1, "Juan Nakpil");
-		Section section1 = new Section(1, "S19", subject1, schedule, teacher1);
-
-		Subject subject2 = curriculum.getSubjects().get(1);
-		Teacher teacher2 = new Teacher(1, "Carlos Garcia");
-		Section section2 = new Section(2, "S20", subject2, schedule, teacher2);
 
 		EnrollmentForm enrollmentForm = student.getNewEnrollmentForm();
 		enrollmentForm.addSection(section1);
@@ -410,7 +354,7 @@ public class EnrollmentTests {
 		Subject subject = curriculum.getSubjects().get(0);
 		return createSection(1, "A", subject, ScheduleDays.MON_AND_THU, ScheduleTimes.FROM_0830_TO_1000);
 	}
-	
+
 	private List<Section> getSixSectionsNoPrerequisites() throws Exception {
 		List<Section> sectionList = new ArrayList<Section>();
 		List<Subject> subjectList = curriculum.getSubjects();
@@ -453,6 +397,63 @@ public class EnrollmentTests {
 
 		assertNotNull(subjectWithPrereq);
 		return subjectWithPrereq;
+	}
+
+	private static Section createSection(int sectionId, String sectionName, Subject subject, ScheduleDays scheduleDays,
+			ScheduleTimes scheduleTimes) throws ScheduleConflictException {
+		AcademicTerm academicTerm = AcademicTerm.academicTermAfterCurrent();
+		Schedule schedule = new Schedule(academicTerm, scheduleDays, scheduleTimes);
+		Teacher teacher = new Teacher(1, "John Doe");
+		return new Section(sectionId, sectionName, subject, schedule, teacher);
+	}
+
+	static void addUnitsToEnrollmentForm(Curriculum curriculum, int unitsToTake, EnrollmentForm enrollmentForm)
+			throws Exception {
+		addUnitsToEnrollmentForm(curriculum, 0, unitsToTake, enrollmentForm);
+	}
+
+	static void addUnitsToEnrollmentForm(Curriculum curriculum, int subjectStartIndex, int unitsToTake,
+			EnrollmentForm enrollmentForm) throws Exception {
+
+		Iterator<Subject> subjectsIterator = curriculum.getSubjects().iterator();
+		ScheduleDays[] scheduleDaysList = ScheduleDays.values();
+		ScheduleTimes[] scheduleTimesList = ScheduleTimes.values();
+
+		int scheduleDaysIndex = 0;
+		int scheduleTimesIndex = 0;
+		int totalUnits = 0;
+		int subjectIndex = 0;
+
+		while (totalUnits < unitsToTake) {
+			Subject subject = subjectsIterator.next();
+
+			if (subject.hasPrerequisites()) {
+				continue;
+			}
+
+			ScheduleDays scheduleDays = scheduleDaysList[scheduleDaysIndex];
+			ScheduleTimes scheduleTimes = scheduleTimesList[scheduleTimesIndex];
+
+			scheduleTimesIndex++;
+			if (scheduleTimesIndex == scheduleTimesList.length) {
+				scheduleTimesIndex = 0;
+				scheduleDaysIndex++;
+			}
+
+			if (subjectStartIndex > subjectIndex) {
+				subjectIndex++;
+				continue;
+			} else {
+				subjectIndex++;
+			}
+
+			totalUnits += subject.getNumberOfUnits();
+
+			String sectionName = "A_" + scheduleDaysIndex + "_" + scheduleTimesIndex;
+			Section section = createSection(subjectIndex + 200, sectionName, subject, scheduleDays, scheduleTimes);
+
+			enrollmentForm.addSection(section);
+		}
 	}
 
 }
